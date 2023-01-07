@@ -10,6 +10,8 @@ int main()
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
 
+    std::cout << "Hello" << std::endl;
+
     // TODO: собственные тесты
     RUN_TEST(tr, monitoringServerTest1);
     return 0;
