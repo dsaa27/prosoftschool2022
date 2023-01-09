@@ -3,6 +3,8 @@
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
 
+#include "MessageSerializer.h"
+
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
