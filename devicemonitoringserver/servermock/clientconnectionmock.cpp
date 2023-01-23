@@ -32,8 +32,7 @@ void unregisterClient(uint64_t id)
 
 struct ConnectToServerTask final : public AbstractTask
 {
-    ConnectToServerTask(TaskQueue& taskQueue, uint64_t clientId, uint64_t serverId) :
-        m_taskQueue(taskQueue), m_clientId(clientId), m_serverId(serverId) {}
+    ConnectToServerTask(TaskQueue& taskQueue, uint64_t clientId, uint64_t serverId);
 
     void operator()() final
     {
@@ -55,6 +54,9 @@ private:
     uint64_t m_clientId = 0;
     uint64_t m_serverId = 0;
 };
+
+    ConnectToServerTask::ConnectToServerTask(TaskQueue &taskQueue, uint64_t clientId, uint64_t serverId) :
+            m_taskQueue(taskQueue), m_clientId(clientId), m_serverId(serverId) {}
 
 } // namespace
 

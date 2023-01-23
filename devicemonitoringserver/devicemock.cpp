@@ -1,8 +1,11 @@
 #include "devicemock.h"
+#include "serialization/MessageSerializator.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
 #include <sstream>
+#include <iostream>
+
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -71,7 +74,11 @@ bool DeviceMock::connectToServer(uint64_t serverId)
 void DeviceMock::sendMessage(const std::string& message) const
 {
     m_clientConnection->sendMessage(message);
+
 }
+
+
+
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
@@ -80,13 +87,17 @@ void DeviceMock::onMessageReceived(const std::string& message)
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
+
+
 void DeviceMock::onConnected()
 {
+    messageList = {};
     // TODO, если нужно
 }
 
 void DeviceMock::onDisconnected()
 {
+    messageList.clear();
     // TODO, если нужно
 }
 
@@ -107,6 +118,9 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
-    
+   std::string message = serializator->serialize(serializator->Meterage, -1, m_timeStamp, meterage);
+   // + добавить шифрование
     // TODO: Сформировать std::string и передать в sendMessage
+    std::cout << message;
+    sendMessage(message);
 }

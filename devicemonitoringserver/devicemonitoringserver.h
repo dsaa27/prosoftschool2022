@@ -2,6 +2,7 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
+#include "serialization/MessageSerializator.h"
 
 #include <cstdint>
 #include <string>
@@ -62,6 +63,7 @@ private:
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
+    MessageSerializator *serializator = new MessageSerializator();
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 

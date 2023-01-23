@@ -1,9 +1,11 @@
 #include "devicemonitoringserver.h"
+#include "serialization/MessageSerializator.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <handlers/abstractnewconnectionhandler.h>
 #include <server/abstractconnection.h>
 #include <servermock/connectionservermock.h>
+#include <iostream>
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
@@ -46,13 +48,15 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    std::cout<< "gett";
+   serializator->deserialize(message);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
 {
+
     // TODO, если нужен
 }
 

@@ -2,6 +2,7 @@
 #define DEVICE_H
 
 #include "common.h"
+#include "serialization/MessageSerializator.h"
 
 #include <string>
 #include <vector>
@@ -30,7 +31,7 @@ public:
     bool bind(uint64_t deviceId);
     /*!
      * \brief Подключить устройство к серверу.
-     * \param serverId - идентификатор сревера
+     * \param serverId - идентификатор сервера
      * \return false в случае ошибки
      */
     bool connectToServer(uint64_t serverId);
@@ -68,6 +69,8 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
+    MessageSerializator *serializator = new MessageSerializator();
+    std::vector<std::string> messageList = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
