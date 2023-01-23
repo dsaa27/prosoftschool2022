@@ -1,5 +1,7 @@
 #include "MessageSerializator.h"
 #include <iostream>
+#include <vector>
+
 MessageSerializator::MessageSerializator() = default;
 MessageSerializator::~MessageSerializator() = default;
 
@@ -7,39 +9,27 @@ std::string
 MessageSerializator::serialize(messageType messType, uint64_t errType,
                                uint64_t timeStamp, uint64_t value) const{
     std::ostringstream os;
-    std::string result = "";
     switch (messType)
     {
         case messageType::Command:
-            result.push_back(char(messageType::Command));
-            result.push_back(' ');
+            os << messageType::Command << " ";
             if (value > 100 || value < 0)
-                result.push_back(char(value));
-            else return "";
+                os << value;
             break;
         case messageType::Error:
             if (errType != -1)
                 return "";
-            result.push_back(char(messageType::Error));
-            result.push_back(char(errType));
+            os << messageType::Error << " ";
+            os << errType;
             break;
         case messageType::Meterage:
-            os << messageType::Meterage;
-            result += std::to_string(messageType::Meterage);
-            result += " ";
+            os << messageType::Meterage << " ";
             if (value > 100 || value < 0)
                 return "";
             else
-            {
-                os << value;
-                result += std::to_string(value);
-            }
-            result += " ";
+                os << value << " ";
             if (timeStamp != -1)
-            {
                 os << timeStamp;
-                result += std::to_string(timeStamp);
-            }
             else return "";
             break;
         default:
@@ -48,24 +38,34 @@ MessageSerializator::serialize(messageType messType, uint64_t errType,
     return os.str();
 }
 
-std::string MessageSerializator::deserialize(const std::string &message) const {
-    std::istringstream os;
-    std::string result = "";
-    int type;
+std::vector<uint64_t> MessageSerializator::deserialize(const std::string &message) const {
+    std::istringstream os(message);
+    uint64_t type;
     os >> type;
-    std::cout << type;
-    os.clear();
+    std::vector<uint64_t> res = {};
+    res.push_back(type);
     switch(type)
     {
         case messageType::Command:
+            uint64_t valueToCorrect;
+            os >> valueToCorrect;
+            res.push_back(valueToCorrect);
             break;
         case messageType::Meterage:
+            uint64_t value, timeStamp;
+            os >> value;
+            os >> timeStamp;
+            res.push_back(value);
+            res.push_back(timeStamp);
             break;
         case messageType::Error:
+            uint64_t errType;
+            os >> errType;
+            res.push_back(errType);
             break;
         default:
             break;
     }
-    //std::string els[3] = strtok(noDeserialized, " ");
-    return result;
+
+    return res;
 }

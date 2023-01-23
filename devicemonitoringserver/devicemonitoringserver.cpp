@@ -6,6 +6,7 @@
 #include <server/abstractconnection.h>
 #include <servermock/connectionservermock.h>
 #include <iostream>
+#include <vector>
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
@@ -50,8 +51,17 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    std::cout<< "gett";
-   serializator->deserialize(message);
+
+    std::vector<uint64_t> res = serializator->deserialize(message);
+
+    switch (res[0]) {
+        case 0://serializator->Meterage:
+            //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра
+            break;
+        default: // сервер получает только сообщения meterage
+            break;
+    }
+    sendMessage(deviceId, "1233");
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)

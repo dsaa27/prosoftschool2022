@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <vector>
 
 class MessageSerializator {
 public:
@@ -26,7 +27,7 @@ public:
 
     std::string serialize(messageType messType, uint64_t errType = -1, uint64_t timeStamp = -1,
                           uint64_t value = -1) const;
-    std::string deserialize(const std::string& message) const;
+    std::vector<uint64_t> deserialize(const std::string& message) const;
 
 };
 

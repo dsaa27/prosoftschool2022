@@ -6,6 +6,7 @@
 #include "devicemonitoringserver.h"
 #include <servermock/servertests.h>
 #include <servermock/clientconnectionmock.h>
+#include <vector>
 
 int main()
 {
@@ -19,12 +20,14 @@ int main()
 
     if(deviceMock->connectToServer(server->listenedId()))
     {
+        std::vector<uint64_t> mets = {2,1,1,1,1,2,3,33,4};
         while (taskQueue.processTask())
             ;
         //monitoringServer->setDeviceWorkSchedule(); //сделать
-        deviceMock->setMeterages({1,1,1,1,1,2,3,33,4});
+        deviceMock->setMeterages({2,1,1,1,1,2,3,33,4});
         deviceMock->startMeterageSending();
-        taskQueue.processTask();
+        for (uint64_t i = 0; i < mets.size()*2; i++)
+            taskQueue.processTask();
     }
 
 

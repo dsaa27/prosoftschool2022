@@ -82,6 +82,16 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
+    std::cout<< message;
+    std::vector<uint64_t> res = serializator->deserialize(message);
+    /*switch (res[0]) {
+        case serializator->Meterage:
+            //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра
+            break;
+        default: // сервер получает только сообщения meterage
+            break;
+    }*/
+
     // TODO: Разобрать std::string, прочитать команду,
     // записать ее в список полученных комманд
     sendNextMeterage(); // Отправляем следующее измерение
