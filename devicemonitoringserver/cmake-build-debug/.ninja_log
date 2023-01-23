@@ -1,0 +1,18 @@
+# ninja log v5
+19	255	6949608802984269	CMakeFiles/devicemonitoringserver.dir/servermock/object.cpp.obj	bc52d1614c706ec6
+4	547	6949608805914900	CMakeFiles/devicemonitoringserver.dir/servermock/connectionchannel.cpp.obj	84841619128bbf9e
+15	438	6949608804824666	CMakeFiles/devicemonitoringserver.dir/servermock/taskqueue.cpp.obj	70d2f9c597501553
+29	567	6949608806104940	CMakeFiles/devicemonitoringserver.dir/devicemock.cpp.obj	958df70f0ffc0a6d
+8	634	6949608806775104	CMakeFiles/devicemonitoringserver.dir/servermock/connectionmock.cpp.obj	a91bd7959dd2a4e5
+257	889	6949608809335724	CMakeFiles/devicemonitoringserver.dir/devicemonitoringserver.cpp.obj	a6632cf47feab083
+35	828	6949608808705523	CMakeFiles/devicemonitoringserver.dir/main.cpp.obj	38bcf5c92910dce3
+0	901	6949608809455698	CMakeFiles/devicemonitoringserver.dir/servermock/clientconnectionmock.cpp.obj	44249ba20ccfc8ae
+11	1064	6949608811071955	CMakeFiles/devicemonitoringserver.dir/servermock/connectionservermock.cpp.obj	e3d72c1c0de6e08b
+439	1244	6949608812900299	CMakeFiles/devicemonitoringserver.dir/tests.cpp.obj	d3d750b92e525d44
+24	1389	6949608814340834	CMakeFiles/devicemonitoringserver.dir/servermock/servertests.cpp.obj	723867ad9de29eea
+1390	1649	6949608816905411	devicemonitoringserver.exe	7d4ee4dbd6f4a7b5
+10	362	6956684272300975	CMakeFiles/devicemonitoringserver.dir/encoding/Mirror.cpp.obj	82f1b40a226a5dbe
+14	391	6956684272611049	CMakeFiles/devicemonitoringserver.dir/encoding/ROT3.cpp.obj	ecdd7e25a942ba87
+18	429	6956684272991116	CMakeFiles/devicemonitoringserver.dir/serialization/MessageSerializator.cpp.obj	b402953c46d3299b
+5	561	6956684274311887	CMakeFiles/devicemonitoringserver.dir/devicemock.cpp.obj	958df70f0ffc0a6d
+561	1015	6956684278817975	devicemonitoringserver.exe	1000e3aec4cfc4b1

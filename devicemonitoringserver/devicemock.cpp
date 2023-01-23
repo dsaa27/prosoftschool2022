@@ -2,7 +2,7 @@
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
-
+#include <sstream>
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -73,7 +73,7 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
     // TODO: Разобрать std::string, прочитать команду,
     // записать ее в список полученных комманд
@@ -107,5 +107,6 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
+    
     // TODO: Сформировать std::string и передать в sendMessage
 }
