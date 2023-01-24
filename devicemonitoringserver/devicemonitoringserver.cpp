@@ -52,16 +52,16 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
 
-    std::vector<uint64_t> res = serializator->deserialize(message);
-
-    switch (res[0]) {
-        case 0://serializator->Meterage:
-            //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра
-            break;
-        default: // сервер получает только сообщения meterage
-            break;
-    }
-    sendMessage(deviceId, "1233");
+    std::vector<uint64_t> res = MessageSerializator::deserialize(message);
+    if (res[0] != MessageSerializator::Meterage)
+        std::cout << "Error";
+    uint8_t  value = res[1];
+    uint64_t timeStamp = res[2];
+    Phase meterage = {timeStamp, value};
+    uint64_t valueToCorrect = commandCenter->compareMeterage(meterage, &devicesWorkSchedule[deviceId]);
+    if (valueToCorrect <= 100)
+        sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Command, -1, -1, (uint8_t )valueToCorrect));
+    else sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Error, valueToCorrect, -1, -1))
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)

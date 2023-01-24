@@ -20,14 +20,14 @@ public:
     };
     enum errorType
     {
-        NoSchedule = 100,
-        NoTimestamp = 101,
-        Obsolete = 102
+        NoSchedule = 101,
+        NoTimestamp = 102,
+        Obsolete = 103
     };
 
-    std::string serialize(messageType messType, uint64_t errType = -1, uint64_t timeStamp = -1,
-                          uint64_t value = -1) const;
-    std::vector<uint64_t> deserialize(const std::string& message) const;
+    static std::string serialize(messageType messType, uint64_t errType = -1, uint64_t timeStamp = -1,
+                          uint8_t value = -1) ;
+    static std::vector<uint64_t> deserialize(const std::string& message) ;
 
 };
 

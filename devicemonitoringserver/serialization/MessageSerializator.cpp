@@ -7,14 +7,13 @@ MessageSerializator::~MessageSerializator() = default;
 
 std::string
 MessageSerializator::serialize(messageType messType, uint64_t errType,
-                               uint64_t timeStamp, uint64_t value) const{
+                               uint64_t timeStamp, uint8_t value) {
     std::ostringstream os;
     switch (messType)
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            if (value > 100 || value < 0)
-                os << value;
+            os << value;
             break;
         case messageType::Error:
             if (errType != -1)
@@ -38,7 +37,7 @@ MessageSerializator::serialize(messageType messType, uint64_t errType,
     return os.str();
 }
 
-std::vector<uint64_t> MessageSerializator::deserialize(const std::string &message) const {
+std::vector<uint64_t> MessageSerializator::deserialize(const std::string &message) {
     std::istringstream os(message);
     uint64_t type;
     os >> type;
@@ -47,12 +46,13 @@ std::vector<uint64_t> MessageSerializator::deserialize(const std::string &messag
     switch(type)
     {
         case messageType::Command:
-            uint64_t valueToCorrect;
+            uint8_t valueToCorrect;
             os >> valueToCorrect;
             res.push_back(valueToCorrect);
             break;
         case messageType::Meterage:
-            uint64_t value, timeStamp;
+            uint8_t value;
+            uint64_t timeStamp;
             os >> value;
             os >> timeStamp;
             res.push_back(value);

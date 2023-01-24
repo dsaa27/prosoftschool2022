@@ -3,9 +3,11 @@
 
 #include "common.h"
 #include "serialization/MessageSerializator.h"
+#include "CommandCenter.h"
 
 #include <cstdint>
 #include <string>
+#include <map>
 
 struct DeviceWorkSchedule;
 class AbstractConnectionServer;
@@ -63,7 +65,8 @@ private:
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
-    MessageSerializator *serializator = new MessageSerializator();
+    std::map<uint64_t, DeviceWorkSchedule> devicesWorkSchedule;
+    CommandCenter *commandCenter = new CommandCenter();
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 
