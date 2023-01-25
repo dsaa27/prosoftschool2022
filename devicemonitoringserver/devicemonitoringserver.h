@@ -65,7 +65,7 @@ private:
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
-    std::map<uint64_t, DeviceWorkSchedule> devicesWorkSchedule;
+    std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
     CommandCenter *commandCenter = new CommandCenter();
     AbstractConnectionServer* m_connectionServer = nullptr;
 };

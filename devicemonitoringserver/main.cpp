@@ -20,10 +20,16 @@ int main()
 
     if(deviceMock->connectToServer(server->listenedId()))
     {
-        std::vector<uint64_t> mets = {2,1,1,1,1,2,3,33,4};
+        std::vector<uint8_t> mets = {2,1,1,1,1,2,3,33,4};
+        std::vector<Phase> phases;
         while (taskQueue.processTask())
             ;
-        //monitoringServer->setDeviceWorkSchedule(); //сделать
+        for (uint64_t i = 0; i < mets.size(); i++)
+        {
+            phases.push_back({i, mets[i]});
+        }
+         DeviceWorkSchedule const deviceWorkSchedule = {13, phases};
+        monitoringServer->setDeviceWorkSchedule(deviceWorkSchedule); //сделать
         deviceMock->setMeterages({2,1,1,1,1,2,3,33,4});
         deviceMock->startMeterageSending();
         for (uint64_t i = 0; i < mets.size()*2; i++)
@@ -32,11 +38,11 @@ int main()
 
 
     TestRunner tr;
-   /* RUN_TEST(tr, taskQueueTest);
+    RUN_TEST(tr, taskQueueTest);
     RUN_TEST(tr, safeObjectPointerTest);
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
-*/
+
     // TODO: собственные тесты
    // RUN_TEST(tr, monitoringServerTest1);
     return 0;

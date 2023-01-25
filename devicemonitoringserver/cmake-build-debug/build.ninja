@@ -126,20 +126,6 @@ build CMakeFiles/devicemonitoringserver.dir/tests.cpp.obj: CXX_COMPILER__devicem
   OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
   OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir
 
-build CMakeFiles/devicemonitoringserver.dir/encoding/ROT3.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/ROT3.cpp || cmake_object_order_depends_target_devicemonitoringserver
-  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\ROT3.cpp.obj.d
-  FLAGS = -g -std=gnu++14
-  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
-  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
-  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
-
-build CMakeFiles/devicemonitoringserver.dir/encoding/Mirror.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/Mirror.cpp || cmake_object_order_depends_target_devicemonitoringserver
-  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\Mirror.cpp.obj.d
-  FLAGS = -g -std=gnu++14
-  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
-  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
-  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
-
 build CMakeFiles/devicemonitoringserver.dir/serialization/MessageSerializator.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/serialization/MessageSerializator.cpp || cmake_object_order_depends_target_devicemonitoringserver
   DEP_FILE = CMakeFiles\devicemonitoringserver.dir\serialization\MessageSerializator.cpp.obj.d
   FLAGS = -g -std=gnu++14
@@ -154,6 +140,34 @@ build CMakeFiles/devicemonitoringserver.dir/CommandCenter.cpp.obj: CXX_COMPILER_
   OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
   OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir
 
+build CMakeFiles/devicemonitoringserver.dir/encoding/MessageEncoder.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/MessageEncoder.cpp || cmake_object_order_depends_target_devicemonitoringserver
+  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\MessageEncoder.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
+  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
+  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
+
+build CMakeFiles/devicemonitoringserver.dir/encoding/ROT3.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/ROT3.cpp || cmake_object_order_depends_target_devicemonitoringserver
+  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\ROT3.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
+  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
+  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
+
+build CMakeFiles/devicemonitoringserver.dir/encoding/Mirror.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/Mirror.cpp || cmake_object_order_depends_target_devicemonitoringserver
+  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\Mirror.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
+  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
+  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
+
+build CMakeFiles/devicemonitoringserver.dir/encoding/Multiply41.cpp.obj: CXX_COMPILER__devicemonitoringserver_Debug C$:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/encoding/Multiply41.cpp || cmake_object_order_depends_target_devicemonitoringserver
+  DEP_FILE = CMakeFiles\devicemonitoringserver.dir\encoding\Multiply41.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/. -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/handlers -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/server -IC:/Users/user/Desktop/prosoftschool2022/devicemonitoringserver/servermock
+  OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir
+  OBJECT_FILE_DIR = CMakeFiles\devicemonitoringserver.dir\encoding
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target devicemonitoringserver
@@ -162,7 +176,7 @@ build CMakeFiles/devicemonitoringserver.dir/CommandCenter.cpp.obj: CXX_COMPILER_
 #############################################
 # Link the executable devicemonitoringserver.exe
 
-build devicemonitoringserver.exe: CXX_EXECUTABLE_LINKER__devicemonitoringserver_Debug CMakeFiles/devicemonitoringserver.dir/servermock/clientconnectionmock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionchannel.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionmock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionservermock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/object.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/servertests.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/taskqueue.cpp.obj CMakeFiles/devicemonitoringserver.dir/devicemock.cpp.obj CMakeFiles/devicemonitoringserver.dir/devicemonitoringserver.cpp.obj CMakeFiles/devicemonitoringserver.dir/main.cpp.obj CMakeFiles/devicemonitoringserver.dir/tests.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/ROT3.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/Mirror.cpp.obj CMakeFiles/devicemonitoringserver.dir/serialization/MessageSerializator.cpp.obj CMakeFiles/devicemonitoringserver.dir/CommandCenter.cpp.obj
+build devicemonitoringserver.exe: CXX_EXECUTABLE_LINKER__devicemonitoringserver_Debug CMakeFiles/devicemonitoringserver.dir/servermock/clientconnectionmock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionchannel.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionmock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/connectionservermock.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/object.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/servertests.cpp.obj CMakeFiles/devicemonitoringserver.dir/servermock/taskqueue.cpp.obj CMakeFiles/devicemonitoringserver.dir/devicemock.cpp.obj CMakeFiles/devicemonitoringserver.dir/devicemonitoringserver.cpp.obj CMakeFiles/devicemonitoringserver.dir/main.cpp.obj CMakeFiles/devicemonitoringserver.dir/tests.cpp.obj CMakeFiles/devicemonitoringserver.dir/serialization/MessageSerializator.cpp.obj CMakeFiles/devicemonitoringserver.dir/CommandCenter.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/MessageEncoder.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/ROT3.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/Mirror.cpp.obj CMakeFiles/devicemonitoringserver.dir/encoding/Multiply41.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\devicemonitoringserver.dir

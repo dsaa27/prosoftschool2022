@@ -18,15 +18,21 @@ public:
         Command = 1,
         Error = 2
     };
-    enum errorType
-    {
-        NoSchedule = 101,
-        NoTimestamp = 102,
-        Obsolete = 103
-    };
 
-    static std::string serialize(messageType messType, uint64_t errType = -1, uint64_t timeStamp = -1,
-                          uint8_t value = -1) ;
+    /*!
+   * \brief сериализует сообщение
+   * \param messType - тип сообщения
+   * \param errType - тип ошибки
+
+   * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
+   */
+    static std::string serialize(messageType messType, uint8_t errType = -1, uint64_t timeStamp = -1,
+                          uint8_t value = -1);
+    /*!
+   * \brief десереализует сообщение
+   * \param message - сообщение
+    * \return десеарилизованное сообщение в виде вектора
+   */
     static std::vector<uint64_t> deserialize(const std::string& message) ;
 
 };

@@ -1,10 +1,6 @@
-#include <vector>
-#include "BaseEncoderExecutor.h"
+#include "ROT3.h"
 
-class ROT3 final : public BaseEncoderExecutor
-        {
-public:
-    ROT3()
+ROT3::ROT3()
     {
         for (char i = 'a'; i < 'z'; i++)
         {
@@ -17,7 +13,12 @@ public:
         }
     }
 
-    std::string encode(std::string message) const final
+ROT3::~ROT3()
+{
+
+}
+
+std::string ROT3::encode(std::string message) const
     {
         std:: string result = "";
         for (char i: message)
@@ -35,7 +36,7 @@ public:
         return  result;
     }
 
-    std::string decode(std::string message) const final
+std::string ROT3::decode(std::string message) const
     {
         std:: string result = "";
         for (char i: message)
@@ -53,7 +54,7 @@ public:
         return  result;
     }
 
-private:
-    std::vector<char> alphabet;
-    std::vector<int> nums;
-};
+
+
+
+

@@ -2,7 +2,7 @@
 #define DEVICE_H
 
 #include "common.h"
-#include "serialization/MessageSerializator.h"
+
 
 #include <string>
 #include <vector>
@@ -69,7 +69,6 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
-    MessageSerializator *serializator = new MessageSerializator();
     std::vector<std::string> messageList = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;

@@ -83,7 +83,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 void DeviceMock::onMessageReceived(const std::string& message)
 {
     std::cout<< message;
-    std::vector<uint64_t> res = serializator->deserialize(message);
+    std::vector<uint64_t> res =  MessageSerializator::deserialize(message);
     /*switch (res[0]) {
         case serializator->Meterage:
             //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра
@@ -108,7 +108,7 @@ void DeviceMock::onConnected()
 void DeviceMock::onDisconnected()
 {
     messageList.clear();
-    // TODO, если нужно
+
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
@@ -128,9 +128,9 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
-   std::string message = serializator->serialize(serializator->Meterage, -1, m_timeStamp, meterage);
-   // + добавить шифрование
-    // TODO: Сформировать std::string и передать в sendMessage
+    std::string message = MessageSerializator::serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
+
+    // TODO: добавить шифрование
     std::cout << message;
     sendMessage(message);
 }

@@ -5,16 +5,21 @@
 #include <typeinfo>
 #include <string>
 
-class BaseEncoderExecutor {
+class BaseEncoderExecutor
+        {
 
 public:
+    BaseEncoderExecutor() = default;
+    ~BaseEncoderExecutor() = default;
     /*!
     * \brief Зашифровать сообщение
+     * \param message - сообщение
     * \return зашифрованное сообщение
     */
     virtual std::string encode(std::string message) const = 0;
     /*!
     * \brief Дешифровать сообщение
+     * * \param message - сообщение
      * \return дешифрованное сообщение
     */
     virtual std::string decode(std::string message) const = 0;

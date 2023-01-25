@@ -13,9 +13,9 @@ public:
     /*!
     * \brief Сравнивает полученное измерением с планом.
     * \param meterage - текущее измерение
-     * \return величина корректировки для достижения этого плана
+     * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    uint64_t compareMeterage(Phase meterage, DeviceWorkSchedule* workSchedule) const;
+    uint8_t compareMeterage(Phase& meterage, std::vector<Phase> &workSchedule) ;
 private:
     struct cmp {
         bool operator() (Phase a, Phase b) const
@@ -24,7 +24,7 @@ private:
         }
     };
 
-    std::set<Phase, cmp> receivedMeterage = {};
+    std::set<Phase, cmp> receivedMeterage;
     enum errorType
     {
         NoSchedule = 101,
@@ -35,17 +35,9 @@ private:
     /*!
     * \brief Находит нужную фазу в плане устройства для данной метки времени
     * \param Phase - текущая фаза
-     * \return nullptr, если такая не найдена в плане
+     * \return фазу с значением 101, если такая не найдена в плане
     */
-    Phase* getPhaseFromWorkSchedule(DeviceWorkSchedule* workSchedule, Phase phase) const
-    {
-        for (Phase ph : workSchedule->schedule)
-        {
-            if (ph.timeStamp == phase.timeStamp)
-                return &ph;
-        }
-        return nullptr;
-    };
+    static Phase getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, Phase& phase) ;
 };
 
 
