@@ -51,16 +51,10 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    std::vector<uint64_t> res = MessageSerializator::deserialize(message);
-
-    if (res[0] != MessageSerializator::Meterage)
-        std::cout << "Incorrect command";
-
-    uint8_t  value = res[1];
-    uint64_t timeStamp = res[2];
-    Phase meterage = {timeStamp, value};
+    MessageSerializator::MessageStruct result = MessageSerializator::deserialize(message);
+    Phase currentPhase = result.phase;
     // + Encoding
-    uint8_t valueToCorrect = commandCenter->compareMeterage(meterage, devicesWorkSchedule[deviceId]);
+    uint8_t valueToCorrect = commandCenter->compareMeterage(currentPhase, devicesWorkSchedule[deviceId]);
     if (valueToCorrect <= 100)
         sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Command, -1, -1, valueToCorrect));
     else sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Error, valueToCorrect));
@@ -74,6 +68,7 @@ void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
 {
+    commandCenter = new CommandCenter();
     addMessageHandler(conn);
     addDisconnectedHandler(conn);
 }

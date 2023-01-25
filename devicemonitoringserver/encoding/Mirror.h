@@ -5,6 +5,9 @@
 #include <string>
 #include "BaseEncoderExecutor.h"
 
+/*!
+ * \brief класс для шифрования и дешифрования сообщений методом зеркала
+ */
 class Mirror final : public BaseEncoderExecutor
         {
 public:

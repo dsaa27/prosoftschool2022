@@ -83,7 +83,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 void DeviceMock::onMessageReceived(const std::string& message)
 {
     std::cout<< message;
-    std::vector<uint64_t> res =  MessageSerializator::deserialize(message);
+    MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(message);
     /*switch (res[0]) {
         case serializator->Meterage:
             //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра

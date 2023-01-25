@@ -5,6 +5,9 @@
 #include <vector>
 #include "BaseEncoderExecutor.h"
 
+/*!
+ * \brief класс для шифрования и дешифрования сообщений методом шифра Цезаря со сдвигом 3.
+ */
 class ROT3 final : public BaseEncoderExecutor
         {
 public:

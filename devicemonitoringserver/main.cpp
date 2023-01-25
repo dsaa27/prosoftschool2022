@@ -24,9 +24,9 @@ int main()
         std::vector<Phase> phases;
         while (taskQueue.processTask())
             ;
-        for (uint64_t i = 0; i < mets.size(); i++)
+        for (uint64_t i = 1; i < mets.size() + 1; i++)
         {
-            phases.push_back({i, mets[i]});
+            phases.push_back({i, mets[i - 1]});
         }
          DeviceWorkSchedule const deviceWorkSchedule = {13, phases};
         monitoringServer->setDeviceWorkSchedule(deviceWorkSchedule); //сделать

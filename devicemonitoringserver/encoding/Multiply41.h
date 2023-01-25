@@ -4,6 +4,9 @@
 
 #include "BaseEncoderExecutor.h"
 
+/*!
+ * \brief класс для шифрования и дешифрования сообщений методом умножения на 41.
+ */
 class Multiply41 final : public BaseEncoderExecutor{
 public:
     Multiply41()=default;

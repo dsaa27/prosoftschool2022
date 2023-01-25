@@ -2,7 +2,6 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
-#include "serialization/MessageSerializator.h"
 #include "CommandCenter.h"
 
 #include <cstdint>
@@ -66,7 +65,7 @@ private:
 
 private:
     std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
-    CommandCenter *commandCenter = new CommandCenter();
+    CommandCenter *commandCenter;
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 
