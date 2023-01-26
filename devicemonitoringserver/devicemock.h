@@ -71,7 +71,7 @@ private:
 
 private:
     MessageEncoder *messageEncoder = new MessageEncoder();
-    std::vector<> messageList = {};
+    std::vector<uint64_t> receivedCommands = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;

@@ -60,7 +60,7 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 
     std::string newMessage;
     if (valueToCorrect <= 100)
-        newMessage = MessageSerializator::serialize(MessageSerializator::Command, -1, -1, valueToCorrect);
+        newMessage = MessageSerializator::serialize(MessageSerializator::Command, 0, 0, valueToCorrect);
     else newMessage = MessageSerializator::serialize(MessageSerializator::Error, valueToCorrect);
     std::string newEncodeMessage = messageEncoder->encode(newMessage);
 

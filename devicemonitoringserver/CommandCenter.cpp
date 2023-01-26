@@ -9,7 +9,7 @@ uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& wo
     if (meterageInWorkSchedule.value == 101)
         return errorType::NoTimestamp;
 
-    if (!receivedMeterage.empty() && receivedMeterage.rbegin()->timeStamp < phase.timeStamp)
+    if (!receivedMeterage.empty() && receivedMeterage.rbegin()->timeStamp > phase.timeStamp)
         return errorType::Obsolete;
 
     receivedMeterage.insert(phase);

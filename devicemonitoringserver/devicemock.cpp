@@ -86,10 +86,8 @@ void DeviceMock::onMessageReceived(const std::string& message)
     std::string decodeMessage = messageEncoder->decode(message);
     MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(message);
     if (res.errorCode > 100)
-        return;
-    messageList.push_back(res.type);
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
+        std::cout<< "error";
+    receivedCommands.push_back(res.type);
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -97,13 +95,13 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
 void DeviceMock::onConnected()
 {
-    messageList = {};
+    receivedCommands = {};
     // TODO, если нужно
 }
 
 void DeviceMock::onDisconnected()
 {
-    messageList.clear();
+    receivedCommands.clear();
 
 }
 

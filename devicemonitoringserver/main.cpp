@@ -20,7 +20,7 @@ int main()
 
     if(deviceMock->connectToServer(server->listenedId()))
     {
-        std::vector<uint8_t> mets = {32,1,1,1,1,2,3,33,4};
+        std::vector<uint8_t> mets = {31};
         std::vector<Phase> phases;
         while (taskQueue.processTask())
             ;
@@ -30,9 +30,9 @@ int main()
         }
         DeviceWorkSchedule const deviceWorkSchedule = {13, phases};
         monitoringServer->setDeviceWorkSchedule(deviceWorkSchedule);
-        deviceMock->setMeterages({32,1,1,1,1,2,3,33,4});
+        deviceMock->setMeterages({32, 1});
         deviceMock->startMeterageSending();
-        for (uint64_t i = 0; i < mets.size()*2; i++)
+        for (uint64_t i = 0; i < mets.size()*2 +4; i++)
             taskQueue.processTask();
     }
 

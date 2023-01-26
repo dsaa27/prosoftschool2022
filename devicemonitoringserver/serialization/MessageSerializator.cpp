@@ -13,11 +13,11 @@ std::string MessageSerializator::serialize(messageType messType, uint8_t errorCo
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            os << value << " ";
+            os << uint64_t(value) << " ";
             break;
         case messageType::Error:
             os << messageType::Error << " ";
-            os << errorCode;
+            os << uint64_t(errorCode);
             break;
         case messageType::Meterage:
             os << messageType::Meterage << " ";
@@ -32,24 +32,38 @@ std::string MessageSerializator::serialize(messageType messType, uint8_t errorCo
 }
 
 MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::string &message) {
-    std::istringstream os(message);
-    uint64_t type;
-    os >> type;
+    std::string input;
+    std::istringstream is(message);
+
+    is >> input;
+    uint64_t type = std::stoi(input);
+
+    uint8_t value;
+    uint64_t timeStamp;
+    uint64_t errorCode;
     MessageStruct result;
     switch(type)
     {
         case messageType::Command:
             result.type = messageType::Command;
-            os >> result.valueToCorrect;
+            is >> input;
+            value = std::stoi(input);
+            result.valueToCorrect = value;
             break;
         case messageType::Meterage:
             result.type = messageType::Meterage;
-            os >> result.phase.value;
-            os >> result.phase.timeStamp ;
+            is >> input;
+            value = std::stoi(input);
+            result.phase.value = value;
+            is >> input;
+            timeStamp = std::stoi(input);
+            result.phase.timeStamp = timeStamp;
             break;
         case messageType::Error:
             result.type = messageType::Error;
-            os >> result.errorCode;
+            is >> input;
+            errorCode = std::stoi(input);
+            result.errorCode = errorCode;
             break;
         default:
             break;
