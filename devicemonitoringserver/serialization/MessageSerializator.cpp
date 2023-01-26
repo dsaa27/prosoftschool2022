@@ -13,7 +13,7 @@ std::string MessageSerializator::serialize(messageType messType, uint8_t errorCo
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            os << uint64_t(value) << " ";
+            os << uint64_t(value);
             break;
         case messageType::Error:
             os << messageType::Error << " ";
@@ -36,7 +36,7 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
     std::istringstream is(message);
 
     is >> input;
-    uint64_t type = std::stoi(input);
+    uint64_t type = std::stoull(input);
 
     uint8_t value;
     uint64_t timeStamp;
@@ -47,22 +47,22 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
         case messageType::Command:
             result.type = messageType::Command;
             is >> input;
-            value = std::stoi(input);
+            value = std::stoull(input);
             result.valueToCorrect = value;
             break;
         case messageType::Meterage:
             result.type = messageType::Meterage;
             is >> input;
-            value = std::stoi(input);
+            value = std::stoull(input);
             result.phase.value = value;
             is >> input;
-            timeStamp = std::stoi(input);
+            timeStamp = std::stoull(input);
             result.phase.timeStamp = timeStamp;
             break;
         case messageType::Error:
             result.type = messageType::Error;
             is >> input;
-            errorCode = std::stoi(input);
+            errorCode = std::stoull(input);
             result.errorCode = errorCode;
             break;
         default:

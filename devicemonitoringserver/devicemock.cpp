@@ -76,17 +76,14 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-
-
-
 void DeviceMock::onMessageReceived(const std::string& message)
 {
     MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
-    std::cout<< message;
+    std::cout<< " " << message << "; ";
     std::string decodeMessage = messageEncoder->decode(message);
-    MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(message);
+    MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(decodeMessage);
     if (res.errorCode > 100)
-        std::cout<< "error";
+        std::cout<< "error; ";
     receivedCommands.push_back(res.type);
     sendNextMeterage(); // Отправляем следующее измерение
 }
@@ -95,14 +92,13 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
 void DeviceMock::onConnected()
 {
-    encoder->addDeviceEncoder(m_clientConnection->bindedId());
     receivedCommands = {};
 }
 
 void DeviceMock::onDisconnected()
 {
+    delete encoder->getDeviceEncoder(m_clientConnection->bindedId());
     receivedCommands.clear();
-
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
@@ -112,7 +108,7 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Mirror");
+    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("ROT3");
     sendNextMeterage();
 }
 
@@ -126,8 +122,7 @@ void DeviceMock::sendNextMeterage()
     ++m_timeStamp;
     std::string message = MessageSerializator::serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
     std::string encodeMessage = messageEncoder->encode(message);
-    std::cout << message << "  ";
-    std::cout << encodeMessage << "  ";
+    std::cout << message << "; ";
     sendMessage(encodeMessage);
 }
 

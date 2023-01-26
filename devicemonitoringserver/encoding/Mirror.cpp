@@ -7,24 +7,15 @@
 std::string Mirror::encode(std::string message) const
 {
     std::ostringstream os;
-    for (int i = 0 ; i < message.length(); i++)
+    std::istringstream is(message);
+    std::string input;
+    while (!is.eof())
     {
-        if (std::isspace(message[i])) {
-            os << message[i];
-            continue;
-        }
-        else
-        {
-            std::string strToReverse;
-            strToReverse += message[i];
-            while (i < message.length() - 1 && !std::isspace(message[i + 1]))
-            {
-                strToReverse += message[i + 1];
-                i++;
-            }
-            reverse(strToReverse.begin(), strToReverse.end());
-            os << strToReverse;
-        }
+        is >> input;
+        reverse(input.begin(), input.end());
+        os << input;
+        if (!is.eof())
+            os << ' ';
     }
     std::string res = os.str();
     return res;

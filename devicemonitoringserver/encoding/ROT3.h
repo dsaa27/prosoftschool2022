@@ -11,16 +11,12 @@
 class ROT3 final : public BaseEncoderExecutor
         {
 public:
-    ROT3();
-    ~ROT3();
+    ROT3() = default;
+    ~ROT3() = default;
     std::string encode(std::string message) const final;
 
     std::string decode(std::string message) const final;
     std::string getName() const final;
-private:
-    std::vector<char> alphabet;
-    std::vector<int> nums;
-
 };
 
 

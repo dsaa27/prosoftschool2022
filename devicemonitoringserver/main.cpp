@@ -31,12 +31,11 @@ int main()
         DeviceWorkSchedule const deviceWorkSchedule = {13, phases};
         monitoringServer->setDeviceWorkSchedule(deviceWorkSchedule);
         deviceMock->setMeterages({32, 1});
+
         deviceMock->startMeterageSending();
-        for (uint64_t i = 0; i < mets.size()*2 +4; i++)
+        for (uint64_t i = 0; i < mets.size()*2 +2; i++)
             taskQueue.processTask();
     }
-
-
     TestRunner tr;
     RUN_TEST(tr, taskQueueTest);
     RUN_TEST(tr, safeObjectPointerTest);

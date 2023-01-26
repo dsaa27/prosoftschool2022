@@ -1,57 +1,48 @@
 #include "ROT3.h"
-
-ROT3::ROT3()
-    {
-        for (char i = 'a'; i < 'z'; i++)
-        {
-            alphabet.push_back(i);
-        }
-
-        for (int i = 0; i < 100; i++)
-        {
-            nums.push_back(i);
-        }
-    }
-
-ROT3::~ROT3()
-{
-
-}
+#include <sstream>
+#include <iostream>
+#include <string>
+#include <algorithm>
 
 std::string ROT3::encode(std::string message) const
     {
-        std:: string result = "";
-        for (char i: message)
+        std::ostringstream os;
+        std::istringstream is(message);
+        std::string input;
+        while (!is.eof())
         {
-            if (isalpha(i))
-            {
-                result += i <= 'z' - 3 ? alphabet[i - 97 + 3] : alphabet[2 - 'z' + i];
-            }
-            else if (std::isdigit(i))
-            {
-                result += i <= 6 ? nums[i + 3] : nums[2 - 9 + i];
-            }
-            else result += i;
+            is >> input;
+            uint64_t number = std::stoull(input);
+            if (number > UINT64_MAX - 3)
+                number = UINT64_MAX - number + 2;
+            else
+                number += 3;
+            os << number;
+            if (!is.eof())
+                os << ' ';
         }
-        return  result;
+        std::string res = os.str();
+        return res;
     }
 
 std::string ROT3::decode(std::string message) const
     {
-        std:: string result = "";
-        for (char i: message)
+        std::ostringstream os;
+        std::istringstream is(message);
+        std::string input;
+        while (!is.eof())
         {
-            if (isalpha(i))
-            {
-                result += i >= 'a' + 3 ? alphabet[i - 3] : nums['z' - 97 + i - 2];
-            }
-            else if (std::isdigit(i))
-            {
-                result += i >= 3 ? nums[i - 3] : nums[10 + i - 2];
-            }
-            else result += i;
+            is >> input;
+            uint64_t number = std::stoull(input);
+            if (number < 3)
+                number = UINT64_MAX - 2 + number;
+            else number -= 3;
+            os << number;
+            if (!is.eof())
+                os << ' ';
         }
-        return  result;
+        std::string res = os.str();
+        return res;
     }
 
 std::string ROT3::getName() const {
