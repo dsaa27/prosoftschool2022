@@ -6,7 +6,6 @@
 MessageEncoder::MessageEncoder()
 {
     currentAlgorithm = nullptr;
-
     ROT3* rot3 = new ROT3();
     allAlgorithms.insert(std::make_pair(rot3->getName(), rot3));
     Mirror* mirror = new Mirror();

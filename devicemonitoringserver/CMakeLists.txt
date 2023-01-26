@@ -38,4 +38,4 @@ add_executable(devicemonitoringserver
         main.cpp
         test_runner.h
         tests.cpp
-        tests.h encoding/BaseEncoderExecutor.h serialization/MessageSerializator.cpp serialization/MessageSerializator.h CommandCenter.cpp CommandCenter.h encoding/MessageEncoder.cpp encoding/MessageEncoder.h encoding/ROT3.cpp encoding/ROT3.h encoding/Mirror.cpp encoding/Mirror.h encoding/Multiply41.cpp encoding/Multiply41.h)
+        tests.h encoding/BaseEncoderExecutor.h serialization/MessageSerializator.cpp serialization/MessageSerializator.h CommandCenter.cpp CommandCenter.h encoding/MessageEncoder.cpp encoding/MessageEncoder.h encoding/ROT3.cpp encoding/ROT3.h encoding/Mirror.cpp encoding/Mirror.h encoding/Multiply41.cpp encoding/Multiply41.h encoding/SingletonEncoder.cpp encoding/SingletonEncoder.h)

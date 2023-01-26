@@ -4,6 +4,7 @@
 #include "common.h"
 #include "CommandCenter.h"
 #include "encoding/MessageEncoder.h"
+#include "encoding/SingletonEncoder.h"
 #include <cstdint>
 #include <string>
 #include <map>
@@ -65,8 +66,8 @@ private:
 
 private:
     std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
+    SingletonEncoder* encoder = SingletonEncoder::getInstance();
     CommandCenter *commandCenter = new CommandCenter();
-    MessageEncoder *messageEncoder = new MessageEncoder();
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 

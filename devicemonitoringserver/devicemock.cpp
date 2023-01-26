@@ -74,7 +74,6 @@ bool DeviceMock::connectToServer(uint64_t serverId)
 void DeviceMock::sendMessage(const std::string& message) const
 {
     m_clientConnection->sendMessage(message);
-
 }
 
 
@@ -82,6 +81,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
+    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
     std::cout<< message;
     std::string decodeMessage = messageEncoder->decode(message);
     MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(message);
@@ -95,8 +95,8 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
 void DeviceMock::onConnected()
 {
+    encoder->addDeviceEncoder(m_clientConnection->bindedId());
     receivedCommands = {};
-    // TODO, если нужно
 }
 
 void DeviceMock::onDisconnected()
@@ -112,12 +112,13 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    messageEncoder->chooseAlgorithm("Mirror");
+    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Mirror");
     sendNextMeterage();
 }
 
 void DeviceMock::sendNextMeterage()
 {
+    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
     if (m_timeStamp >= m_meterages.size())
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
@@ -129,3 +130,4 @@ void DeviceMock::sendNextMeterage()
     std::cout << encodeMessage << "  ";
     sendMessage(encodeMessage);
 }
+

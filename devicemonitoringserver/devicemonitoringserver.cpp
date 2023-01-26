@@ -50,7 +50,9 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    messageEncoder->chooseAlgorithm("Mirror");
+    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(deviceId);
+    if (messageEncoder == nullptr)
+        return;
 
     std::string decodeMessage = messageEncoder->decode(message);
     MessageSerializator::MessageStruct result = MessageSerializator::deserialize(decodeMessage);

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "encoding/MessageEncoder.h"
+#include "encoding/SingletonEncoder.h"
 
 
 #include <string>
@@ -70,7 +71,7 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
-    MessageEncoder *messageEncoder = new MessageEncoder();
+    SingletonEncoder* encoder = SingletonEncoder::getInstance();
     std::vector<uint64_t> receivedCommands = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
