@@ -2,6 +2,7 @@
 #define DEVICE_H
 
 #include "common.h"
+#include "encoding/MessageEncoder.h"
 
 
 #include <string>
@@ -69,7 +70,8 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
-    std::vector<std::string> messageList = {};
+    MessageEncoder *messageEncoder = new MessageEncoder();
+    std::vector<> messageList = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;

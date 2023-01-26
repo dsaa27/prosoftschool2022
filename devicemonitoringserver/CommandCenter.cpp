@@ -1,22 +1,22 @@
 #include "CommandCenter.h"
 
 //TODO: ско ошибки управления параметром на каждом этапе
-uint8_t CommandCenter::compareMeterage(Phase& meterage, std::vector<Phase>& workSchedule) {
+uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& workSchedule) {
     if (workSchedule.empty())
         return errorType::NoSchedule;
 
-    Phase meterageInWorkSchedule = getPhaseFromWorkSchedule(workSchedule, meterage);
+    Phase meterageInWorkSchedule = getPhaseFromWorkSchedule(workSchedule, phase);
     if (meterageInWorkSchedule.value == 101)
         return errorType::NoTimestamp;
 
-    if (!receivedMeterage.empty() && receivedMeterage.rbegin()->timeStamp < meterage.timeStamp)
+    if (!receivedMeterage.empty() && receivedMeterage.rbegin()->timeStamp < phase.timeStamp)
         return errorType::Obsolete;
 
-    receivedMeterage.insert(meterage);
+    receivedMeterage.insert(phase);
 
-    if (meterageInWorkSchedule.value >= meterage.value)
-        return meterageInWorkSchedule.value - meterage.value;
-    else return meterage.value - meterageInWorkSchedule.value;
+    if (meterageInWorkSchedule.value >= phase.value)
+        return meterageInWorkSchedule.value - phase.value;
+    else return phase.value - meterageInWorkSchedule.value;
 }
 
 Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, Phase& phase) {

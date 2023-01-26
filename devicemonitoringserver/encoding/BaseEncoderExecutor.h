@@ -23,14 +23,12 @@ public:
      * \return дешифрованное сообщение
     */
     virtual std::string decode(std::string message) const = 0;
-    /*!
+
+    virtual /*!
     * \brief Получить имя метода шифрования
      * \return имя класса
     */
-    std::string getName() const
-    {
-        return typeid(this).name();
-    }
+    std::string getName() const = 0;
 };
 
 

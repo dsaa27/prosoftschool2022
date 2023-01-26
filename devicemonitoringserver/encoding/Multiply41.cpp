@@ -9,3 +9,7 @@ std::string Multiply41::decode(std::string message) const
 {
     return std::string();
 }
+
+std::string Multiply41::getName() const {
+    return "Multiply41";
+}

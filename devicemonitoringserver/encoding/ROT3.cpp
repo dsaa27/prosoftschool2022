@@ -54,6 +54,10 @@ std::string ROT3::decode(std::string message) const
         return  result;
     }
 
+std::string ROT3::getName() const {
+    return "ROT3";
+}
+
 
 
 

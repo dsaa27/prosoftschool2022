@@ -83,15 +83,11 @@ void DeviceMock::sendMessage(const std::string& message) const
 void DeviceMock::onMessageReceived(const std::string& message)
 {
     std::cout<< message;
+    std::string decodeMessage = messageEncoder->decode(message);
     MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(message);
-    /*switch (res[0]) {
-        case serializator->Meterage:
-            //сравнить значения - если не совпали то отправить сообщение команду корректировку параметра
-            break;
-        default: // сервер получает только сообщения meterage
-            break;
-    }*/
-
+    if (res.errorCode > 100)
+        return;
+    messageList.push_back(res.type);
     // TODO: Разобрать std::string, прочитать команду,
     // записать ее в список полученных комманд
     sendNextMeterage(); // Отправляем следующее измерение
@@ -118,6 +114,7 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
+    messageEncoder->chooseAlgorithm("Mirror");
     sendNextMeterage();
 }
 
@@ -129,8 +126,8 @@ void DeviceMock::sendNextMeterage()
     (void)meterage;
     ++m_timeStamp;
     std::string message = MessageSerializator::serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
-
-    // TODO: добавить шифрование
-    std::cout << message;
-    sendMessage(message);
+    std::string encodeMessage = messageEncoder->encode(message);
+    std::cout << message << "  ";
+    std::cout << encodeMessage << "  ";
+    sendMessage(encodeMessage);
 }

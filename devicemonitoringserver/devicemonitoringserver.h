@@ -3,7 +3,7 @@
 
 #include "common.h"
 #include "CommandCenter.h"
-
+#include "encoding/MessageEncoder.h"
 #include <cstdint>
 #include <string>
 #include <map>
@@ -65,7 +65,8 @@ private:
 
 private:
     std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
-    CommandCenter *commandCenter;
+    CommandCenter *commandCenter = new CommandCenter();
+    MessageEncoder *messageEncoder = new MessageEncoder();
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 

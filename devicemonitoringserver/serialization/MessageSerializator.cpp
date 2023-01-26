@@ -1,6 +1,6 @@
 #include "MessageSerializator.h"
 #include <iostream>
-#include <vector>
+
 
 
 MessageSerializator::MessageSerializator() = default;
@@ -21,7 +21,7 @@ std::string MessageSerializator::serialize(messageType messType, uint8_t errorCo
             break;
         case messageType::Meterage:
             os << messageType::Meterage << " ";
-            os << value << " ";
+            os << uint64_t(value) << " ";
             os << timeStamp;
             break;
         default:
@@ -40,26 +40,16 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
     {
         case messageType::Command:
             result.type = messageType::Command;
-            uint8_t valueToCorrect;
-            os >> valueToCorrect;
-            result.valueToCorrect = valueToCorrect;
+            os >> result.valueToCorrect;
             break;
         case messageType::Meterage:
             result.type = messageType::Meterage;
-            uint8_t value;
-            uint64_t timeStamp;
-
-            os >> value;
-            os >> timeStamp;
-
-            result.phase.value = value;
-            result.phase.timeStamp = timeStamp;
+            os >> result.phase.value;
+            os >> result.phase.timeStamp ;
             break;
         case messageType::Error:
             result.type = messageType::Error;
-            uint64_t errorCode;
-            os >> errorCode;
-            result.errorCode = errorCode;
+            os >> result.errorCode;
             break;
         default:
             break;

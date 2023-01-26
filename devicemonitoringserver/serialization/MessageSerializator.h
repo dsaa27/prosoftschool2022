@@ -8,6 +8,9 @@
 #include <vector>
 #include "deviceworkschedule.h"
 
+/*!
+ * \brief класс сериализации и десериализации сообщений
+ */
 class MessageSerializator {
 
 public:
@@ -20,8 +23,8 @@ public:
         Error = 2
     };
     /*!
-      * \brief результат десериализованного сообщения.
-      */
+    * \brief результат десериализованного сообщения.
+    */
     struct MessageStruct final
     {
         messageType type = messageType::Meterage; ///< Тип сообщения
@@ -30,19 +33,19 @@ public:
         uint8_t errorCode = 0; ///< Код ошибки, если возникла
     };
     /*!
-   * \brief сериализует сообщение
-   * \param messType - тип сообщения
-   * \param errorCode - тип ошибки
+    * \brief сериализует сообщение
+    * \param messType - тип сообщения
+    * \param errorCode - тип ошибки
 
-   * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
-   */
+    * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
+    */
     static std::string serialize(messageType messType, uint8_t errorCode = 0, uint64_t timeStamp = 0,
                                  uint8_t value = 0);
     /*!
-   * \brief десереализует сообщение
-   * \param message - сообщение
+    * \brief десереализует сообщение
+    * \param message - сообщение
     * \return десеарилизованное сообщение в виде вектора
-   */
+    */
     static MessageStruct deserialize(const std::string& message) ;
 };
 

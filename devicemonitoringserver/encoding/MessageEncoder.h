@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 #include "BaseEncoderExecutor.h"
-
+#include <vector>
 /*!
  * \brief класс для шифрования и дешифрования сериализованных сообщений
  * для последующей передачи через клиент-серверное соединение.
@@ -15,18 +15,19 @@ class MessageEncoder final
 public:
     MessageEncoder();
     ~MessageEncoder();
+    std::vector<std::string> getAllAlgorithms();
     /*!
     * \brief Зашифровать сообщение
     * * \param message - сообщение
     * \return зашифрованное сообщение
    */
-    std::string encode(std::string& message);
+    std::string encode(const std::string& message);
     /*!
    * \brief Дешифровать сообщение
     * * \param message - сообщение
     * \return дешифрованное сообщение
    */
-    std::string decode(std::string& message);
+    std::string decode(const std::string& message);
     /*!
    * \brief выбрать алгоритм шифрования
     * * \param algorithm - имя алгоритма

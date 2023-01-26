@@ -8,14 +8,21 @@
 
 class CommandCenter {
 public:
+    enum errorType
+    {
+        NoSchedule = 101,
+        NoTimestamp = 102,
+        Obsolete = 103
+    };
+
     CommandCenter();
     ~CommandCenter();
     /*!
     * \brief Сравнивает полученное измерением с планом.
-    * \param meterage - текущее измерение
+    * \param phase - текущая фаза
      * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    uint8_t compareMeterage(Phase& meterage, std::vector<Phase> &workSchedule) ;
+    uint8_t checkMeterageInPhase(Phase& phase, std::vector<Phase> &workSchedule) ;
 private:
     struct cmp {
         bool operator() (Phase a, Phase b) const
@@ -25,12 +32,6 @@ private:
     };
 
     std::set<Phase, cmp> receivedMeterage;
-    enum errorType
-    {
-        NoSchedule = 101,
-        NoTimestamp = 102,
-        Obsolete = 103
-    };
 
     /*!
     * \brief Находит нужную фазу в плане устройства для данной метки времени

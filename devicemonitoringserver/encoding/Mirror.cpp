@@ -1,34 +1,42 @@
+#include <sstream>
+#include <iostream>
+#include <string>
+#include <algorithm>
 #include "Mirror.h"
 
 std::string Mirror::encode(std::string message) const
 {
-    std:: string result = "";
+    std::ostringstream os;
     for (int i = 0 ; i < message.length(); i++)
     {
-        if (isalpha(message[i]) || std::isdigit(message[i]) && i < message.length()
-                                   && isalpha(message[i + 1]) || std::isdigit(message[i + 1]))
-        {
-            result.push_back(message[i + 1]);
-            result.push_back(message[i]);
+        if (std::isspace(message[i])) {
+            os << message[i];
+            continue;
         }
-        else result += message[i];
+        else
+        {
+            std::string strToReverse;
+            strToReverse += message[i];
+            while (i < message.length() - 1 && !std::isspace(message[i + 1]))
+            {
+                strToReverse += message[i + 1];
+                i++;
+            }
+            reverse(strToReverse.begin(), strToReverse.end());
+            os << strToReverse;
+        }
     }
-    return  result;
+    std::string res = os.str();
+    return res;
 }
 
 std::string Mirror::decode(std::string message) const
 {
-    std:: string result = "";
-    for (int i = 0 ; i < message.length(); i++)
-    {
-        if (isalpha(message[i]) || std::isdigit(message[i]) && i < message.length()
-                                   && isalpha(message[i + 1]) || std::isdigit(message[i + 1]))
-        {
-            result.push_back(message[i + 1]);
-            result.push_back(message[i]);
-        }
-        else result += message[i];
-    }
+    std:: string result = encode(message);
     return  result;
+}
+
+std::string Mirror::getName() const {
+    return "Mirror";
 }
 

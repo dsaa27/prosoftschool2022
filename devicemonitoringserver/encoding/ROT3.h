@@ -16,6 +16,7 @@ public:
     std::string encode(std::string message) const final;
 
     std::string decode(std::string message) const final;
+    std::string getName() const final;
 private:
     std::vector<char> alphabet;
     std::vector<int> nums;

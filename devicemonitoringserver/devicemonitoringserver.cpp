@@ -5,7 +5,6 @@
 #include <handlers/abstractnewconnectionhandler.h>
 #include <server/abstractconnection.h>
 #include <servermock/connectionservermock.h>
-#include <iostream>
 #include <vector>
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
@@ -51,13 +50,21 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    MessageSerializator::MessageStruct result = MessageSerializator::deserialize(message);
+    messageEncoder->chooseAlgorithm("Mirror");
+
+    std::string decodeMessage = messageEncoder->decode(message);
+    MessageSerializator::MessageStruct result = MessageSerializator::deserialize(decodeMessage);
+
     Phase currentPhase = result.phase;
-    // + Encoding
-    uint8_t valueToCorrect = commandCenter->compareMeterage(currentPhase, devicesWorkSchedule[deviceId]);
+    uint8_t valueToCorrect = commandCenter->checkMeterageInPhase(currentPhase, devicesWorkSchedule[deviceId]);
+
+    std::string newMessage;
     if (valueToCorrect <= 100)
-        sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Command, -1, -1, valueToCorrect));
-    else sendMessage(deviceId, MessageSerializator::serialize(MessageSerializator::Error, valueToCorrect));
+        newMessage = MessageSerializator::serialize(MessageSerializator::Command, -1, -1, valueToCorrect);
+    else newMessage = MessageSerializator::serialize(MessageSerializator::Error, valueToCorrect);
+    std::string newEncodeMessage = messageEncoder->encode(newMessage);
+
+    sendMessage(deviceId, newEncodeMessage);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
@@ -68,7 +75,6 @@ void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
 {
-    commandCenter = new CommandCenter();
     addMessageHandler(conn);
     addDisconnectedHandler(conn);
 }
