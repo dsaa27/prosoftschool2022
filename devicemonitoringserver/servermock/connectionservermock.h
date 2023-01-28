@@ -10,6 +10,7 @@
 class AbstractConnection;
 class ConnectionChannel;
 class ConnectionMock;
+class DeviceMonitoringServer;
 
 /*!
  * \brief Макет сервера для приема подключений.
@@ -53,6 +54,8 @@ private:
     uint64_t m_serverId = 0;
     std::unordered_map<uint64_t, ConnectionMock*> m_connections;
     AbstractNewConnectionHandler* m_newConnectionHandler = nullptr;
+
+friend DeviceMonitoringServer;
 };
 
 #endif // CONNECTIONSERVERMOCK_H

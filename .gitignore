@@ -1,2 +1,3 @@
 build-devicemonitoringserver*
+devicemonitoringserver/*.pro.user
 devicemonitoringserver/*.user
