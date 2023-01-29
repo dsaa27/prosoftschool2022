@@ -4,3 +4,6 @@ devicemonitoringserver/*.user
 
 devicemonitoringserver/encoder/rot3/*.o
 devicemonitoringserver/encoder/rot3/rot3_test
+
+devicemonitoringserver/encoder/mr/*.o
+devicemonitoringserver/encoder/mr/mr_test
