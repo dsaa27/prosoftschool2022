@@ -1,7 +1,9 @@
 #include "rot3.hxx"
 
+const std::string rot3::_name{"rot3"};
+
 std::string rot3::name(void) {
-    return "ROT3";
+    return _name;
 }
 
 char rot3::encode(const char c) {

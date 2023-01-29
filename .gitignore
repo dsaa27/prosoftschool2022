@@ -7,3 +7,6 @@ devicemonitoringserver/encoder/rot3/rot3_test
 
 devicemonitoringserver/encoder/mr/*.o
 devicemonitoringserver/encoder/mr/mr_test
+
+devicemonitoringserver/encoder/m41/*.o
+devicemonitoringserver/encoder/m41/m41_test

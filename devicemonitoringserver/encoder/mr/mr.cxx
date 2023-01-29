@@ -1,8 +1,10 @@
 #include "mr.hxx"
 #include <string>
 
+const std::string mr::_name{"mirror"};
+
 std::string mr::name(void) {
-    return "mirror";
+    return _name;
 }
 
 char mr::encode(const char c) {

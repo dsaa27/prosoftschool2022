@@ -4,8 +4,10 @@
 using namespace std;
 
 int main(void) {
+    cout << __FILE_NAME__ << endl;
     rot3 r;
 
+    cout << "Test #1" << endl;
     {
         const std::string plain_text{""};
         const std::string cipher_text{r.encode(plain_text)};
@@ -14,6 +16,7 @@ int main(void) {
         assert(plain_text == r.decode(cipher_text));
     }
 
+    cout << "Test #2" << endl;
     {
         const std::string plain_text{"Hello World!"};
         const std::string cipher_text{r.encode(plain_text)};
@@ -22,6 +25,7 @@ int main(void) {
         assert(plain_text == r.decode(cipher_text));
     }
 
+    cout << "Test #3" << endl;
     {
         const std::string plain_text{"I love you CXX(C++)."};
         const std::string cipher_text{r.encode(plain_text)};
