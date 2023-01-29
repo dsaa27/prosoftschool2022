@@ -64,7 +64,6 @@ double CommandCenter::getMSE(uint64_t deviceId) const {
     if (it == m_devices.end())
         return 0.0;
     else {
-        calculateMSE(deviceId);
         return it->second->m_MSE;
     }
 }
@@ -106,6 +105,7 @@ Message* CommandCenter::makeDecision(uint64_t deviceId, const Message* clientMet
             deviceExpTmstmp = clientCurrentTmstmp;
             ++deviceExpTmstmp;
             device->second->m_errors->push(deviation);
+            calculateMSE(deviceId);
             return newCommand;
         }
     }
