@@ -1,2 +1,4 @@
 build-devicemonitoringserver*
 devicemonitoringserver/*.user
+
+devicemonitoringserver/encoder/rot3/*.o
