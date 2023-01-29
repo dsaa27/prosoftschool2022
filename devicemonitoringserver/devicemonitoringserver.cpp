@@ -1,9 +1,10 @@
 #include "devicemonitoringserver.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <server/abstractconnection.h>
-#include <servermock/connectionservermock.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "handlers/abstractnewconnectionhandler.h"
+#include "server/abstractconnection.h"
+#include "servermock/connectionservermock.h"
+#include "servermock/connectionservermock.h"
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
