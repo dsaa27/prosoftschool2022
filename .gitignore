@@ -5,8 +5,8 @@ devicemonitoringserver/*.user
 devicemonitoringserver/encoder/rot3/*.o
 devicemonitoringserver/encoder/rot3/rot3_test
 
-devicemonitoringserver/encoder/mr/*.o
-devicemonitoringserver/encoder/mr/mr_test
+devicemonitoringserver/encoder/mirr/*.o
+devicemonitoringserver/encoder/mirr/mirr_test
 
-devicemonitoringserver/encoder/m41/*.o
-devicemonitoringserver/encoder/m41/m41_test
+devicemonitoringserver/encoder/mul41/*.o
+devicemonitoringserver/encoder/mul41/mul41_test

@@ -1,6 +1,6 @@
 #include "../base_encoder.hxx"
 
-class m41: public base_encoder {
+class mul41: public base_encoder {
     private:
         static const std::string _name;
 

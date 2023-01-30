@@ -1,4 +1,4 @@
-#include "m41.hxx"
+#include "mul41.hxx"
 #include <assert.h>
 #include <iostream>
 #include <string>
@@ -6,7 +6,7 @@ using namespace std;
 
 int main(void) {
     cout << __FILE_NAME__ << endl;
-    m41 m;
+    mul41 m;
 
     cout << "Test #1" << endl;
     {
@@ -56,7 +56,8 @@ int main(void) {
             0x23, '1', '6', '4',
             0x23, '1', '2', '3',
             0x31, '8', '2',
-            0x31, '4', '1'
+            0x31, '4', '1',
+            0
         };
 
         const std::string expected_cipher_text{_expected_cipher_text};

@@ -1,7 +1,7 @@
 #pragma once
 #include "../base_encoder.hxx"
 
-class mr : public base_encoder {
+class mirr : public base_encoder {
   private:
     static const std::string _name;
 

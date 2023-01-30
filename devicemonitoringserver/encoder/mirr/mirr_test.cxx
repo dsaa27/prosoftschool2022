@@ -1,4 +1,4 @@
-#include "mr.hxx"
+#include "mirr.hxx"
 #include <assert.h>
 #include <cstring>
 #include <iostream>
@@ -7,7 +7,7 @@ using namespace std;
 
 int main(void) {
     cout << __FILE_NAME__ << endl;
-    mr m;
+    mirr m;
 
     cout << "Test #1" << endl;
     {

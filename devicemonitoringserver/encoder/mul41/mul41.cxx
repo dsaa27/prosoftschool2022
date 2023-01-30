@@ -1,13 +1,13 @@
-#include "m41.hxx"
+#include "mul41.hxx"
 #include <string>
 
-const std::string m41::_name{"multiply41"};
+const std::string mul41::_name{"multiply41"};
 
-std::string m41::name(void) {
+std::string mul41::name(void) {
     return _name;
 }
 
-std::string m41::encode(const std::string &message) {
+std::string mul41::encode(const std::string &message) {
     std::string ret;
 
     for (const char c : message) {
@@ -34,7 +34,7 @@ std::string m41::encode(const std::string &message) {
     return ret;
 }
 
-std::string m41::decode(const std::string &message) {
+std::string mul41::decode(const std::string &message) {
     std::string ret;
     int i = 0;
 

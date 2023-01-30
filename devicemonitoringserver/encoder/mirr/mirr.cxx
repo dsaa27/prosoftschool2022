@@ -1,13 +1,13 @@
-#include "mr.hxx"
+#include "mirr.hxx"
 #include <string>
 
-const std::string mr::_name{"mirror"};
+const std::string mirr::_name{"mirror"};
 
-std::string mr::name(void) {
+std::string mirr::name(void) {
     return _name;
 }
 
-char mr::encode(const char c) {
+char mirr::encode(const char c) {
     if (100 <= c) {
         return c;
     }
@@ -18,11 +18,11 @@ char mr::encode(const char c) {
     return (low * 10 + high);
 }
 
-char mr::decode(const char c) {
+char mirr::decode(const char c) {
     return encode(c);
 }
 
-std::string mr::encode(const std::string& message) {
+std::string mirr::encode(const std::string& message) {
     std::string ret;
 
     for (const char c : message) {
@@ -32,6 +32,6 @@ std::string mr::encode(const std::string& message) {
     return ret;
 }
 
-std::string mr::decode(const std::string &message) {
-    return mr::encode(message);
+std::string mirr::decode(const std::string &message) {
+    return mirr::encode(message);
 }
