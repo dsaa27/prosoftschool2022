@@ -4,6 +4,7 @@
 #include "common.h"
 #include "encoding/MessageEncoder.h"
 #include "encoding/SingletonEncoder.h"
+#include "serialization/MessageSerializator.h"
 
 
 #include <string>
@@ -47,6 +48,8 @@ public:
      */
     void startMeterageSending();
 
+    std::vector<std::string> getResponses();
+
 private:
     /*!
      * \brief Отправить следующее измерение.
@@ -72,6 +75,8 @@ private:
 
 private:
     SingletonEncoder* encoder = SingletonEncoder::getInstance();
+    MessageSerializator* serializator = new MessageSerializator();
+    std::vector<std::string> responses = {};
     std::vector<uint64_t> receivedCommands = {};
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;

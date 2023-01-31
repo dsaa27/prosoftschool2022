@@ -1,19 +1,14 @@
 #include "MessageSerializator.h"
 #include <iostream>
 
-
-
-MessageSerializator::MessageSerializator() = default;
-MessageSerializator::~MessageSerializator() = default;
-
 std::string MessageSerializator::serialize(messageType messType, uint8_t errorCode,
-                               uint64_t timeStamp, uint8_t value) {
+                               uint64_t timeStamp, uint8_t value, int64_t valueToCorrect) {
     std::ostringstream os;
     switch (messType)
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            os << uint64_t(value);
+            os << int64_t(valueToCorrect);
             break;
         case messageType::Error:
             os << messageType::Error << " ";
@@ -39,6 +34,7 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
     uint64_t type = std::stoull(input);
 
     uint8_t value;
+    uint8_t valueToCorrect;
     uint64_t timeStamp;
     uint64_t errorCode;
     MessageStruct result;
@@ -47,13 +43,13 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
         case messageType::Command:
             result.type = messageType::Command;
             is >> input;
-            value = std::stoull(input);
-            result.valueToCorrect = value;
+            valueToCorrect = std::stoul(input);
+            result.valueToCorrect = valueToCorrect;
             break;
         case messageType::Meterage:
             result.type = messageType::Meterage;
             is >> input;
-            value = std::stoull(input);
+            value = std::stoul(input);
             result.phase.value = value;
             is >> input;
             timeStamp = std::stoull(input);

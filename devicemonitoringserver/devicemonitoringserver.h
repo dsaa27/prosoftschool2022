@@ -5,6 +5,7 @@
 #include "CommandCenter.h"
 #include "encoding/MessageEncoder.h"
 #include "encoding/SingletonEncoder.h"
+#include "serialization/MessageSerializator.h"
 #include <cstdint>
 #include <string>
 #include <map>
@@ -65,6 +66,7 @@ private:
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
+    MessageSerializator* serializator = new MessageSerializator();
     std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
     SingletonEncoder* encoder = SingletonEncoder::getInstance();
     CommandCenter *commandCenter = new CommandCenter();

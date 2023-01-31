@@ -14,8 +14,8 @@
 class MessageSerializator {
 
 public:
-    MessageSerializator();
-    ~MessageSerializator();
+    MessageSerializator() = default;
+    ~MessageSerializator() = default;
     enum messageType
     {
         Meterage = 0,
@@ -39,14 +39,14 @@ public:
 
     * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    static std::string serialize(messageType messType, uint8_t errorCode = 0, uint64_t timeStamp = 0,
+    std::string serialize(messageType messType, uint8_t errorCode = 0, uint64_t timeStamp = 0,
                                  uint8_t value = 0);
     /*!
     * \brief десереализует сообщение
     * \param message - сообщение
     * \return десеарилизованное сообщение в виде вектора
     */
-    static MessageStruct deserialize(const std::string& message) ;
+    MessageStruct deserialize(const std::string& message) ;
 };
 
 #endif //DEVICEMONITORINGSERVER_MESSAGESERIALIZATOR_H

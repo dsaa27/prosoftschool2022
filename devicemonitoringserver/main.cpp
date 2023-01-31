@@ -10,14 +10,13 @@
 
 int main()
 {
-    TaskQueue taskQueue;
+   /* TaskQueue taskQueue;
     AbstractClientConnection* client = new ClientConnectionMock(taskQueue);
     AbstractConnectionServer* server = new ConnectionServerMock(taskQueue);
     DeviceMonitoringServer *monitoringServer = new DeviceMonitoringServer(server);
     DeviceMock *deviceMock = new DeviceMock(client);
     deviceMock->bind(13);
     monitoringServer->listen(13);
-
     if(deviceMock->connectToServer(server->listenedId()))
     {
         std::vector<uint8_t> mets = {31};
@@ -35,7 +34,7 @@ int main()
         deviceMock->startMeterageSending();
         for (uint64_t i = 0; i < mets.size()*2 +2; i++)
             taskQueue.processTask();
-    }
+    }*/
     TestRunner tr;
     RUN_TEST(tr, taskQueueTest);
     RUN_TEST(tr, safeObjectPointerTest);
@@ -43,7 +42,7 @@ int main()
     RUN_TEST(tr, clientServerTest);
 
     // TODO: собственные тесты
-   // RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, monitoringServerTest1);
     return 0;
 }
 

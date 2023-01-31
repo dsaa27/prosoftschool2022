@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <set>
+#include <map>
 #include "deviceworkschedule.h"
 
 class CommandCenter {
@@ -24,6 +25,9 @@ public:
     */
     uint8_t checkMeterageInPhase(Phase& phase, std::vector<Phase> &workSchedule) ;
 private:
+    std::map<Phase, double> standardDeviationForPhase;
+    std::vector<uint8_t> differenceNeedAndActualValue;
+    void countStandardDeviationForPhase(Phase phase);
     struct cmp {
         bool operator() (Phase a, Phase b) const
         {

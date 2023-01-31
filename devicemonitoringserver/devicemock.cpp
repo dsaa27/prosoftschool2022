@@ -81,7 +81,8 @@ void DeviceMock::onMessageReceived(const std::string& message)
     MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
     std::cout<< " " << message << "; ";
     std::string decodeMessage = messageEncoder->decode(message);
-    MessageSerializator::MessageStruct res =  MessageSerializator::deserialize(decodeMessage);
+    MessageSerializator::MessageStruct res =  serializator->deserialize(decodeMessage);
+    responses.push_back(decodeMessage);
     if (res.errorCode > 100)
         std::cout<< "error; ";
     receivedCommands.push_back(res.type);
@@ -120,9 +121,13 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
-    std::string message = MessageSerializator::serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
+    std::string message = serializator->serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
     std::string encodeMessage = messageEncoder->encode(message);
     std::cout << message << "; ";
     sendMessage(encodeMessage);
+}
+
+std::vector<std::string> DeviceMock::getResponses() {
+    return responses;
 }
 

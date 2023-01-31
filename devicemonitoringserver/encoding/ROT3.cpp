@@ -13,7 +13,7 @@ std::string ROT3::encode(std::string message) const
         {
             is >> input;
             uint64_t number = std::stoull(input);
-            if (number > UINT64_MAX - 3)
+            if (number > INT64_MAX - 3)
                 number = UINT64_MAX - number + 2;
             else
                 number += 3;

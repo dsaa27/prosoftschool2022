@@ -1,12 +1,11 @@
 #include "CommandCenter.h"
 
-//TODO: ско ошибки управления параметром на каждом этапе
 uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& workSchedule) {
     if (workSchedule.empty())
         return errorType::NoSchedule;
 
-    Phase meterageInWorkSchedule = getPhaseFromWorkSchedule(workSchedule, phase);
-    if (meterageInWorkSchedule.value == 101)
+    Phase phaseFromWorkSchedule = getPhaseFromWorkSchedule(workSchedule, phase);
+    if (phaseFromWorkSchedule.value == 101)
         return errorType::NoTimestamp;
 
     if (!receivedMeterage.empty() && receivedMeterage.rbegin()->timeStamp > phase.timeStamp)
@@ -14,9 +13,13 @@ uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& wo
 
     receivedMeterage.insert(phase);
 
-    if (meterageInWorkSchedule.value >= phase.value)
-        return meterageInWorkSchedule.value - phase.value;
-    else return phase.value - meterageInWorkSchedule.value;
+    uint8_t diff = 0;
+    if (phaseFromWorkSchedule.value >= phase.value)
+        diff = phaseFromWorkSchedule.value - phase.value;
+    else diff = phase.value - phaseFromWorkSchedule.value;
+    differenceNeedAndActualValue.push_back(diff);
+    //countStandardDeviationForPhase(phase);
+    return diff;
 }
 
 Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, Phase& phase) {
@@ -27,6 +30,18 @@ Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, 
     }
     Phase err = {101, 101};
     return err;
+}
+
+void CommandCenter::countStandardDeviationForPhase(Phase phase) {
+    int64_t average = 0;
+    for (uint8_t v : differenceNeedAndActualValue)
+        average+= v;
+    average /= differenceNeedAndActualValue.size();
+    uint64_t sum = 0;
+   /* for (Phase phase : receivedMeterage)
+    {
+        sum += phase.value - average;
+    }*/
 }
 
 CommandCenter::CommandCenter()=default;
