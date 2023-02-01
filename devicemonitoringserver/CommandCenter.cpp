@@ -42,12 +42,14 @@ double CommandCenter::countStandardDeviationForPhase(Phase phase,  uint64_t devi
         sum += pow(abs((double)met - average), 2);
     sum /= count;
     double standDeviation = sqrt(sum);
-    devicesSD[deviceId].push_back(standDeviation);
+    devicesStandDeviation[deviceId].push_back(standDeviation);
     return standDeviation;
 }
 
 double CommandCenter::getStandardDeviation(uint64_t deviceId) {
-    return round(devicesSD[deviceId].back() * 100) / 100;
+    if (devicesStandDeviation.find(deviceId) == devicesStandDeviation.end())
+        return 0.0;
+    return round(devicesStandDeviation[deviceId].back() * 100) / 100;
 }
 
 void CommandCenter::addDevice(const DeviceWorkSchedule& workSchedule) {
@@ -58,10 +60,8 @@ void CommandCenter::addDevice(const DeviceWorkSchedule& workSchedule) {
 }
 
 void CommandCenter::deleteDevice(uint64_t deviceId) {
+    devicesStandDeviation.erase(deviceId);
     devicesWorkSchedule.erase(deviceId);
+    devicesDifferenceNeededAndActualValue.erase(deviceId);
 }
-
-
-CommandCenter::CommandCenter()=default;
-CommandCenter::~CommandCenter()=default;
 

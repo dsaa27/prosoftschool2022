@@ -5,9 +5,8 @@
 #include <servermock/clientconnectionmock.h>
 #include <servermock/connectionservermock.h>
 #include <servermock/taskqueue.h>
-#include "vector"
 
-void monitoringServerTest1()
+void monitoringServerStandardTest()
 {
     TaskQueue taskQueue;
     DeviceMock device(new ClientConnectionMock(taskQueue));
@@ -21,9 +20,7 @@ void monitoringServerTest1()
     std::vector<uint8_t> mets = {32, 2};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-    {
         phases.push_back({i, mets[i - 1]});
-    }
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2});
@@ -33,13 +30,12 @@ void monitoringServerTest1()
     device.startMeterageSending();
     for (int i = 0; i < mets.size()*2 + 2; i++)
         taskQueue.processTask();
+
     std::vector<std::string> responses = device.getResponses();
     if (responses.size() != expected.size())
         ASSERT(false);
     for (int i = 0; i < responses.size(); i++)
-    {
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
 }
 
 void monitoringServerTestErrorNoSchedule()
@@ -64,9 +60,7 @@ void monitoringServerTestErrorNoSchedule()
     if (responses.size() != expected.size())
     ASSERT(false);
     for (int i = 0; i < responses.size(); i++)
-    {
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
 }
 
 void monitoringServerTestErrorNoTimestamp()
@@ -83,9 +77,8 @@ void monitoringServerTestErrorNoTimestamp()
     std::vector<uint8_t> mets = {12};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-    {
         phases.push_back({i, mets[i - 1]});
-    }
+
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({13, 1});
@@ -95,13 +88,12 @@ void monitoringServerTestErrorNoTimestamp()
     device.startMeterageSending();
     for (int i = 0; i < mets.size()*2 + 2; i++)
         taskQueue.processTask();
+
     std::vector<std::string> responses = device.getResponses();
     if (responses.size() != expected.size())
     ASSERT(false);
     for (int i = 0; i < responses.size(); i++)
-    {
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
 }
 
 void monitoringServerTestNegativeValue()
@@ -118,9 +110,8 @@ void monitoringServerTestNegativeValue()
     std::vector<uint8_t> mets = {3};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-    {
         phases.push_back({i, mets[i - 1]});
-    }
+
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({5});
@@ -130,13 +121,12 @@ void monitoringServerTestNegativeValue()
     device.startMeterageSending();
     for (int i = 0; i < mets.size()*2 + 2; i++)
         taskQueue.processTask();
+
     std::vector<std::string> responses = device.getResponses();
     if (responses.size() != expected.size())
     ASSERT(false);
     for (int i = 0; i < responses.size(); i++)
-    {
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
 }
 
 void monitoringServerTestComplex()
@@ -153,9 +143,8 @@ void monitoringServerTestComplex()
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-    {
         phases.push_back({i, mets[i - 1]});
-    }
+
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2, 8, 3, 7, 7});
@@ -169,9 +158,7 @@ void monitoringServerTestComplex()
     if (responses.size() != expected.size())
         ASSERT(false);
     for (int i = 0; i < responses.size(); i++)
-    {
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
 }
 
 void monitoringServerTestStandardDeviation()
@@ -188,9 +175,7 @@ void monitoringServerTestStandardDeviation()
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-    {
         phases.push_back({i, mets[i - 1]});
-    }
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2, 8, 3, 7});
@@ -267,7 +252,6 @@ void monitoringServerTestTwoDevices()
         ASSERT_EQUAL(responsesDev1[i], expectedDev1[i]);
     for (int i = 0; i < responsesDev2.size(); i++)
         ASSERT_EQUAL(responsesDev2[i], expectedDev2[i]);
-
     double sd = server.getStandardDeviation(deviceId1);
     ASSERT_EQUAL(sd, 1.96);
     sd = server.getStandardDeviation(deviceId2);

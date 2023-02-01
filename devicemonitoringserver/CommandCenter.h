@@ -19,8 +19,8 @@ public:
         Obsolete = 103
     };
 
-    CommandCenter();
-    ~CommandCenter();
+    CommandCenter()=default;
+    ~CommandCenter()=default;
     /*!
     * \brief Сравнивает полученное измерением с планом.
     * \param phase - текущая фаза
@@ -56,9 +56,9 @@ private:
         }
     };
 
-    std::map<uint64_t , std::vector<Phase>> devicesWorkSchedule;
-    std::map<uint64_t , std::vector<double>> devicesSD;
-    std::map<uint64_t , std::vector<int64_t>> devicesDifferenceNeededAndActualValue;
+    std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
+    std::map<uint64_t, std::vector<double>> devicesStandDeviation;
+    std::map<uint64_t, std::vector<int64_t>> devicesDifferenceNeededAndActualValue;
     std::set<Phase, cmp> receivedMeterage;
 
     /*!

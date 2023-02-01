@@ -10,7 +10,7 @@ int main()
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
 
-    RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, monitoringServerStandardTest);
     RUN_TEST(tr, monitoringServerTestErrorNoSchedule);
     RUN_TEST(tr, monitoringServerTestErrorNoTimestamp);
     RUN_TEST(tr, monitoringServerTestComplex);
