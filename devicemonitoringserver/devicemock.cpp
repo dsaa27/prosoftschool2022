@@ -98,7 +98,7 @@ void DeviceMock::onConnected()
 
 void DeviceMock::onDisconnected()
 {
-    delete encoder->getDeviceEncoder(m_clientConnection->bindedId());
+    delete serializator;
     receivedCommands.clear();
 }
 

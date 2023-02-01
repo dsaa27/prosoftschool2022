@@ -16,7 +16,7 @@ int64_t CommandCenter::checkMeterageInPhase(Phase phase, uint64_t deviceId) {
     int64_t diff = 0;
 
     diff = (int64_t)phaseFromWorkSchedule.value - (int64_t)phase.value;
-    differenceNeededAndActualValue.push_back(diff);
+    devicesDifferenceNeededAndActualValue[deviceId].push_back(diff);
     double sd = countStandardDeviationForPhase(phaseFromWorkSchedule,  deviceId);
     return diff;
 }
@@ -33,17 +33,15 @@ Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, 
 
 double CommandCenter::countStandardDeviationForPhase(Phase phase,  uint64_t deviceId) {
     double average = 0;
-    for (int64_t v : differenceNeededAndActualValue)
+    double count = (double)devicesDifferenceNeededAndActualValue[deviceId].size();
+    for (int64_t v : devicesDifferenceNeededAndActualValue[deviceId])
         average += (double)v;
-    average /= (double)differenceNeededAndActualValue.size();
+    average /= count;
     double sum = 0;
-    for (int64_t met : differenceNeededAndActualValue)
-    {
+    for (int64_t met : devicesDifferenceNeededAndActualValue[deviceId])
         sum += pow(abs((double)met - average), 2);
-    }
-    sum /= (double)differenceNeededAndActualValue.size();
+    sum /= count;
     double standDeviation = sqrt(sum);
-
     devicesSD[deviceId].push_back(standDeviation);
     return standDeviation;
 }

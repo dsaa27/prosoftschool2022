@@ -4,7 +4,9 @@
 
 #include <typeinfo>
 #include <string>
-
+/*!
+ * Базовый абстрактный класс для шифрования и дешифрования
+ */
 class BaseEncoderExecutor
         {
 

@@ -6,10 +6,10 @@
  * \brief Тест сервера.
  */
 void monitoringServerTest1();
-void monitoringServerTestErrorObsolete();
 void monitoringServerTestErrorNoSchedule();
 void monitoringServerTestErrorNoTimestamp();
 void monitoringServerTestComplex();
 void monitoringServerTestNegativeValue();
 void monitoringServerTestStandardDeviation();
+void monitoringServerTestTwoDevices();
 #endif // TESTS_H

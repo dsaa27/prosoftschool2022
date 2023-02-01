@@ -58,7 +58,7 @@ private:
 
     std::map<uint64_t , std::vector<Phase>> devicesWorkSchedule;
     std::map<uint64_t , std::vector<double>> devicesSD;
-    std::vector<int64_t> differenceNeededAndActualValue;
+    std::map<uint64_t , std::vector<int64_t>> devicesDifferenceNeededAndActualValue;
     std::set<Phase, cmp> receivedMeterage;
 
     /*!

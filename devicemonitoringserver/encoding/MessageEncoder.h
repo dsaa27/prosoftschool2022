@@ -7,7 +7,7 @@
 #include "BaseEncoderExecutor.h"
 #include <vector>
 /*!
- * \brief класс для шифрования и дешифрования сериализованных сообщений
+ * Класс для шифрования и дешифрования сериализованных сообщений
  * для последующей передачи через клиент-серверное соединение.
  */
 class MessageEncoder final
@@ -36,7 +36,7 @@ public:
     bool chooseAlgorithm(std::string algorithm);
     /*!
    * \brief добавить алгоритм шифрования
-    * * \param algorithm - невладеющий указатель на алгоритм
+    * * \param algorithm - владеющий указатель на алгоритм
     * \return false - если не удалось
    */
     bool addAlgorithm(BaseEncoderExecutor* algorithm);

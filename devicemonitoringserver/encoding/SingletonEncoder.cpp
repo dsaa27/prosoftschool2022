@@ -15,7 +15,8 @@ void SingletonEncoder::addDeviceEncoder(uint64_t deviceId) {
 }
 
 void SingletonEncoder::deleteDevice(uint64_t deviceId) {
-    devicesEncoder.erase(deviceId);
+    if (devicesEncoder.find(deviceId) != devicesEncoder.end())
+        devicesEncoder.erase(deviceId);
     if (devicesEncoder.empty())
         delete p_instance;
 }
