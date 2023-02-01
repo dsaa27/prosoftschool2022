@@ -12,11 +12,8 @@ std::string ROT3::encode(std::string message) const
         while (!is.eof())
         {
             is >> input;
-            uint64_t number = std::stoull(input);
-            if (number > INT64_MAX - 3)
-                number = UINT64_MAX - number + 2;
-            else
-                number += 3;
+            int64_t number = std::stoll(input);
+            number += 3;
             os << number;
             if (!is.eof())
                 os << ' ';
@@ -33,10 +30,8 @@ std::string ROT3::decode(std::string message) const
         while (!is.eof())
         {
             is >> input;
-            uint64_t number = std::stoull(input);
-            if (number < 3)
-                number = UINT64_MAX - 2 + number;
-            else number -= 3;
+            int64_t number = std::stoll(input);
+            number -= 3;
             os << number;
             if (!is.eof())
                 os << ' ';

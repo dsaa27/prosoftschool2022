@@ -1,10 +1,10 @@
 #include "CommandCenter.h"
-
-uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& workSchedule) {
-    if (workSchedule.empty())
+#include "math.h"
+int64_t CommandCenter::checkMeterageInPhase(Phase phase, uint64_t deviceId) {
+    if (devicesWorkSchedule[deviceId].empty())
         return errorType::NoSchedule;
 
-    Phase phaseFromWorkSchedule = getPhaseFromWorkSchedule(workSchedule, phase);
+    Phase phaseFromWorkSchedule = getPhaseFromWorkSchedule(devicesWorkSchedule[deviceId], phase);
     if (phaseFromWorkSchedule.value == 101)
         return errorType::NoTimestamp;
 
@@ -13,12 +13,11 @@ uint8_t CommandCenter::checkMeterageInPhase(Phase& phase, std::vector<Phase>& wo
 
     receivedMeterage.insert(phase);
 
-    uint8_t diff = 0;
-    if (phaseFromWorkSchedule.value >= phase.value)
-        diff = phaseFromWorkSchedule.value - phase.value;
-    else diff = phase.value - phaseFromWorkSchedule.value;
-    differenceNeedAndActualValue.push_back(diff);
-    //countStandardDeviationForPhase(phase);
+    int64_t diff = 0;
+
+    diff = (int64_t)phaseFromWorkSchedule.value - (int64_t)phase.value;
+    differenceNeededAndActualValue.push_back(diff);
+    double sd = countStandardDeviationForPhase(phaseFromWorkSchedule,  deviceId);
     return diff;
 }
 
@@ -32,17 +31,38 @@ Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, 
     return err;
 }
 
-void CommandCenter::countStandardDeviationForPhase(Phase phase) {
-    int64_t average = 0;
-    for (uint8_t v : differenceNeedAndActualValue)
-        average+= v;
-    average /= differenceNeedAndActualValue.size();
-    uint64_t sum = 0;
-   /* for (Phase phase : receivedMeterage)
+double CommandCenter::countStandardDeviationForPhase(Phase phase,  uint64_t deviceId) {
+    double average = 0;
+    for (int64_t v : differenceNeededAndActualValue)
+        average += (double)v;
+    average /= (double)differenceNeededAndActualValue.size();
+    double sum = 0;
+    for (int64_t met : differenceNeededAndActualValue)
     {
-        sum += phase.value - average;
-    }*/
+        sum += pow(abs((double)met - average), 2);
+    }
+    sum /= (double)differenceNeededAndActualValue.size();
+    double standDeviation = sqrt(sum);
+
+    devicesSD[deviceId].push_back(standDeviation);
+    return standDeviation;
 }
+
+double CommandCenter::getStandardDeviation(uint64_t deviceId) {
+    return round(devicesSD[deviceId].back() * 100) / 100;
+}
+
+void CommandCenter::addDevice(const DeviceWorkSchedule& workSchedule) {
+    if (devicesWorkSchedule.find(workSchedule.deviceId) == devicesWorkSchedule.end())
+    {
+        devicesWorkSchedule.insert(std::make_pair(workSchedule.deviceId, workSchedule.schedule));
+    }
+}
+
+void CommandCenter::deleteDevice(uint64_t deviceId) {
+    devicesWorkSchedule.erase(deviceId);
+}
+
 
 CommandCenter::CommandCenter()=default;
 CommandCenter::~CommandCenter()=default;

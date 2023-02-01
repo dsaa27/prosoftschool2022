@@ -14,7 +14,11 @@ MessageEncoder::MessageEncoder()
     allAlgorithms.insert(std::make_pair(multiply41->getName(), multiply41));
 }
 
-MessageEncoder::~MessageEncoder()=default;
+MessageEncoder::~MessageEncoder()
+{
+    for (std::pair<std::string, BaseEncoderExecutor*> pair : allAlgorithms)
+        delete pair.second;
+}
 
 bool MessageEncoder::addAlgorithm(BaseEncoderExecutor *algorithm)
 {

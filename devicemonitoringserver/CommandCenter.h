@@ -7,6 +7,9 @@
 #include <map>
 #include "deviceworkschedule.h"
 
+/*!
+   * Класс командного центра - отвечает за сверение пришедших измерений с планом и подсчитыает СКО ошибки выполнения плана.
+   */
 class CommandCenter {
 public:
     enum errorType
@@ -23,11 +26,29 @@ public:
     * \param phase - текущая фаза
      * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    uint8_t checkMeterageInPhase(Phase& phase, std::vector<Phase> &workSchedule) ;
+    int64_t checkMeterageInPhase(Phase phase, uint64_t deviceId);
+
+    /*!
+    * \brief возвращает СКО ошибки выполения плана для последней отправленной фазы
+     * \return ско ошибки
+    */
+    double getStandardDeviation(uint64_t deviceId);
+
+    /*!
+    * \brief добавляет устройство и его план
+    */
+    void addDevice(const DeviceWorkSchedule& workSchedule);
+
+    /*!
+    * \brief удаляет устройство из списков
+    */
+    void deleteDevice(uint64_t deviceId);
 private:
-    std::map<Phase, double> standardDeviationForPhase;
-    std::vector<uint8_t> differenceNeedAndActualValue;
-    void countStandardDeviationForPhase(Phase phase);
+    /*!
+  * \brief считает ско ошибки для текущей фазы
+     * \return ско ошибки
+  */
+    double countStandardDeviationForPhase(Phase phase, uint64_t deviceId);
     struct cmp {
         bool operator() (Phase a, Phase b) const
         {
@@ -35,6 +56,9 @@ private:
         }
     };
 
+    std::map<uint64_t , std::vector<Phase>> devicesWorkSchedule;
+    std::map<uint64_t , std::vector<double>> devicesSD;
+    std::vector<int64_t> differenceNeededAndActualValue;
     std::set<Phase, cmp> receivedMeterage;
 
     /*!

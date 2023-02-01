@@ -28,7 +28,7 @@ public:
     struct MessageStruct final
     {
         messageType type = messageType::Meterage; ///< Тип сообщения
-        uint8_t valueToCorrect = 0; ///< Значение, на которое нужно скорректировать параметр
+        int64_t valueToCorrect = 0; ///< Значение, на которое нужно скорректировать параметр
         Phase phase = {0, 0}; ///< Текущий этап
         uint8_t errorCode = 0; ///< Код ошибки, если возникла
     };
@@ -40,7 +40,7 @@ public:
     * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
     std::string serialize(messageType messType, uint8_t errorCode = 0, uint64_t timeStamp = 0,
-                                 uint8_t value = 0);
+                                 uint8_t value = 0, int64_t valueToCorrect=0);
     /*!
     * \brief десереализует сообщение
     * \param message - сообщение

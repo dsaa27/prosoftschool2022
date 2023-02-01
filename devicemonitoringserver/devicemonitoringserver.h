@@ -37,6 +37,11 @@ public:
      */
     bool listen(uint64_t serverId);
 
+    /*!
+ * \brief возвращает СКО ошибки выполения плана для текущей фазы
+ */
+    double getStandardDeviation(uint64_t deviceId);
+
 private:
     /*!
      * \brief Отправить сообщение устройству.
@@ -61,13 +66,14 @@ private:
      */
     void onDisconnected(uint64_t clientId);
 
+
+
 private:
     void addMessageHandler(AbstractConnection* conn);
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
     MessageSerializator* serializator = new MessageSerializator();
-    std::map<uint64_t, std::vector<Phase>> devicesWorkSchedule;
     SingletonEncoder* encoder = SingletonEncoder::getInstance();
     CommandCenter *commandCenter = new CommandCenter();
     AbstractConnectionServer* m_connectionServer = nullptr;

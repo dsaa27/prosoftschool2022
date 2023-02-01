@@ -34,7 +34,7 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
     uint64_t type = std::stoull(input);
 
     uint8_t value;
-    uint8_t valueToCorrect;
+    int64_t valueToCorrect;
     uint64_t timeStamp;
     uint64_t errorCode;
     MessageStruct result;
@@ -43,7 +43,7 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
         case messageType::Command:
             result.type = messageType::Command;
             is >> input;
-            valueToCorrect = std::stoul(input);
+            valueToCorrect = std::stoll(input);
             result.valueToCorrect = valueToCorrect;
             break;
         case messageType::Meterage:

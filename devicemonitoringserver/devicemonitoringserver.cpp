@@ -28,12 +28,14 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
 {
+    delete commandCenter;
+    delete serializator;
     delete m_connectionServer;
 }
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& deviceWorkSchedule)
 {
-    devicesWorkSchedule.insert(std::make_pair(deviceWorkSchedule.deviceId, deviceWorkSchedule.schedule));
+    commandCenter->addDevice(deviceWorkSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -58,11 +60,11 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
     MessageSerializator::MessageStruct result = serializator->deserialize(decodeMessage);
 
     Phase currentPhase = result.phase;
-    uint8_t valueToCorrect = commandCenter->checkMeterageInPhase(currentPhase, devicesWorkSchedule[deviceId]);
+    int64_t valueToCorrect = commandCenter->checkMeterageInPhase(currentPhase, deviceId);
 
     std::string newMessage;
     if (valueToCorrect <= 100)
-        newMessage = serializator->serialize(serializator->Command, 0, 0, valueToCorrect);
+        newMessage = serializator->serialize(serializator->Command, 0, 0, 0, valueToCorrect);
     else newMessage = serializator->serialize(serializator->Error, valueToCorrect);
     std::string newEncodeMessage = messageEncoder->encode(newMessage);
 
@@ -71,8 +73,8 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    devicesWorkSchedule.erase(clientId);
-    // TODO, если нужен
+    encoder->deleteDevice(clientId);
+    commandCenter->deleteDevice(clientId);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -121,4 +123,8 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     };
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
+}
+
+double DeviceMonitoringServer::getStandardDeviation(uint64_t deviceId) {
+    return commandCenter->getStandardDeviation(deviceId);
 }

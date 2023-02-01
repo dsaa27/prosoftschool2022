@@ -14,3 +14,14 @@ void SingletonEncoder::addDeviceEncoder(uint64_t deviceId) {
     devicesEncoder.insert(std::make_pair(deviceId, messageEncoder));
 }
 
+void SingletonEncoder::deleteDevice(uint64_t deviceId) {
+    devicesEncoder.erase(deviceId);
+    if (devicesEncoder.empty())
+        delete p_instance;
+}
+
+SingletonEncoder::~SingletonEncoder() {
+    for (std::pair<uint64_t, MessageEncoder*> pair : devicesEncoder)
+        delete pair.second;
+}
+
