@@ -3,11 +3,11 @@
 
 const std::string mul41::_name{"multiply41"};
 
-std::string mul41::name(void) {
+std::string mul41::name(void) const {
     return _name;
 }
 
-std::string mul41::encode(const std::string &message) {
+std::string mul41::encode(const std::string& message) const {
     std::string ret;
 
     for (const char c : message) {
@@ -34,7 +34,7 @@ std::string mul41::encode(const std::string &message) {
     return ret;
 }
 
-std::string mul41::decode(const std::string &message) {
+std::string mul41::decode(const std::string& message) const {
     std::string ret;
     int i = 0;
 

@@ -10,3 +10,6 @@ devicemonitoringserver/encoder/mirr/mirr_test
 
 devicemonitoringserver/encoder/mul41/*.o
 devicemonitoringserver/encoder/mul41/mul41_test
+
+devicemonitoringserver/encoder/*.o
+devicemonitoringserver/encoder/message_encoder_test
