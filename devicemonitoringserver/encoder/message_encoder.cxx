@@ -1,7 +1,8 @@
 #include "message_encoder.hxx"
 #include "base_encoder.hxx"
 
-message_encoder::message_encoder(base_encoder* encoder) {
+message_encoder::message_encoder(base_encoder* encoder)
+    : main_encoder{nullptr} {
     register_encoder(encoder);
     choose_encoder(encoder->name());
 }

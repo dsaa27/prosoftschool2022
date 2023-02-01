@@ -1,8 +1,19 @@
 CXX := /usr/bin/clang++
 
-message_encoder_test: message_encoder_test.o message_encoder.o rot3.o mul41.o mirr.o
-	$(CXX) message_encoder_test.o message_encoder.o rot3.o mul41.o mirr.o -o message_encoder_test
+message_encoder_test:\
+	message_encoder_test.o\
+	message_encoder.o\
+	rot3.o\
+	mul41.o\
+	mirr.o
 
+	$(CXX)\
+		message_encoder_test.o\
+		message_encoder.o\
+		rot3.o\
+		mul41.o\
+		mirr.o\
+		-o message_encoder_test
 
 message_encoder_test.o: message_encoder_test.cxx
 	$(CXX) -c message_encoder_test.cxx -o message_encoder_test.o

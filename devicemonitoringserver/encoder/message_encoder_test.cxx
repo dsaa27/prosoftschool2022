@@ -5,10 +5,13 @@
 #include "rot3/rot3.hxx"
 #include <assert.h>
 #include <vector>
+#include <iostream>
 using namespace std;
 
 int main(void) {
+    cout << __FILE_NAME__ << endl;
 
+    cout << "Test #1" << endl;
     {
         base_encoder* encoder{new rot3()};
         message_encoder message_encoder{encoder};
@@ -22,6 +25,7 @@ int main(void) {
         assert(plain_text_in == plain_text_out);
     }
 
+    cout << "Test #2" << endl;
     {
         vector<base_encoder*> encoders{new rot3(), new mul41(), new mirr()};
         message_encoder message_encoder{};
