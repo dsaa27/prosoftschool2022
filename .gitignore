@@ -1,15 +1,5 @@
 build-devicemonitoringserver*
 devicemonitoringserver/*.user
 
-
-devicemonitoringserver/encoder/rot3/*.o
-devicemonitoringserver/encoder/rot3/rot3_test
-
-devicemonitoringserver/encoder/mirr/*.o
-devicemonitoringserver/encoder/mirr/mirr_test
-
-devicemonitoringserver/encoder/mul41/*.o
-devicemonitoringserver/encoder/mul41/mul41_test
-
-devicemonitoringserver/encoder/*.o
-devicemonitoringserver/encoder/message_encoder_test
+*.o
+*_test
