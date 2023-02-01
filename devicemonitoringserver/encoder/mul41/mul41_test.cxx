@@ -33,7 +33,7 @@ int main(void) {
     cout << "Test #2" << endl;
     {
         const char _plain_text[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                                 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+                                 9, 8, 7, 6, 5, 4, 3, 2, 1, '\0'};
 
         const string plain_text{_plain_text};
 
@@ -57,7 +57,7 @@ int main(void) {
             0x23, '1', '2', '3',
             0x31, '8', '2',
             0x31, '4', '1',
-            0
+            '\0'
         };
 
         const std::string expected_cipher_text{_expected_cipher_text};
