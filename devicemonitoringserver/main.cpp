@@ -14,6 +14,10 @@
 #include <multiply41.h>
 #include <messageencoder.h>
 
+
+#include <commandcenter.h>
+#include <devicemonitoringserver.h>
+
 using namespace std;
 int main()
 {
@@ -76,32 +80,48 @@ int main()
 
    //BaseEncoderExecutor *p_U1 = reinterpret_cast <BaseEncoderExecutor*> (p_multiply);
 
-//   MessageEncoder Encode;
+   //MessageEncoder Encode;
 
-//   Multiply41 multiply;
+   //Multiply41 multiply;
 
-//   RO3 ro3;
+   //RO3 ro3;
 
-//   Mirror mirror;
+   //Mirror mirror;
 
-//   BaseEncoderExecutor *p_U1 = reinterpret_cast <BaseEncoderExecutor*> (&multiply);
+   //BaseEncoderExecutor *p_U1 = reinterpret_cast <BaseEncoderExecutor*> (&multiply);
 
-//   //Encode.choice_algoithm(P1);
+   //string P1 = "Multiply41";
 
-//   Encode.registration_algorithm(p_U1);
+   //Encode.choice_algoithm(P1);
 
-//   string M1 = Encode.encode(Write1);
+   //Encode.registration_algorithm(p_U1);
 
-//   //cout << "M = " << M1 << endl;
+   //string M1 = Encode.encode(Write1);
 
-//   string N1 = Encode.decode(M1);
+   //cout << "M = " << M1 << endl;
 
-//   //cout << "N = " << N1 << endl;
+   //string N1 = Encode.decode(M1);
 
-//   cout << "M = " << M1 << " " << "N = " << N1 << endl;
+   //cout << "N = " << N1 << endl;
+
+   //cout << "M = " << M1 << " " << "N = " << N1 << endl;
 
 
     // TODO: собственные тесты
+
+
+
+    CommandCenter commandcenter;
+
+    //DeviceMonitoringServer devicemonitoringserver;
+
+    string MessageToCommandCenter = "TestMessage";
+
+    string MessageFromCommandCenter = "";
+
+    //1 вариант: devicemonitoringserver.SendMessageToCommandCenter(commandcenter, MessageToCommandCenter, MessageFromCommandCenter);
+
+    //commandcenter.GetCommandMessage(MessageToCommandCenter, MessageFromCommandCenter);
 
     return 0;
 }
