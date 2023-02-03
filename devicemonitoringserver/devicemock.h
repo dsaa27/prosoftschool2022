@@ -2,6 +2,7 @@
 #define DEVICE_H
 
 #include "common.h"
+//#include "clientservercomponents/messageserializer.h"
 
 #include <string>
 #include <vector>
@@ -71,6 +72,7 @@ private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
+    //MessageSerializer m_messageSerializer;
 };
 
 #endif // DEVICE_H

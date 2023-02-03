@@ -12,5 +12,6 @@ int main()
 
     // TODO: собственные тесты
     RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, messageSerializerTest);
     return 0;
 }
