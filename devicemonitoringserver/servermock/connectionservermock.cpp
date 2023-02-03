@@ -1,6 +1,6 @@
 #include "connectionservermock.h"
 #include "connectionmock.h"
-#include <handlers/abstractnewconnectionhandler.h>
+#include "../handlers/abstractnewconnectionhandler.h"
 
 #include <cassert>
 #include <unordered_map>

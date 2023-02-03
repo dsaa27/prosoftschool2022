@@ -1,7 +1,7 @@
 #include "connectionchannel.h"
 #include "taskqueue.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
+#include "../handlers/abstractaction.h"
+#include "../handlers/abstractmessagehandler.h"
 
 #include <cassert>
 

@@ -2,8 +2,8 @@
 #define CONNECTIONMOCK_H
 
 #include "../common.h"
-#include <handlers/abstractaction.h>
-#include <server/abstractconnection.h>
+#include "../handlers/abstractaction.h"
+#include "../server/abstractconnection.h"
 
 class ConnectionChannel;
 class ConnectionServerMock;

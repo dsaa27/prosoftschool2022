@@ -1,7 +1,7 @@
 #include "connectionmock.h"
 #include "connectionchannel.h"
 #include "connectionservermock.h"
-#include <handlers/abstractmessagehandler.h>
+#include "../handlers/abstractmessagehandler.h"
 
 ConnectionMock::ConnectionMock(ConnectionServerMock* server) :
     m_disconnectedHandler(server, this)

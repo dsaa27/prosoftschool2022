@@ -2,9 +2,13 @@
 #include "devicemock.h"
 #include "devicemonitoringserver.h"
 #include "test_runner.h"
-#include <servermock/clientconnectionmock.h>
-#include <servermock/connectionservermock.h>
-#include <servermock/taskqueue.h>
+#include "servermock/clientconnectionmock.h"
+#include "servermock/connectionservermock.h"
+#include "servermock/taskqueue.h"
+
+//#include "clientservercomponents/messageserializer.h"
+#include "unit_tests_functions/unittestfunctions.h"
+
 
 void monitoringServerTest1()
 {
