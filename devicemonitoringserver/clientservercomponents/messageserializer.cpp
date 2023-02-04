@@ -48,12 +48,15 @@ void MessageSerializer::checkInvalidDeserializeMessageArgument(const std::string
           messageSplitBySpace.push_back(currentWord);
         }
 
+        if (messageSplitBySpace.size() < 2)
+            throw std::invalid_argument("");
+
         int messageTypeInt = std::stoi(messageSplitBySpace[0]);
         MessageType messageType = static_cast<MessageType>(messageTypeInt);
 
         if (messageType == MessageType::command) {
             double correction = std::stod(messageSplitBySpace[1]);
-            if (    !((correction >= 0) && (correction <= 1))
+            if (    !((correction >= -1) && (correction <= 1))
                     ||
                     (messageSplitBySpace.size() > 2)) {
                 flagInvalidArgument = true;
@@ -66,6 +69,8 @@ void MessageSerializer::checkInvalidDeserializeMessageArgument(const std::string
                 flagInvalidArgument = true;
             }
         } else if (messageType == MessageType::meterage) {
+            if(messageSplitBySpace.size() < 3)
+                throw std::invalid_argument("");
             std::stoull(messageSplitBySpace[1]);
             int measureValue = std::stoi(messageSplitBySpace[2]);
             if (    !((measureValue >= 0) && (measureValue <= 100))

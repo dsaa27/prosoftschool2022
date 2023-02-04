@@ -44,6 +44,8 @@ void messageSerializerTest()
     testCommandMessageSerialization(1.0 / 3, "2 0.333333");
     testCommandMessageSerialization(1.0 / 99, "2 0.010101");
     testCommandMessageSerialization(1.0 / 77, "2 0.012987");
+    testCommandMessageSerialization(1.0 / -37, "2 -0.027027");
+    testCommandMessageSerialization(1.0 / -17, "2 -0.0588235");
 
     testErrorMessageSerialization(ErrorType::noSchedule, "3 1");
     testErrorMessageSerialization(ErrorType::noTimestamp, "3 2");
@@ -77,7 +79,7 @@ void messageSerializerTest()
     testCheckInvalidDeserializeMessageArgument("1 -1 4", "");
     testCheckInvalidDeserializeMessageArgument("1 24321", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("2 0.12411", "");
-    testCheckInvalidDeserializeMessageArgument("2 342", "Deserializer has invalid argument");
+    testCheckInvalidDeserializeMessageArgument("2 -0.12", "");
     testCheckInvalidDeserializeMessageArgument("2 -124", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("3 1", "");
     testCheckInvalidDeserializeMessageArgument("3 2", "");
