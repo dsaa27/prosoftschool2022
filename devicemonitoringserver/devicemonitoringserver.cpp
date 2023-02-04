@@ -29,9 +29,11 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& Schedule)
 {
-    // TODO
+    //TO DO
+    DeviceWorkSchedule Schedule1 = Schedule;
+    m_commandcenter->SetSchedule(m_this_deviceId, Schedule1);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,9 +48,28 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    //TO DO
+    std::string Message = message;
+
+    m_this_deviceId = deviceId;
+
+    Message = m_encoder->decode(Message);
+
+    std::string Messagefromserver = Message;
+    std::string Messagetoserver = "";
+
+    m_commandcenter->GetMessage(deviceId, Messagefromserver, Messagetoserver);
+
+    sendMessage(deviceId, Messagetoserver);
+}
+
+void DeviceMonitoringServer::setEncodingAlgoritm(BaseEncoderExecutor *EncodeAlgoritm)
+{
+    std::cout << 2 << std::endl;
+    m_encoder->registration_algorithm(EncodeAlgoritm);
+    std::cout << 3 << std::endl;
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
