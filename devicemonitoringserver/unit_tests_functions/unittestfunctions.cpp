@@ -68,4 +68,15 @@ void testErrorMessageDeserialization(const std::string& messageAsString, Enumera
     ASSERT_EQUAL(static_cast<int>(deserializedErrorMessage->errorType), static_cast<int>(errorType));
 }
 
+void testCheckInvalidDeserializeMessageArgument(const std::string &messageAsString, const std::string &exceptionMessage)
+{
+    try {
+        MessageSerializer messageSerializer;
+        messageSerializer.checkInvalidDeserializeMessageArgument(messageAsString);
+        ASSERT(exceptionMessage == "");
+    } catch (std::exception const& ex) {
+        ASSERT_EQUAL(ex.what(), exceptionMessage);
+    }
+}
+
 

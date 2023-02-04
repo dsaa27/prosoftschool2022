@@ -10,12 +10,18 @@
 
 class MessageSerializer
 {
+    friend void testCheckInvalidDeserializeMessageArgument(
+            const std::string &messageAsString,
+            const std::string &exceptionMessage);
 public:
     MessageSerializer() = default;
 
-    std::string serializeMessage (const AbstractMessage& other);
+    std::string serializeMessage (const AbstractMessage &other);
 
-    AbstractMessage* deserializeMessage (const std::string& messageAsString);
+    AbstractMessage* deserializeMessage (const std::string &messageAsString);
+
+private:
+    void checkInvalidDeserializeMessageArgument(const std::string &messageAsString);
 
 };
 
