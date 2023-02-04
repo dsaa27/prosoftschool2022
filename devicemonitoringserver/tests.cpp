@@ -69,6 +69,7 @@ void messageSerializerTest()
     testCheckInvalidDeserializeMessageArgument("1241 2 3", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("1241 2 3", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("", "Deserializer has invalid argument");
+    testCheckInvalidDeserializeMessageArgument("1  5  8", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("0 92 034 35", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("1 92 34 35", "Deserializer has invalid argument");
     testCheckInvalidDeserializeMessageArgument("1", "Deserializer has invalid argument");

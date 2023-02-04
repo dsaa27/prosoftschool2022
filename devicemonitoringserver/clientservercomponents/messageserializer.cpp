@@ -1,5 +1,7 @@
 #include "messageserializer.h"
 
+#include <vector>
+
 std::string MessageSerializer::serializeMessage (const AbstractMessage& other)
 {
     std::string stringAsMessage = other.convert2string();
@@ -38,53 +40,42 @@ void MessageSerializer::checkInvalidDeserializeMessageArgument(const std::string
         using namespace Enumerations;
         bool flagInvalidArgument = false;
 
-        //stirng had to be at least 3 chars
-        if (messageAsString.length() == 0)
-            flagInvalidArgument = true;
-
-        std::string beforeFirstSpace = messageAsString.substr(0, messageAsString.find(" "));
-        std::string afterFirstSpace = "";
-
-        //if ther is no " "
-        if(messageAsString.length() == beforeFirstSpace.length()) {
-            flagInvalidArgument = true;
-        } else {
-            afterFirstSpace = messageAsString.substr(messageAsString.find(" ") + 1);
+        //split message by spaces
+        std::istringstream istream(messageAsString);
+        std::vector <std::string> messageSplitBySpace;
+        std::string currentWord;
+        while ( getline( istream, currentWord, ' ' ) ) {
+          messageSplitBySpace.push_back(currentWord);
         }
 
-        int messageTypeInt = std::stoi(beforeFirstSpace);
+        int messageTypeInt = std::stoi(messageSplitBySpace[0]);
         MessageType messageType = static_cast<MessageType>(messageTypeInt);
 
         if (messageType == MessageType::command) {
-            double correction = std::stod(afterFirstSpace);
-            if (!((correction >= 0) && (correction <= 1)))
-                flagInvalidArgument = true;
-        } else if (messageType == MessageType::error) {
-            int errorTypeInt = std::stoi(afterFirstSpace);
-            if (!((errorTypeInt >= 1) && (errorTypeInt <= 3)))
-                flagInvalidArgument = true;
-        } else if (messageType == MessageType::meterage) {
-            std::string afterSecondSpace = "";
-
-            //if there is no second " "
-            if(afterFirstSpace.find(" ") == std::string::npos)
-            {
-                flagInvalidArgument = true;
-            } else {
-                afterSecondSpace = afterFirstSpace.substr(afterFirstSpace.find(" ") + 1);
-            }
-
-            std::stoull(afterFirstSpace.substr(0, afterFirstSpace.find(" ")));
-            int measureValue = std::stoi(afterSecondSpace);
-            if (!((measureValue >= 0) && (measureValue <= 100))
+            double correction = std::stod(messageSplitBySpace[1]);
+            if (    !((correction >= 0) && (correction <= 1))
                     ||
-                (afterSecondSpace.find(" ") != std::string::npos)) {
+                    (messageSplitBySpace.size() > 2)) {
+                flagInvalidArgument = true;
+            }
+        } else if (messageType == MessageType::error) {
+            int errorTypeInt = std::stoi(messageSplitBySpace[1]);
+            if (  !((errorTypeInt >= 1) && (errorTypeInt <= 3))
+                  ||
+                  (messageSplitBySpace.size() > 2)) {
+                flagInvalidArgument = true;
+            }
+        } else if (messageType == MessageType::meterage) {
+            std::stoull(messageSplitBySpace[1]);
+            int measureValue = std::stoi(messageSplitBySpace[2]);
+            if (    !((measureValue >= 0) && (measureValue <= 100))
+                    ||
+                    (messageSplitBySpace.size() > 3)) {
                 flagInvalidArgument = true;
             }
         } else {
             flagInvalidArgument = true;
         }
-
 
         if(flagInvalidArgument)
             throw std::invalid_argument("");
