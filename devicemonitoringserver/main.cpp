@@ -30,7 +30,7 @@ int main()
 
         //Проверка работы MessageSerializer
     string Type1 = {"Meterage"}, Type2;
-    uint8_t Meterage1 = 50;
+    uint8_t Meterage1 = 82;
     uint8_t Meterage2;
     uint64_t Time1 = 5, Time2;
     double Command = -7.5;
@@ -47,13 +47,13 @@ int main()
 //    cout << Write2 << endl;
 //    cout << Write3 << endl;
 
-/*
-    cout << Message.GetTypeMessage(Write1) << endl;
-    cout << Message.GetMeterage(Write1) << endl;
-    cout << Message.GetTimeStamp(Write1) << endl;
-    cout << Message.GetTypeError(Write3) << endl;
-    cout << Message.GetCommand(Write2) << endl;
-*/
+
+//    cout << Message.GetTypeMessage(Write1) << endl;
+//    cout << Message.GetMeterage(Write1) << endl;
+//    cout << Message.GetTimeStamp(Write1) << endl;
+//    cout << Message.GetTypeError(Write3) << endl;
+//    cout << Message.GetCommand(Write2) << endl;
+
 
 
 
@@ -122,6 +122,55 @@ int main()
     //1 вариант: devicemonitoringserver.SendMessageToCommandCenter(commandcenter, MessageToCommandCenter, MessageFromCommandCenter);
 
     //commandcenter.GetCommandMessage(MessageToCommandCenter, MessageFromCommandCenter);
+
+
+    map <int, int> mp;
+
+    mp[1] = 4;
+    mp[2] = 3;
+
+    map <int, int>::iterator it = mp.begin();
+
+    it++;
+
+/*    for (int i=0; it != mp.end(); it++, i++){
+        if(it -> first == 1) cout << "already use" << endl;
+        else
+            cout << it->first << " " << it ->second << endl;
+
+    }
+*/
+
+    //it->second = 5;
+
+//    int g = it->second;
+
+//    cout << g << endl;
+
+//    g = 10;
+
+//    it->second = g;
+
+//    cout << it->second << endl;
+
+
+
+//    cout << it->first << " " << it ->second << endl;
+
+//    it = mp.find(3);
+
+//        cout << it->first << " " << it ->second << endl;
+
+
+//    uint8_t met = 5;
+//    double com = -3;
+
+
+//    double u_meterages = static_cast <double> (met);
+//    u_meterages = u_meterages + com;
+
+//    cout << u_meterages << endl;
+
 
     return 0;
 }
