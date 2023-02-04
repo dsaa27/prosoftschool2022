@@ -82,10 +82,32 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
     // TODO: Разобрать std::string, прочитать команду,
     // записать ее в список полученных комманд
+
+    std::string BufferMessage = message;
+
+    std::string Message = m_encoder->decode(BufferMessage);
+    std::string TypeOfMessage = m_serial->GetTypeMessage(Message);
+
+    if (TypeOfMessage == "Error")
+    {
+        std::cout << "This is Error: " << m_serial->GetTypeError(Message);
+    }
+
+    if (TypeOfMessage == "Command")
+    {
+        m_CommandFromServer.push_back(m_serial->GetCommand(Message));
+
+        double u_buffermeterages = static_cast <double> (m_meterages.back());
+
+        u_buffermeterages = u_buffermeterages + m_CommandFromServer.back();
+
+        m_meterages.back() = static_cast <uint8_t> (u_buffermeterages);
+    }
+
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -132,7 +154,8 @@ void DeviceMock::sendNextMeterage()
 
 }
 
-std::string DeviceMock::setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm)
+void DeviceMock::setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm)
 {
     m_encoder->registration_algorithm(EncodeAlgoritm);
+    std::cout << 1 << std::endl;
 }
