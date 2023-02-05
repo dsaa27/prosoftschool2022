@@ -1,9 +1,9 @@
 #ifndef MESSAGEENCODER_H
 #define MESSAGEENCODER_H
-#define toInt(x) x-'0'
-#define maxKeySize 10
 #include <string>
 #include <vector>
+#include <unordered_map>
+constexpr uint8_t maxKeySize = 10;
 
 class MessageEncoder;
 
@@ -12,12 +12,15 @@ public:
     BaseEncoderExecutor(const std::string& name): m_name(name) {};
     virtual ~BaseEncoderExecutor() = default;
 
-    virtual void encode(std::string& output, const std::string& input) = 0;
-    virtual void decode(std::string& output, const std::string& input) = 0;
+    virtual std::string encode(const std::string& input) = 0;
+    virtual std::string decode(const std::string& input) = 0;
 
     std::string name() const {
         return m_name;
     };
+
+protected:
+    int toInt(const char& charToInt);
 
 private:
     std::string m_name;
@@ -27,16 +30,16 @@ class EncoderROT3 final: public BaseEncoderExecutor {
 public:
     EncoderROT3(): BaseEncoderExecutor("ROT3") {};
 
-    void encode(std::string& output, const std::string& input);
-    void decode(std::string& output, const std::string& input);
+    std::string encode(const std::string& input);
+    std::string decode(const std::string& input);
 };
 
 class EncoderMirror final: public BaseEncoderExecutor {
 public:
     EncoderMirror(): BaseEncoderExecutor("Mirror") {};
 
-    void encode(std::string& output, const std::string& input);
-    void decode(std::string& output, const std::string& input);
+    std::string encode(const std::string& input);
+    std::string decode(const std::string& input);
 };
 
 
@@ -44,45 +47,39 @@ class EncoderMultiply41 final: public BaseEncoderExecutor {
 public:
     EncoderMultiply41(): BaseEncoderExecutor("Multiply41") {};
 
-    void encode(std::string& output, const std::string& input);
-    void decode(std::string& output, const std::string& input);
+    std::string encode(const std::string& input);
+    std::string decode(const std::string& input);
 };
 
 class EncoderCustom final: public BaseEncoderExecutor {
 public:
-    EncoderCustom(): BaseEncoderExecutor("Custom") {};
+    EncoderCustom(const std::string& name): BaseEncoderExecutor(name) {};
 
-    void encode (std::string& output, const std::string& input);
-    void decode(std::string& output, const std::string& input);
+    std::string encode (const std::string& input);
+    std::string decode(const std::string& input);
     void setkey(const std::string& inputkey);
 
 private:
     std::vector<char> key{'X', 'O', 'R'};
 };
 
-enum Methods{
-    ROT3,
-    Mirror,
-    Multiply41,
-    Custom
-};
-
 class MessageEncoder {
-private:
-    BaseEncoderExecutor *m_encoderexecutor = nullptr;
 
 public:
-    ~MessageEncoder() {
-        if (m_encoderexecutor) delete m_encoderexecutor;
-    };
+    ~MessageEncoder();
 
-
-    void proceedEncoding(std::string& output, const std::string& input);
-    void proceedDecoding(std::string& output, const std::string& input);
-    void selectMethod(Methods m_method);
-    void deselect();
-    void registerСustom(const std::string& inputkey);
+    std::string proceedEncoding(const std::string& input);
+    std::string proceedDecoding(const std::string& input);
+    void selectMethod(const std::string& name);
+    void registerСustom(const std::string& name, const std::string& key);
     std::string getName() const;
+
+private:
+    void deselect();
+
+private:
+    BaseEncoderExecutor *m_encoderexecutor = nullptr;
+    std::unordered_map<std::string, BaseEncoderExecutor*> m_encoderExecutors;
 
 };
 

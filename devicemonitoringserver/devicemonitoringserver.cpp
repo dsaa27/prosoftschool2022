@@ -81,30 +81,22 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
         std::vector<std::string>* messagesFromNewClient = new std::vector<std::string>;
         m_messagesFromClients.insert(std::pair<uint64_t, std::vector<std::string>&>(deviceId, *messagesFromNewClient));
     }
-    if (m_encoder->getName() == "No name") {
-        const auto& it = m_messagesFromClients.find(deviceId);
-        it->second.push_back(message);
-        return;
-    }
-    std::string deencodedSerializedMsg;
-    m_encoder->proceedDecoding(deencodedSerializedMsg, message);
+
+    std::string deencodedSerializedMsg = m_encoder->proceedDecoding(message);
     const auto* messageFromClient = m_serializator->deserialize(deencodedSerializedMsg);
     if (dynamic_cast<const Meterage*>(messageFromClient)) {
         const auto* newCommand = m_commandcenter->makeDecision(deviceId, messageFromClient);
-        std::string encodedSerializedMsg;
-        m_encoder->proceedEncoding(encodedSerializedMsg, m_serializator->serialize(newCommand));
+        std::string encodedSerializedMsg = m_encoder->proceedEncoding(m_serializator->serialize(newCommand));
         sendMessage(deviceId, encodedSerializedMsg);
-
-        delete &m_serializator->serialize(newCommand);
     }
     const auto& it = m_messagesFromClients.find(deviceId);
     if (dynamic_cast<const Info*>(messageFromClient)) {
         it->second.push_back(static_cast<const Info*>(messageFromClient)->m_message);
     }
-    if (!dynamic_cast<const Meterage*>(messageFromClient) &&
-            !dynamic_cast<const Info*>(messageFromClient)) {
-        it->second.push_back(deencodedSerializedMsg);
+    if (messageFromClient == nullptr) {
+        it->second.push_back(message);
     }
+
     delete messageFromClient;
 }
 
@@ -112,7 +104,8 @@ double DeviceMonitoringServer::getMSE(uint64_t deviceId) {
     auto* conn = m_connectionServer->connection(deviceId);
     if (conn)
         return m_commandcenter->getMSE(deviceId);
-    else return 0.0;
+    else
+        return 0.0;
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t deviceId)
@@ -120,12 +113,9 @@ void DeviceMonitoringServer::onDisconnected(uint64_t deviceId)
     std::ostringstream buffer;
     buffer << "Server ID " << m_connectionServer->listenedId() << " disconnected";
     Info info{buffer.str()};
-    std::string serializedInfo;
-    std::string encodedSerializedInfo;
-    m_encoder->proceedEncoding(encodedSerializedInfo, m_serializator->serialize(&info));
+    std::string serializedInfo = m_serializator->serialize(&info);
+    std::string encodedSerializedInfo = m_encoder->proceedEncoding(serializedInfo);
     sendMessage(deviceId, encodedSerializedInfo);
-
-    delete &m_serializator->serialize(&info);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -176,19 +166,15 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
 }
 
-void DeviceMonitoringServer::selectEncodingMethod(Methods method) {
-    m_encoder->selectMethod(method);
+void DeviceMonitoringServer::setEncodingMethod(const std::string& name) {
+    m_encoder->selectMethod(name);
 }
 
-void DeviceMonitoringServer::deselectEncodingMethod() {
-    m_encoder->deselect();
+void DeviceMonitoringServer::registerСustomEncodingMethod(const std::string& name, const std::string& key) {
+    m_encoder->registerСustom(name, key);
 }
 
-void DeviceMonitoringServer::registerСustomEncodingMethod(const std::string& inputkey) {
-    m_encoder->registerСustom(inputkey);
-}
-
-std::string DeviceMonitoringServer::getEncodingMethodName() {
+std::string DeviceMonitoringServer::getEncodingMethodName() const {
     return m_encoder->getName();
 }
 

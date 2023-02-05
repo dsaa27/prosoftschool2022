@@ -36,7 +36,8 @@ CommandCenter::~CommandCenter() {
 }
 
 void CommandCenter::setSchedule(const DeviceWorkSchedule& workSchedule) {
-    if (!workSchedule.deviceId) return;
+    if (!workSchedule.deviceId)
+        return;
     const auto& it = m_devices.find(workSchedule.deviceId);
     if (it == m_devices.end()) {
         auto *m_device = new Device;
@@ -59,7 +60,8 @@ void CommandCenter::calculateMSE(uint64_t deviceId) const {
 };
 
 double CommandCenter::getMSE(uint64_t deviceId) const {
-    if (!deviceId) return 0.0;
+    if (!deviceId)
+        return 0.0;
     const auto& it = m_devices.find(deviceId);
     if (it == m_devices.end())
         return 0.0;

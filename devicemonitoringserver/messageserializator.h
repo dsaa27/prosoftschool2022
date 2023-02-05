@@ -3,8 +3,9 @@
 
 #include "message.h"
 
-struct MessageSerializator {
-    std::string& serialize(const Message* incoming);
+class MessageSerializator {
+public:
+    std::string serialize(const Message* incoming);
     Message* deserialize(const std::string& incoming);
 };
 

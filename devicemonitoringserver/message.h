@@ -11,15 +11,15 @@ struct Message {
         Error,
         Info
     } const m_type;
-
+protected:
     Message(Message::Type type): m_type{type} {};
-    virtual ~Message() = 0;
+public:
+    virtual ~Message() = default;
 };
-inline Message::~Message() {}
 
 
 struct Meterage: public Message {
-    Meterage(const uint8_t& value, const uint64_t& timestamp): Message(Message::Type::Meterage),
+    Meterage(const uint8_t value, const uint64_t timestamp): Message(Message::Type::Meterage),
         m_value(value), m_timestamp(timestamp) {};
     Meterage(): Message(Message::Type::Meterage) {};
 
@@ -29,7 +29,7 @@ struct Meterage: public Message {
 
 
 struct Command: public Message {
-    Command(const uint8_t& value, const bool& up): Message(Message::Type::Command),
+    Command(const uint8_t value, const bool up): Message(Message::Type::Command),
         m_value(value), m_up(up) {};
     Command(): Message(Message::Type::Command) {};
 
@@ -45,7 +45,7 @@ struct Error: public Message {
         Obsolete,
         ErrorMessage = 100
     } m_errType;
-    Error(const Error::Type& errType): Message(Message::Type::Error), m_errType(errType) {};
+    Error(const Error::Type errType): Message(Message::Type::Error), m_errType(errType) {};
     Error(): Message(Message::Type::Error), m_errType(Error::Type::ErrorMessage) {};
 };
 
@@ -53,7 +53,7 @@ struct Info: public Message {
     Info(const std::string& message): Message(Message::Type::Info), m_message(message) {};
     Info(): Message(Message::Type::Info) {};
 
-    std::string m_message{""};
+    std::string m_message;
 };
 
 #endif // MESSAGE_H

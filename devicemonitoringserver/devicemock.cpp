@@ -85,8 +85,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
-    std::string deencodedSerializedMsg;
-    m_encoder->proceedDecoding(deencodedSerializedMsg, message);
+    std::string deencodedSerializedMsg = m_encoder->proceedDecoding(message);
     const auto* commandFromServer = m_serializator->deserialize(deencodedSerializedMsg);
     std::ostringstream toCommandsList;
     if (dynamic_cast<const Command*>(commandFromServer)) {
@@ -115,30 +114,22 @@ void DeviceMock::onMessageReceived(const std::string& message)
     if (dynamic_cast<const Info*>(commandFromServer)) {
         m_messagesFromServer.push_back(static_cast<const Info*>(commandFromServer)->m_message);
     }
-    if (!dynamic_cast<const Command*>(commandFromServer) &&
-            !dynamic_cast<const Error*>(commandFromServer) &&
-            !dynamic_cast<const Info*>(commandFromServer)) {
-        m_messagesFromServer.push_back(deencodedSerializedMsg);
+    if (commandFromServer == nullptr) {
+        m_messagesFromServer.push_back(message);
     }
-
     sendNextMeterage();
+
 	delete commandFromServer;
 }
 
 void DeviceMock::onConnected()
 {
-    if (m_encoder->getName() == "No name")
-        return;
     std::ostringstream buffer;
     buffer << "Device ID " << m_clientConnection->bindedId() << " connected";
     Info info{buffer.str()};
-    std::string serializedInfo;
-    serializedInfo= m_serializator->serialize(&info);
-    std::string encodedSerializedInfo;
-    m_encoder->proceedEncoding(encodedSerializedInfo, m_serializator->serialize(&info));
+    std::string serializedInfo = m_serializator->serialize(&info);
+    std::string encodedSerializedInfo = m_encoder->proceedEncoding(serializedInfo);
     sendMessage(encodedSerializedInfo);
-
-    delete &m_serializator->serialize(&info);
 }
 
 void DeviceMock::onDisconnected()
@@ -146,12 +137,9 @@ void DeviceMock::onDisconnected()
     std::ostringstream buffer;
     buffer << "Device ID " << m_clientConnection->bindedId() << " disconnected";
     Info info{buffer.str()};
-    std::string serializedInfo;
-    std::string encodedSerializedInfo;
-    m_encoder->proceedEncoding(encodedSerializedInfo, m_serializator->serialize(&info));
+    std::string serializedInfo = m_serializator->serialize(&info);
+    std::string encodedSerializedInfo = m_encoder->proceedEncoding(serializedInfo);
     sendMessage(encodedSerializedInfo);
-
-    delete &m_serializator->serialize(&info);
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
@@ -161,9 +149,7 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    if (m_encoder->getName() == "No name")
-        return;
-	sendNextMeterage();
+    sendNextMeterage();
 }
 
 void DeviceMock::sendNextMeterage()
@@ -174,11 +160,8 @@ void DeviceMock::sendNextMeterage()
         return;*/
 	const auto meterage = m_meterages.at(m_timeStamp);
     Meterage currentMeterage{meterage, m_timeStamp};
-    std::string encodedSerializedMsg;
-    m_encoder->proceedEncoding(encodedSerializedMsg, m_serializator->serialize(&currentMeterage));
+    std::string encodedSerializedMsg = m_encoder->proceedEncoding(m_serializator->serialize(&currentMeterage));
     sendMessage(encodedSerializedMsg);
-
-    delete &m_serializator->serialize(&currentMeterage);
     ++m_timeStamp;
     
 	/*if (m_timeStamp == 9) {
@@ -187,19 +170,15 @@ void DeviceMock::sendNextMeterage()
     }*/
 }
 
-void DeviceMock::selectEncodingMethod(Methods method) {
-    m_encoder->selectMethod(method);
+void DeviceMock::setEncodingMethod(const std::string& name) {
+    m_encoder->selectMethod(name);
 }
 
-void DeviceMock::deselectEncodingMethod() {
-    m_encoder->deselect();
+void DeviceMock::registerСustomEncodingMethod(const std::string& name, const std::string& key) {
+    m_encoder->registerСustom(name, key);
 }
 
-void DeviceMock::registerСustomEncodingMethod(const std::string& inputkey) {
-    m_encoder->registerСustom(inputkey);
-}
-
-std::string DeviceMock::getEncodingMethodName() {
+std::string DeviceMock::getEncodingMethodName() const {
     return m_encoder->getName();
 }
 

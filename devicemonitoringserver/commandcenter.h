@@ -1,11 +1,11 @@
 #ifndef COMMANDCENTER_H
 #define COMMANDCENTER_H
-#define multyplier 100.0
-#define maxBufferSize 20
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
 #include "message.h"
+constexpr double multyplier = 100.0;
+constexpr uint8_t maxBufferSize = 20;
 
 class DeviceWorkSchedule;
 class CommandCenter;

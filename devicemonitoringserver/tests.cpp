@@ -26,8 +26,9 @@ void monitoringServerTest1()
     ASSERT(device.bind(deviceId));
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
-    server.selectEncodingMethod(ROT3);
-    device.selectEncodingMethod(ROT3);
+    std::string method {"ROT3"};
+    server.setEncodingMethod(method);
+    device.setEncodingMethod(method);
     while (taskQueue.processTask())
         ;
 	const auto& messagesFromDevice = messagesFromDevices.find(deviceId)->second;
@@ -71,8 +72,10 @@ void monitoringServerTest2()
     ASSERT(device.bind(deviceId));
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
-    server.selectEncodingMethod(ROT3);
-    device.selectEncodingMethod(Multiply41);
+    std::string method1 {"ROT3"};
+    std::string method2 {"Multiply41"};
+    server.setEncodingMethod(method1);
+    device.setEncodingMethod(method2);
     while (taskQueue.processTask())
         ;
     const auto& messagesFromDevice = messagesFromDevices.find(deviceId)->second;
@@ -105,8 +108,9 @@ void monitoringServerTest3(){
     ASSERT(device.bind(deviceId));
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
-    server.selectEncodingMethod(Mirror);
-    device.selectEncodingMethod(Mirror);
+    std::string method {"Mirror"};
+    server.setEncodingMethod(method);
+    device.setEncodingMethod(method);
     while (taskQueue.processTask())
         ;
     const auto& messagesFromDevice = messagesFromDevices.find(deviceId)->second;
@@ -151,8 +155,9 @@ void monitoringServerTest4(){
     ASSERT(device.bind(deviceId));
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
-    server.selectEncodingMethod(Multiply41);
-    device.selectEncodingMethod(Multiply41);
+    std::string method {"Multiply41"};
+    server.setEncodingMethod(method);
+    device.setEncodingMethod(method);
     while (taskQueue.processTask())
         ;
     const auto& messagesFromDevice = messagesFromDevices.find(deviceId)->second;
@@ -251,9 +256,14 @@ void monitoringServerTest5(){
     ASSERT(server.listen(serverId));
     ASSERT(device1.connectToServer(serverId));
     ASSERT(device2.connectToServer(serverId));
-    server.selectEncodingMethod(Custom);
-    device1.selectEncodingMethod(Custom);
-    device2.selectEncodingMethod(Custom);
+    std::string method {"Super Cereal Method"};
+    std::string key {"a3Hd$Bh6"};
+    server.registerСustomEncodingMethod(method, key);
+    server.setEncodingMethod(method);
+    device1.registerСustomEncodingMethod(method, key);
+    device1.setEncodingMethod(method);
+    device2.registerСustomEncodingMethod(method, key);
+    device2.setEncodingMethod(method);
     while (taskQueue.processTask())
         ;
     const auto& messagesFromDevice1 = messagesFromDevices.find(deviceId1)->second;
@@ -310,15 +320,21 @@ void encodingTest() {
     //casual switching
     {
         ASSERT_EQUAL(testEncoder.getName(), "No name");
-        testEncoder.selectMethod(ROT3);
+        testEncoder.selectMethod("ROT3");
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
-        testEncoder.selectMethod(Mirror);
+        testEncoder.selectMethod("Mirror");
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
-        testEncoder.selectMethod(Multiply41);
+        testEncoder.selectMethod("Multiply41");
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
-        testEncoder.selectMethod(Custom);
+        testEncoder.selectMethod("Custom");
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        testEncoder.registerСustom("Custom", "");
+        testEncoder.selectMethod("Custom");
         ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.deselect();
+        testEncoder.registerСustom("Another Custom", "12345");
+        testEncoder.selectMethod("Another Custom");
+        ASSERT_EQUAL(testEncoder.getName(), "Another Custom");
+        testEncoder.selectMethod("");
         ASSERT_EQUAL(testEncoder.getName(), "No name");
     }
     //numbers
@@ -328,71 +344,86 @@ void encodingTest() {
         std::string messageEncoded{""};
         std::string messageDecoded{""};
         ASSERT_EQUAL(testEncoder.getName(), "No name");
-        testEncoder.selectMethod(ROT3);
+        testEncoder.selectMethod("ROT3");
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
         ASSERT_EQUAL(messageEncoded, "3456789012");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Mirror
-        testEncoder.selectMethod(Mirror);
+        testEncoder.selectMethod("Mirror");
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
         ASSERT_EQUAL(messageEncoded, "9876543210");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Multiply41
-        testEncoder.selectMethod(Multiply41);
+        testEncoder.selectMethod("Multiply41");
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
-        ASSERT_EQUAL(messageEncoded, "04182123164205246287328369");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Custom
         //regular key
-        testEncoder.selectMethod(Custom);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.selectMethod("Custom1");
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        testEncoder.registerСustom("Custom1", "");
+        testEncoder.selectMethod("Custom1");
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //custom key up to 10 symbols
         std::string key {"SomeKey"};
-        testEncoder.registerСustom(key);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.registerСustom("Custom1", key);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //custom key more than 10 symbols
         key = "SomeKeyMoreThan10Symbols";
-        testEncoder.registerСustom(key);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.registerСustom("Custom1", key);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom1");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
+        messageEncoded.clear();
+        messageDecoded.clear();
+        //No encoding
+        testEncoder.selectMethod("");
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        ASSERT_EQUAL(messageEncoded, messageToEncode);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        ASSERT_EQUAL(messageDecoded, messageToEncode);
+        testEncoder.selectMethod("ROT3");
+        ASSERT_EQUAL(testEncoder.getName(), "ROT3");
 
-        testEncoder.deselect();
+        testEncoder.selectMethod("");
         ASSERT_EQUAL(testEncoder.getName(), "No name");
     }
     //alphabet
@@ -402,71 +433,84 @@ void encodingTest() {
         std::string messageEncoded{""};
         std::string messageDecoded{""};
         ASSERT_EQUAL(testEncoder.getName(), "No name");
-        testEncoder.selectMethod(ROT3);
+        testEncoder.selectMethod("ROT3");
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
         ASSERT_EQUAL(messageEncoded, "defghijklmnopqrstuvwxyzabc DEFGHIJKLMNOPQRSTUVWXYZABC");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "ROT3");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Mirror
-        testEncoder.selectMethod(Mirror);
+        testEncoder.selectMethod("Mirror");
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
         ASSERT_EQUAL(messageEncoded, "zyxwvutsrqponmlkjihgfedcba ZYXWVUTSRQPONMLKJIHGFEDCBA");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "Mirror");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Multiply41
-        testEncoder.selectMethod(Multiply41);
+        testEncoder.selectMethod("Multiply41");
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
-        ASSERT_EQUAL(messageEncoded, messageToEncode);
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
         ASSERT_EQUAL(testEncoder.getName(), "Multiply41");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //Custom
         //regular key
-        testEncoder.selectMethod(Custom);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.registerСustom("Custom2", "");
+        testEncoder.selectMethod("Custom2");
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //custom key up to 10 symbols
         std::string key {"SomeKey"};
-        testEncoder.registerСustom(key);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.registerСustom("Custom2", key);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
         messageEncoded.clear();
         messageDecoded.clear();
         //custom key more than 10 symbols
         key = "SomeKeyMoreThan10Symbols";
-        testEncoder.registerСustom(key);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedEncoding(messageEncoded, messageToEncode);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
-        testEncoder.proceedDecoding(messageDecoded, messageEncoded);
-        ASSERT_EQUAL(testEncoder.getName(), "Custom");
+        testEncoder.registerСustom("Custom2", key);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "Custom2");
         ASSERT_EQUAL(messageDecoded, messageToEncode);
+        messageEncoded.clear();
+        messageDecoded.clear();
+        //No encoding
+        testEncoder.selectMethod("");
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        messageEncoded = testEncoder.proceedEncoding(messageToEncode);
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        ASSERT_EQUAL(messageEncoded, messageToEncode);
+        messageDecoded = testEncoder.proceedDecoding(messageEncoded);
+        ASSERT_EQUAL(testEncoder.getName(), "No name");
+        ASSERT_EQUAL(messageDecoded, messageToEncode);
+        testEncoder.selectMethod("ROT3");
+        ASSERT_EQUAL(testEncoder.getName(), "ROT3");
 
-        testEncoder.deselect();
+        testEncoder.selectMethod("");
         ASSERT_EQUAL(testEncoder.getName(), "No name");
     }
 }

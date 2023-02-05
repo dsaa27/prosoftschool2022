@@ -46,15 +46,13 @@ public:
     void startMeterageSending();
 	//выполнить разъединение с сервером
     void disconnect();
-    //выбор метода (де)шифрования
-    void selectEncodingMethod(Methods);
-    //отмена выбранного метода (де)шифрования
-    void deselectEncodingMethod();
-    //ввод пользовательского ключа шифрования вплоть до 10 символов
+    //выбор метода (де)шифрования (возможно отключение при name == "")
+    void setEncodingMethod(const std::string& name);
+    //ввод пользовательского имени и ключа шифрования вплоть до 10 символов
     //если в строке больше 10 символов, считываются первые 10
-    void registerСustomEncodingMethod(const std::string&);
+    void registerСustomEncodingMethod(const std::string& name, const std::string& key);
     //возвращает название выбранного метода (де)шифрования
-    std::string getEncodingMethodName();
+    std::string getEncodingMethodName() const;
 
 private:
     /*!

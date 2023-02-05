@@ -1,12 +1,16 @@
 #include "messageencoder.h"
 
+int BaseEncoderExecutor::toInt(const char& charToInt) {
+    return charToInt-'0';
+}
 
-void EncoderROT3::encode(std::string& output, const std::string& input) {
+
+std::string EncoderROT3::encode(const std::string& input) {
+    std::string output;
     for (uint8_t i = 0; i < input.size(); ++i) {
         if (input[i] == ' ')
             output += input[i];
-        else if (input[i] == '0' || input[i] == '1' || input[i] == '2' || input[i] == '3' || input[i] == '4' ||
-        input[i] == '5' || input[i] == '6' || input[i] == '7' || input[i] == '8' || input[i] == '9') {
+        else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
             output += std::to_string((val+3)%10);
         } else if (std::isupper(input[i])) {
@@ -15,13 +19,14 @@ void EncoderROT3::encode(std::string& output, const std::string& input) {
             output += (input[i]-94)%26+97;
         }
     }
+    return output;
 }
-void EncoderROT3::decode(std::string& output, const std::string& input) {
+std::string EncoderROT3::decode(const std::string& input) {
+    std::string output;
     for (uint8_t i = 0; i < input.size(); ++i) {
         if (input[i] == ' ')
             output += input[i];
-        else if (input[i] == '0' || input[i] == '1' || input[i] == '2' || input[i] == '3' || input[i] == '4' ||
-        input[i] == '5' || input[i] == '6' || input[i] == '7' || input[i] == '8' || input[i] == '9') {
+        else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
             output += std::to_string((val+7)%10);
         }  else if (std::isupper(input[i])) {
@@ -30,14 +35,15 @@ void EncoderROT3::decode(std::string& output, const std::string& input) {
             output += (input[i]-74)%26+97;
         }
     }
+    return output;
 }
 
-void EncoderMirror::encode(std::string& output, const std::string& input) {
+std::string EncoderMirror::encode(const std::string& input) {
+    std::string output;
     for (uint8_t i = 0; i < input.size(); ++i) {
         if (input[i] == ' ')
             output += input[i];
-        else if (input[i] == '0' || input[i] == '1' || input[i] == '2' || input[i] == '3' || input[i] == '4' ||
-        input[i] == '5' || input[i] == '6' || input[i] == '7' || input[i] == '8' || input[i] == '9') {
+        else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
             output += std::to_string(9-val);
         } else if (std::isupper(input[i])) {
@@ -46,13 +52,14 @@ void EncoderMirror::encode(std::string& output, const std::string& input) {
             output += 122-input[i]+97;
         }
     }
+    return output;
 }
-void EncoderMirror::decode(std::string& output, const std::string& input) {
+std::string EncoderMirror::decode(const std::string& input) {
+    std::string output;
     for (uint8_t i = 0; i < input.size(); ++i) {
         if (input[i] == ' ')
             output += input[i];
-        else if (input[i] == '0' || input[i] == '1' || input[i] == '2' || input[i] == '3' || input[i] == '4' ||
-        input[i] == '5' || input[i] == '6' || input[i] == '7' || input[i] == '8' || input[i] == '9') {
+        else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
             output += std::to_string(9-val);
         } else if (std::isupper(input[i])) {
@@ -61,40 +68,34 @@ void EncoderMirror::decode(std::string& output, const std::string& input) {
             output += 122-input[i]+97;
         }
     }
+    return output;
 }
 
 
-void EncoderMultiply41::encode(std::string& output, const std::string& input) {
+std::string EncoderMultiply41::encode(const std::string& input) {
+    std::string output;
     for (uint8_t i = 0; i < input.size(); ++i) {
-        if (input[i] == '1' || input[i] == '2' || input[i] == '3' || input[i] == '4' || input[i] == '5' ||
-        input[i] == '6' || input[i] == '7' || input[i] == '8' || input[i] == '9') {
-            int val = toInt(input[i]);
-            output += std::to_string(val*41);
-        } else {output += input[i];}
+        int val = input[i]*41;
+        int first = val/100;
+        int second = val%100;
+        output += first;
+        output += second;
     }
+    return output;
 }
-void EncoderMultiply41::decode(std::string& output, const std::string& input) {
-    std::string substr("");
-    for (uint8_t endstr = 0; endstr < input.size(); ++endstr) {
-        substr = input[endstr];
-        if  (substr == "1" || substr == "2" || substr == "3" || substr == "4" || substr == "5" ||
-        substr == "6" || substr == "7" || substr == "8" || substr == "9") {
-            substr += input[++endstr];
-            uint16_t value = std::stoi(substr);
-            if (value%41 == 0) {
-                output += std::to_string(value/41);
-                substr.clear();
-            } else {
-                substr += input[++endstr];
-                value = std::stoi(substr);
-                output += std::to_string(value/41);
-                substr.clear();
-            }
-        } else output += substr;
+std::string EncoderMultiply41::decode(const std::string& input) {
+    std::string output;
+    for (uint8_t i = 0; i < input.size(); ++i) {
+        int first = input[i++];
+        int second = input[i];
+        int val = (first*100+second)/41;
+        output += val;
     }
+    return output;
 }
 
-void EncoderCustom::encode (std::string& output, const std::string& input) {
+std::string EncoderCustom::encode (const std::string& input) {
+    std::string output;
     uint8_t j(0);
     for (uint8_t i = 0; i < input.size(); ++i) {
         output += key[j++]^input[i];
@@ -102,8 +103,10 @@ void EncoderCustom::encode (std::string& output, const std::string& input) {
             j = 0;
         }
     }
+    return output;
 }
-void EncoderCustom::decode(std::string& output, const std::string& input) {
+std::string EncoderCustom::decode(const std::string& input) {
+    std::string output;
     uint8_t j(0);
     for (uint8_t i = 0; i < input.size(); ++i) {
         output += key[j++]^input[i];
@@ -111,67 +114,80 @@ void EncoderCustom::decode(std::string& output, const std::string& input) {
             j = 0;
         }
     }
+    return output;
 }
 void EncoderCustom::setkey(const std::string& inputkey) {
     const uint8_t max_size (maxKeySize);
-    if (inputkey == "") return;
+    if (inputkey == "")
+        return;
     for (uint8_t i = 0u; i < (inputkey.size() < max_size ? inputkey.size() : max_size); ++i)
         key[i] = inputkey[i];
     key.resize((inputkey.size() < max_size ? inputkey.size() : max_size));
 }
 
-
-void MessageEncoder::proceedEncoding(std::string& output, const std::string& input) {
-    if (!m_encoderexecutor) return;
-    m_encoderexecutor->encode(output, input);
-}
-
-void MessageEncoder::proceedDecoding(std::string& output, const std::string& input) {
-    if (!m_encoderexecutor) return;
-    m_encoderexecutor->decode(output, input);
-}
-
-void MessageEncoder::selectMethod(Methods m_method) {
-    if (m_encoderexecutor) delete m_encoderexecutor;
-    switch (m_method) {
-    case ROT3: {
-        auto *encoder = new EncoderROT3;
-        m_encoderexecutor = encoder;
-        return;
-        }
-    case Mirror: {
-        auto *encoder = new EncoderMirror;
-        m_encoderexecutor = encoder;
-        return;
-        }
-    case Multiply41: {
-        auto *encoder = new EncoderMultiply41;
-        m_encoderexecutor = encoder;
-        return;
-        }
-    case Custom: {
-        auto *encoder = new EncoderCustom;
-        m_encoderexecutor = encoder;
-        return;
-        }
-    default: return;
+MessageEncoder::~MessageEncoder() {
+    if (!m_encoderExecutors.empty()) {
+        for (const auto& it : m_encoderExecutors)
+            delete it.second;
     }
+}
+
+std::string MessageEncoder::proceedEncoding(const std::string& input) {
+    if (!m_encoderexecutor)
+        return input;
+    return m_encoderexecutor->encode(input);
+}
+
+std::string MessageEncoder::proceedDecoding(const std::string& input) {
+    if (!m_encoderexecutor)
+        return input;
+    return m_encoderexecutor->decode(input);
+}
+
+void MessageEncoder::selectMethod(const std::string& name) {
+    if (name == "") {
+        deselect();
+    } else if (name == "ROT3") {
+        if (m_encoderExecutors.count(name) == 0) {
+            m_encoderExecutors.insert(std::make_pair(name, new EncoderROT3));
+        }
+        m_encoderexecutor = m_encoderExecutors[name];
+    } else if (name == "Mirror") {
+        if (m_encoderExecutors.count(name) == 0) {
+            m_encoderExecutors.insert(std::make_pair(name, new EncoderMirror));
+        }
+        m_encoderexecutor = m_encoderExecutors[name];
+    } else if (name == "Multiply41") {
+        if (m_encoderExecutors.count(name) == 0) {
+            m_encoderExecutors.insert(std::make_pair(name, new EncoderMultiply41));
+        }
+        m_encoderexecutor = m_encoderExecutors[name];
+    } else {
+        if (m_encoderExecutors.count(name) == 0) {
+            deselect();
+            return;
+        } else {
+            m_encoderexecutor = m_encoderExecutors[name];
+        }
+    }
+    return;
 }
 
 void MessageEncoder::deselect() {
-    if (m_encoderexecutor) {
-        delete m_encoderexecutor;
-        m_encoderexecutor=nullptr;
-    }
-    else return;
+    m_encoderexecutor = nullptr;
 }
 
-void MessageEncoder::registerСustom(const std::string& inputkey) {
-    if (!dynamic_cast<EncoderCustom*>(m_encoderexecutor)) return;
-    static_cast<EncoderCustom*>(m_encoderexecutor)->setkey(inputkey);
+void MessageEncoder::registerСustom(const std::string& name, const std::string& inputkey) {
+    if (m_encoderExecutors.count(name) == 0) {
+        m_encoderExecutors.insert(std::make_pair(name, new EncoderCustom(name)));
+        static_cast<EncoderCustom*>(m_encoderExecutors[name])->setkey(inputkey);
+    } else
+        static_cast<EncoderCustom*>(m_encoderExecutors[name])->setkey(inputkey);
 }
 
 std::string MessageEncoder::getName() const {
-    if (!m_encoderexecutor) return "No name";
-    else return m_encoderexecutor->name();
+    if (!m_encoderexecutor)
+        return "No name";
+    else
+        return m_encoderexecutor->name();
 }
