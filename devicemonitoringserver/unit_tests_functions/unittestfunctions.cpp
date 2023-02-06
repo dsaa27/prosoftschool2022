@@ -1,8 +1,13 @@
 #include "../test_runner.h"
 #include "../clientservercomponents/abstractmessage.h"
 #include "../clientservercomponents/messageserializer.h"
+#include "unittestfunctions.h"
+#include "../clientservercomponents/commandcenter.h"
 
-void testMeasureMessageSerialization(uint64_t timeStamp, uint8_t measureValue, const std::string& expectSerializedMessage)
+#include <random>
+
+void unitTestFunctions::testMeasureMessageSerialization
+    (uint64_t timeStamp, uint8_t measureValue, const std::string expectSerializedMessage)
 {
     MessageSerializer messageSerializer;
 
@@ -11,7 +16,8 @@ void testMeasureMessageSerialization(uint64_t timeStamp, uint8_t measureValue, c
     ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newMeterageMessage));
 }
 
-void testCommandMessageSerialization(double correction, const std::string& expectSerializedMessage)
+void unitTestFunctions::testCommandMessageSerialization
+    (double correction, const std::string expectSerializedMessage)
 {
     MessageSerializer messageSerializer;
 
@@ -20,7 +26,8 @@ void testCommandMessageSerialization(double correction, const std::string& expec
     ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newCommandMessage));
 }
 
-void testErrorMessageSerialization(Enumerations::ErrorType errorType, const std::string& expectSerializedMessage)
+void unitTestFunctions::testErrorMessageSerialization
+    (Enumerations::ErrorType errorType, const std::string expectSerializedMessage)
 {
     MessageSerializer messageSerializer;
 
@@ -29,7 +36,8 @@ void testErrorMessageSerialization(Enumerations::ErrorType errorType, const std:
     ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newErrorMessage));
 }
 
-void testMeasureMessageDeserialization(const std::string& messageAsString, uint64_t timeStamp, uint8_t measureValue)
+void unitTestFunctions::testMeasureMessageDeserialization
+    (const std::string messageAsString, uint64_t timeStamp, uint8_t measureValue)
 {
     MessageSerializer messageSerializer;
 
@@ -42,7 +50,8 @@ void testMeasureMessageDeserialization(const std::string& messageAsString, uint6
     ASSERT_EQUAL(deserializedMeterageMessage->timeStamp, timeStamp);
 }
 
-void testCommandMessageDeserialization(const std::string& messageAsString, double correction)
+void unitTestFunctions::testCommandMessageDeserialization
+    (const std::string messageAsString, double correction)
 {
     MessageSerializer messageSerializer;
 
@@ -56,7 +65,8 @@ void testCommandMessageDeserialization(const std::string& messageAsString, doubl
     ASSERT(std::abs(deserializedCommandMessage->correction - correction) <= epsilon);
 }
 
-void testErrorMessageDeserialization(const std::string& messageAsString, Enumerations::ErrorType errorType)
+void unitTestFunctions::testErrorMessageDeserialization
+    (const std::string messageAsString, Enumerations::ErrorType errorType)
 {
     MessageSerializer messageSerializer;
 

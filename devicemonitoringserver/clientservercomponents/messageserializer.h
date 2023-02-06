@@ -6,11 +6,12 @@
 #include <cstdint>
 
 #include "abstractmessage.h"
+#include "../unit_tests_functions/unittestfunctions.h"
 
 
 class MessageSerializer
 {
-    friend void testCheckInvalidDeserializeMessageArgument(
+    friend void unitTestFunctions::testCheckInvalidDeserializeMessageArgument(
             const std::string messageAsString,
             const std::string exceptionMessage);
 public:

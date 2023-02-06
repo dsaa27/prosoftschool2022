@@ -12,16 +12,16 @@ namespace Enumerations
 {
     enum class MessageType
     {
-        meterage = 0,
-        command = 1,
-        error = 2
+        meterage = 1,
+        command = 2,
+        error = 3
     };
 
     enum class ErrorType
     {
-        noSchedule = 0,
-        noTimestamp = 1,
-        obsolete = 2
+        noSchedule = 1,
+        noTimestamp = 2,
+        obsolete = 3
     };
 }
 

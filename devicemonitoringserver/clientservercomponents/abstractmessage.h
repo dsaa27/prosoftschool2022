@@ -5,6 +5,7 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 class AbstractMessage
 {
@@ -43,7 +44,7 @@ struct CommandMessage final : public AbstractMessage
     {
         std::ostringstream ost;
         ost << static_cast<int>(Enumerations::MessageType::command) << " "
-            << correction;
+            << std::setprecision(6) << correction;
         return ost.str();
     }
 
