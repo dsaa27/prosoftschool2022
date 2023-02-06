@@ -3,19 +3,46 @@
 
 #include <cstdint>
 #include <string>
+
 #include "../common.h"
+#include "../deviceworkschedule.h"
 
-void testMeasureMessageSerialization(uint64_t timeStamp, uint8_t measureValue, const std::string& expectSerializedMessage);
+namespace unitTestFunctions
+{
+    void testMessageSerialization();
 
-void testCommandMessageSerialization(double correction, const std::string& expectSerializedMessage);
+    void testMessageDeserialization();
 
-void testErrorMessageSerialization(Enumerations::ErrorType errorType, const std::string& expectSerializedMessage);
+    void testMeasureMessageSerialization(uint64_t timeStamp, uint8_t measureValue, const std::string expectSerializedMessage);
 
-void testMeasureMessageDeserialization(const std::string &messageAsString, uint64_t timeStamp, uint8_t measureValue);
+    void testCommandMessageSerialization(double correction, const std::string expectSerializedMessage);
 
-void testCommandMessageDeserialization(const std::string &messageAsString, double correction);
+    void testErrorMessageSerialization(Enumerations::ErrorType errorType, const std::string expectSerializedMessage);
 
-void testErrorMessageDeserialization(const std::string &messageAsString, Enumerations::ErrorType errorType);
+    void testMeasureMessageDeserialization(const std::string messageAsString, uint64_t timeStamp, uint8_t measureValue);
 
-void testCheckInvalidDeserializeMessageArgument(const std::string &messageAsString, const std::string &exceptionMessage);
+    void testCommandMessageDeserialization(const std::string messageAsString, double correction);
+
+    void testErrorMessageDeserialization(const std::string messageAsString, Enumerations::ErrorType errorType);
+
+    void testCheckInvalidDeserializeMessageArgument(const std::string messageAsString, const std::string exceptionMessage);
+
+    DeviceWorkSchedule* createRandomDeviceWorkSchedule();
+
+    void testCommandCenterSetUnsetDeviceWorkSchedule();
+
+    void testCommandCenterReceiveAndSendMessage();
+
+    void testCommandtMessage();
+
+    void testErrorMessage();
+
+    void testNoScheduleError();
+
+    void testNoTimeStampError();
+
+    void testObsoleteError();
+
+    void testIncorrectFormatMessage();
+}
 #endif // UNITTESTFUNCTIONS_H

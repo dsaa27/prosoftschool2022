@@ -9,4 +9,6 @@ void monitoringServerTest1();
 
 void messageSerializerTest();
 
+void commandCenterTest();
+
 #endif // TESTS_H

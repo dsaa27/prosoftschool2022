@@ -13,5 +13,6 @@ int main()
     // TODO: собственные тесты
     RUN_TEST(tr, monitoringServerTest1);
     RUN_TEST(tr, messageSerializerTest);
+    RUN_TEST(tr, commandCenterTest);
     return 0;
 }

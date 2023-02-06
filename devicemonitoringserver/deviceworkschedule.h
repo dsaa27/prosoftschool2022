@@ -18,6 +18,12 @@ struct Phase
  */
 struct DeviceWorkSchedule
 {
+    DeviceWorkSchedule(const std::vector<Phase> &schedule, uint64_t deviceId);
+
+    static const uint8_t unfoundValue = 255;
+
+    uint8_t findScheduleValue(uint64_t timeStamp);
+
     uint64_t deviceId = 0;       ///< Идентификатор устройства
     std::vector<Phase> schedule; ///< План работы устройства
 };
