@@ -44,5 +44,7 @@ namespace unitTestFunctions
     void testObsoleteError();
 
     void testIncorrectFormatMessage();
+
+    void testStandardDeviationCalculation();
 }
 #endif // UNITTESTFUNCTIONS_H

@@ -44,4 +44,5 @@ void commandCenterTest()
 
     testCommandCenterSetUnsetDeviceWorkSchedule();
     testCommandCenterReceiveAndSendMessage();
+    testStandardDeviationCalculation();
 }

@@ -75,12 +75,13 @@ void CommandCenter::StandardDeviationCalculator::calculateStandartDeviation()
     double average = 0;
     for (auto now : inaccuracys)
         average += now;
+    average /= inaccuracys.size();
 
     double sumOfSquares = 0;
     for (auto now : inaccuracys)
-        sumOfSquares += (average - now) * (average - now);
+        sumOfSquares += ((average - now) * (average - now));
 
-    currentSD =  sqrt(sumOfSquares / inaccuracys.size());
+    currentSD = sqrt(sumOfSquares / inaccuracys.size());
 }
 
 double CommandCenter::getCurrentStandardDeviation(uint64_t deviceId)
