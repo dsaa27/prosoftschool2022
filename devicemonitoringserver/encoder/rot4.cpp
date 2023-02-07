@@ -8,7 +8,6 @@ std::string Rot4::encode (std::string message)
         encodedMessage.push_back(c + 4);
     }
     return encodedMessage;
-
 }
 
 std::string Rot4::decode (std::string message)
@@ -19,7 +18,6 @@ std::string Rot4::decode (std::string message)
         decodedMessage.push_back(c - 4);
     }
     return decodedMessage;
-
 }
 
 std::string Rot4::name ()

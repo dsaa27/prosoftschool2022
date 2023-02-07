@@ -49,7 +49,6 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
     std::string decodedMessage = m_encoder.decode(message);
-    //std::cout << "Received a message from a device with an id " << deviceId << ": " << decodedMessage << std::endl;
     MessageStruct parsedMessage = m_serializer.deSerializate(decodedMessage);
     MessageStruct answer = m_commandCenter.generateCommand(deviceId, parsedMessage);
     std::string serialAnswer = m_serializer.serializate(answer);

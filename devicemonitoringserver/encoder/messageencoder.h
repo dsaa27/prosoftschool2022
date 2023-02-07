@@ -8,14 +8,28 @@
 #include <map>
 #include <vector>
 
-//модуль шифрования
 class MessageEncoder : public BaseEncoderExecutor
 {
 public:
+    /*!
+     * \brief Зашифровать строку.
+     */
     std::string encode (std::string message) final;
+    /*!
+     * \brief Расшифровать строку.
+     */
     std::string decode (std::string message) final;
+    /*!
+     * \brief Получить название текущего алгоритма шифрования.
+     */
     std::string name() final;
+    /*!
+     * \brief Выбрать алгоритм шифрования по его названию.
+     */
     void setEncodeAlgorithm (std::string algoName);
+    /*!
+     * \brief Добавить новый алгоритм шифрования (без его установки в качестве текущего).
+     */
     void registerNewAlgorithm (BaseEncoderExecutor& newAlgorithm);
 
 private:

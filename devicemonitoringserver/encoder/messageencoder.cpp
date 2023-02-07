@@ -6,7 +6,7 @@ void MessageEncoder::setEncodeAlgorithm (std::string algoName)
 {
     if (m_algoNameMap.find(algoName) == m_algoNameMap.end())
     {
-        std::cout << "The encoding algorithm '" << algoName << "' doesn't exist" << std::endl;
+        std::cerr << "The encoding algorithm '" << algoName << "' doesn't exist" << std::endl;
         return;
     }
     m_algoName = algoName;
@@ -34,7 +34,7 @@ void MessageEncoder::registerNewAlgorithm(BaseEncoderExecutor& newAlgorithm)
     std::string newAlgorithmName = newAlgorithm.name();
     if (m_algoNameMap.find(newAlgorithmName) != m_algoNameMap.end())
     {
-        std::cout << "The encoding algorithm '" << newAlgorithmName << "' already exist" << std::endl;
+        std::cerr << "The encoding algorithm '" << newAlgorithmName << "' already exist" << std::endl;
         return;
     }
     std::string name = newAlgorithm.name();

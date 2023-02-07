@@ -14,11 +14,23 @@ struct DeviceInfo
 class CommandCenter
 {
 public:
+    /*!
+     * \brief Установить план работы устройства.
+     */
     void setSchedule(const DeviceWorkSchedule& deviceWorkSchedule);
+    /*!
+     * \brief Выработать команду устройству.
+     * \param deviceId - идентификатор устройства.
+     * \param message - сообщение от устройтсва.
+     */
     MessageStruct generateCommand(uint64_t deviceId, MessageStruct message);
+    /*!
+     * \brief Получить СКО ошибки управления устройством.
+     */
     float getMse(uint64_t deviceId);
 private:
     void updateMse(uint64_t deviceId, int dx);
+private:
     std::map<uint64_t, std::vector<Phase>> m_scheduleMap;
     std::map <uint64_t, DeviceInfo> deviceInfoMap;
 };

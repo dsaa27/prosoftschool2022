@@ -9,7 +9,13 @@
 class MessageSerializer
 {
 public:
+    /*!
+     * \brief Конвертировать структуру сообщения в строку.
+     */
     std::string serializate(const MessageStruct& message);
+    /*!
+     * \brief Конвертировать строку в структуру сообщения.
+     */
     MessageStruct deSerializate(std::string serialMessage);
 };
 #endif // MESSAGESERIALIZATOR_H

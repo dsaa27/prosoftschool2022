@@ -7,7 +7,7 @@ std::string MessageSerializer::serializate(const MessageStruct& message)
     if (message.messageType == METERAGE)
     {
         serialMessage << std::to_string(message.measurements.timeStamp);
-        serialMessage << ":";
+        serialMessage << ":"; // ':' - разделитель времени и значения измерения
         serialMessage << std::to_string(message.measurements.value);
     }
 
