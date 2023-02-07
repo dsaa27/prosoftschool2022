@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 
-std::string ROT3::encode(std::string message) const
+std::string ROT3::encode(const std::string& message) const
     {
         std::ostringstream os;
         std::istringstream is(message);
@@ -18,11 +18,10 @@ std::string ROT3::encode(std::string message) const
             if (!is.eof())
                 os << ' ';
         }
-        std::string res = os.str();
-        return res;
+        return os.str();
     }
 
-std::string ROT3::decode(std::string message) const
+std::string ROT3::decode(const std::string& message) const
     {
         std::ostringstream os;
         std::istringstream is(message);
@@ -36,8 +35,7 @@ std::string ROT3::decode(std::string message) const
             if (!is.eof())
                 os << ' ';
         }
-        std::string res = os.str();
-        return res;
+         return os.str();
     }
 
 std::string ROT3::getName() const {

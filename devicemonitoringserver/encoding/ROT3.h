@@ -13,9 +13,9 @@ class ROT3 final : public BaseEncoderExecutor
 public:
     ROT3() = default;
     ~ROT3() = default;
-    std::string encode(std::string message) const final;
+    std::string encode(const std::string& message) const final;
 
-    std::string decode(std::string message) const final;
+    std::string decode(const std::string& message) const final;
     std::string getName() const final;
 };
 

@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "Mirror.h"
 
-std::string Mirror::encode(std::string message) const
+std::string Mirror::encode(const std::string& message) const
 {
     std::ostringstream os;
     std::istringstream is(message);
@@ -17,14 +17,12 @@ std::string Mirror::encode(std::string message) const
         if (!is.eof())
             os << ' ';
     }
-    std::string res = os.str();
-    return res;
+    return os.str();
 }
 
-std::string Mirror::decode(std::string message) const
+std::string Mirror::decode(const std::string& message) const
 {
-    std:: string result = encode(message);
-    return  result;
+    return  encode(message);
 }
 
 std::string Mirror::getName() const {

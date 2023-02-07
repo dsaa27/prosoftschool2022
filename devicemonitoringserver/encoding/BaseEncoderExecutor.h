@@ -18,13 +18,13 @@ public:
      * \param message - сообщение
     * \return зашифрованное сообщение
     */
-    virtual std::string encode(std::string message) const = 0;
+    virtual std::string encode(const std::string& message) const = 0;
     /*!
     * \brief Дешифровать сообщение
      * * \param message - сообщение
      * \return дешифрованное сообщение
     */
-    virtual std::string decode(std::string message) const = 0;
+    virtual std::string decode(const std::string& message) const = 0;
 
     virtual /*!
     * \brief Получить имя метода шифрования
