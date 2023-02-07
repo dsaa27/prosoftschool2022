@@ -12,6 +12,8 @@ std::string Mirror::encode(const std::string& message) const
     while (!is.eof())
     {
         is >> input;
+        if (input.empty())
+            continue;
         reverse(input.begin(), input.end());
         os << input;
         if (!is.eof())

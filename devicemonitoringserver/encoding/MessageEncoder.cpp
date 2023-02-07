@@ -16,7 +16,7 @@ MessageEncoder::MessageEncoder()
 
 MessageEncoder::~MessageEncoder()
 {
-    for (std::pair<std::string, BaseEncoderExecutor*> pair : allAlgorithms)
+    for (const std::pair<std::string, BaseEncoderExecutor*> &pair : allAlgorithms)
         delete pair.second;
 }
 
@@ -40,15 +40,19 @@ bool MessageEncoder::chooseAlgorithm(std::string algorithm)
 
 std::string MessageEncoder::decode(const std::string &message)
 {
-    return currentAlgorithm->decode(message);
+    if (currentAlgorithm != nullptr)
+        return currentAlgorithm->decode(message);
+    else return "";
 }
 
 std::string MessageEncoder::encode(const std::string &message)
 {
-    return currentAlgorithm->encode(message);
+    if (currentAlgorithm != nullptr)
+        return currentAlgorithm->encode(message);
+    else return "";
 }
 
-std::vector<std::string> MessageEncoder::getAllAlgorithms() {
+std::vector<std::string> MessageEncoder::getAvailableAlgorithms() {
     std::vector<std::string> allAlgsName = {};
     for (const std::pair<std::string, BaseEncoderExecutor*> &alg : allAlgorithms)
     {

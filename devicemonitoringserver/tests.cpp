@@ -5,6 +5,7 @@
 #include <servermock/clientconnectionmock.h>
 #include <servermock/connectionservermock.h>
 #include <servermock/taskqueue.h>
+#include <encoding/Xor.h>
 
 void monitoringServerStandardTest()
 {
@@ -257,3 +258,64 @@ void monitoringServerTestTwoDevices()
     sd = server.getStandardDeviation(deviceId2);
     ASSERT_EQUAL(sd, 0.47);
 }
+
+void encodingTest()
+{
+    MessageEncoder* encoder = new MessageEncoder();
+    std::vector<std::string> actualAlgs = encoder->getAvailableAlgorithms();
+    std::vector<std::string> expectedAlgs = {"Mirror", "Multiply41", "ROT3"};
+    ASSERT_EQUAL(expectedAlgs, actualAlgs);
+    ASSERT_EQUAL(encoder->encode("1234"), "");
+    ASSERT_EQUAL(encoder->decode("1234"), "");
+    encoder->chooseAlgorithm("ROT3");
+    ASSERT_EQUAL(encoder->encode("1234"), "1237");
+    ASSERT_EQUAL(encoder->addAlgorithm(nullptr), false);
+    delete encoder;
+}
+
+void encodingTestRot3()
+{
+    MessageEncoder* encoder = new MessageEncoder();
+    encoder->chooseAlgorithm("ROT3");
+    ASSERT_EQUAL(encoder->encode("1234"), "1237");
+    ASSERT_EQUAL(encoder->decode("1237"), "1234");
+    ASSERT_EQUAL(encoder->encode("12 34 -2"), "15 37 1");
+    ASSERT_EQUAL(encoder->decode("15 37 1"), "12 34 -2");
+    delete encoder;
+}
+
+void encodingTestMirror()
+{
+    MessageEncoder* encoder = new MessageEncoder();
+    encoder->chooseAlgorithm("Mirror");
+    ASSERT_EQUAL(encoder->encode("41 23"), "14 32");
+    ASSERT_EQUAL(encoder->decode("14 32"), "41 23");
+    delete encoder;
+}
+
+void encodingTestMultiply41()
+{
+    MessageEncoder* encoder = new MessageEncoder();
+    encoder->chooseAlgorithm("Multiply41");
+    ASSERT_EQUAL(encoder->encode("1 -11"), "41 -451");
+    ASSERT_EQUAL(encoder->decode("41 -451"), "1 -11");
+    delete encoder;
+}
+
+void encodingTestXor()
+{
+    MessageEncoder* encoder = new MessageEncoder();
+    Xor* xorAlg = new Xor();
+    encoder->addAlgorithm(xorAlg);
+    std::vector<std::string> actualAlgs = encoder->getAvailableAlgorithms();
+    std::vector<std::string> expectedAlgs = {"Mirror", "Multiply41", "ROT3", "Xor"};
+    ASSERT_EQUAL(expectedAlgs, actualAlgs);
+    encoder->chooseAlgorithm("Xor");
+    ASSERT_EQUAL(encoder->encode("12"), "pq");
+    ASSERT_EQUAL(encoder->decode("pq"), "12");
+    ASSERT_EQUAL(encoder->encode("1 -2"), "pcoe");
+    ASSERT_EQUAL(encoder->decode("pcoe"), "1 -2");
+    delete encoder;
+}
+
+

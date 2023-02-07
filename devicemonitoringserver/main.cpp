@@ -17,6 +17,11 @@ int main()
     RUN_TEST(tr, monitoringServerTestNegativeValue);
     RUN_TEST(tr, monitoringServerTestStandardDeviation);
     RUN_TEST(tr, monitoringServerTestTwoDevices);
+    RUN_TEST(tr, encodingTest);
+    RUN_TEST(tr,  encodingTestRot3);
+    RUN_TEST(tr, encodingTestMirror);
+    RUN_TEST(tr, encodingTestMultiply41);
+    RUN_TEST(tr, encodingTestXor);
     return 0;
 }
 

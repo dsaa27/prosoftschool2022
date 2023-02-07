@@ -12,6 +12,8 @@ std::string Multiply41::encode(const std::string& message) const
     while (!is.eof())
     {
         is >> input;
+        if (input.empty())
+            continue;
         int64_t number = std::stoll(input);
         int64_t numMul41 = number * 41;
         os << numMul41;

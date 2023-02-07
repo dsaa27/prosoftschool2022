@@ -15,7 +15,7 @@ class MessageEncoder final
 public:
     MessageEncoder();
     ~MessageEncoder();
-    std::vector<std::string> getAllAlgorithms();
+    std::vector<std::string> getAvailableAlgorithms();
     /*!
     * \brief Зашифровать сообщение
     * * \param message - сообщение
