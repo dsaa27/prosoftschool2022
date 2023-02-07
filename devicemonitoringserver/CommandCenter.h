@@ -26,7 +26,7 @@ public:
     * \param phase - текущая фаза
      * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    int64_t checkMeterageInPhase(Phase phase, uint64_t deviceId);
+    int64_t checkMeterageInPhase(Phase& phase, uint64_t deviceId);
 
     /*!
     * \brief возвращает СКО ошибки выполения плана для последней отправленной фазы
@@ -48,7 +48,7 @@ private:
   * \brief считает ско ошибки для текущей фазы
      * \return ско ошибки
   */
-    double countStandardDeviationForPhase(Phase phase, uint64_t deviceId);
+    double countStandardDeviationForPhase(Phase& phase, uint64_t deviceId);
     struct cmp {
         bool operator() (Phase a, Phase b) const
         {

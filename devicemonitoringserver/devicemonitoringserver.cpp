@@ -62,12 +62,21 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
     Phase currentPhase = result.phase;
     int64_t valueToCorrect = commandCenter->checkMeterageInPhase(currentPhase, deviceId);
 
-    std::string newMessage;
+    MessageSerializator::MessageStruct newMessage;
+    std::string serializedMessage;
     if (valueToCorrect <= 100)
-        newMessage = serializator->serialize(serializator->Command, 0, 0, 0, valueToCorrect);
-    else newMessage = serializator->serialize(serializator->Error, valueToCorrect);
-    std::string newEncodeMessage = messageEncoder->encode(newMessage);
-
+    {
+        newMessage.valueToCorrect = valueToCorrect;
+        newMessage.type = MessageSerializator::Command;
+        serializedMessage = serializator->serialize(newMessage);
+    }
+    else
+    {
+        newMessage.type = MessageSerializator::Error;
+        newMessage.errorCode = valueToCorrect;
+        serializedMessage = serializator->serialize(newMessage);
+    }
+    std::string newEncodeMessage = messageEncoder->encode(serializedMessage);
     sendMessage(deviceId, newEncodeMessage);
 }
 

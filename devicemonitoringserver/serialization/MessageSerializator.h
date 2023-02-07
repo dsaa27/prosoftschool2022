@@ -34,13 +34,10 @@ public:
     };
     /*!
     * \brief сериализует сообщение
-    * \param messType - тип сообщения
-    * \param errorCode - тип ошибки
-
+    * \param message - сообщение в виде структуры
     * \return величина корректировки для достижения этого плана или код ошибки в случае некорректных измерений
     */
-    std::string serialize(messageType messType, uint8_t errorCode = 0, uint64_t timeStamp = 0,
-                                 uint8_t value = 0, int64_t valueToCorrect=0);
+    std::string serialize(MessageStruct message);
     /*!
     * \brief десереализует сообщение
     * \param message - сообщение

@@ -1,29 +1,27 @@
 #include "MessageSerializator.h"
 #include <iostream>
 
-std::string MessageSerializator::serialize(messageType messType, uint8_t errorCode,
-                               uint64_t timeStamp, uint8_t value, int64_t valueToCorrect) {
+std::string MessageSerializator::serialize(MessageStruct message) {
     std::ostringstream os;
-    switch (messType)
+    switch (message.type)
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            os << int64_t(valueToCorrect);
+            os << int64_t(message.valueToCorrect);
             break;
         case messageType::Error:
             os << messageType::Error << " ";
-            os << uint64_t(errorCode);
+            os << uint64_t(message.errorCode);
             break;
         case messageType::Meterage:
             os << messageType::Meterage << " ";
-            os << uint64_t(value) << " ";
-            os << timeStamp;
+            os << uint64_t(message.phase.value) << " ";
+            os << message.phase.timeStamp;
             break;
         default:
             break;
     }
-    std::string result = os.str();
-    return result;
+    return os.str();
 }
 
 MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::string &message) {

@@ -1,6 +1,6 @@
 #include "CommandCenter.h"
 #include "math.h"
-int64_t CommandCenter::checkMeterageInPhase(Phase phase, uint64_t deviceId) {
+int64_t CommandCenter::checkMeterageInPhase(Phase& phase, uint64_t deviceId) {
     if (devicesWorkSchedule[deviceId].empty())
         return errorType::NoSchedule;
 
@@ -13,11 +13,9 @@ int64_t CommandCenter::checkMeterageInPhase(Phase phase, uint64_t deviceId) {
 
     receivedMeterage.insert(phase);
 
-    int64_t diff = 0;
-
-    diff = (int64_t)phaseFromWorkSchedule.value - (int64_t)phase.value;
+    int64_t diff = (int64_t)phaseFromWorkSchedule.value - (int64_t)phase.value;
     devicesDifferenceNeededAndActualValue[deviceId].push_back(diff);
-    double sd = countStandardDeviationForPhase(phaseFromWorkSchedule,  deviceId);
+    countStandardDeviationForPhase(phaseFromWorkSchedule,  deviceId);
     return diff;
 }
 
@@ -31,7 +29,7 @@ Phase CommandCenter::getPhaseFromWorkSchedule(std::vector<Phase>& workSchedule, 
     return err;
 }
 
-double CommandCenter::countStandardDeviationForPhase(Phase phase,  uint64_t deviceId) {
+double CommandCenter::countStandardDeviationForPhase(Phase& phase,  uint64_t deviceId) {
     double average = 0;
     double count = (double)devicesDifferenceNeededAndActualValue[deviceId].size();
     for (int64_t v : devicesDifferenceNeededAndActualValue[deviceId])
@@ -54,12 +52,12 @@ double CommandCenter::getStandardDeviation(uint64_t deviceId) {
 
 void CommandCenter::addDevice(const DeviceWorkSchedule& workSchedule) {
     if (devicesWorkSchedule.find(workSchedule.deviceId) == devicesWorkSchedule.end())
-    {
         devicesWorkSchedule.insert(std::make_pair(workSchedule.deviceId, workSchedule.schedule));
-    }
 }
 
 void CommandCenter::deleteDevice(uint64_t deviceId) {
+    if (devicesWorkSchedule.find(deviceId) == devicesWorkSchedule.end())
+        return;
     devicesStandDeviation.erase(deviceId);
     devicesWorkSchedule.erase(deviceId);
     devicesDifferenceNeededAndActualValue.erase(deviceId);

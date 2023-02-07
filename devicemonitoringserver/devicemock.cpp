@@ -120,7 +120,11 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
-    std::string message = serializator->serialize(MessageSerializator::Meterage, -1, m_timeStamp, meterage);
+    MessageSerializator::MessageStruct res;
+    res.valueToCorrect = -1;
+    res.type = MessageSerializator::Meterage;
+    res.phase = {m_timeStamp, meterage};
+    std::string message = serializator->serialize(res);
     std::string encodeMessage = messageEncoder->encode(message);
     sendMessage(encodeMessage);
 }
