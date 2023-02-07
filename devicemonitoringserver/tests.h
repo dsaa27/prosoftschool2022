@@ -5,6 +5,21 @@
 /*!
  * \brief Тест сервера.
  */
-void monitoringServerTest1();
+void monitoringServerTest();
+
+/*!
+ * \brief Тест модуля сериализации/десериализации.
+ */
+void serializatorTest();
+
+/*!
+ * \brief Тест модуля шифрации/дешифрации.
+ */
+void encoderTest();
+/*!
+ * \brief Тест командного центра
+ */
+void comandCenterTest();
+
 
 #endif // TESTS_H

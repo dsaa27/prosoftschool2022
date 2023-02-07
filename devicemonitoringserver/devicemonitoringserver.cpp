@@ -29,9 +29,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& workSchedule)
 {
-    // TODO
+    m_commandCenter.setSchedule(workSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,9 +46,15 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    std::string decodedMessage = m_encoder.decode(message);
+    //std::cout << "Received a message from a device with an id " << deviceId << ": " << decodedMessage << std::endl;
+    MessageStruct parsedMessage = m_serializer.deSerializate(decodedMessage);
+    MessageStruct answer = m_commandCenter.generateCommand(deviceId, parsedMessage);
+    std::string serialAnswer = m_serializer.serializate(answer);
+    std::string encodedAnswer = m_encoder.encode(serialAnswer);
+    sendMessage(deviceId, encodedAnswer);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
