@@ -29,14 +29,15 @@ std::string Multiply41::decode(const std::string& message) const
     while (!is.eof())
     {
         is >> input;
+        if (input.empty())
+            continue;
         int64_t number = std::stoll(input);
         int64_t numDiv41 = number / 41;
         os << numDiv41;
         if (!is.eof())
             os << ' ';
     }
-    std::string res = os.str();
-    return res;
+    return os.str();
 }
 
 std::string Multiply41::getName() const {

@@ -40,19 +40,17 @@ bool MessageEncoder::chooseAlgorithm(std::string algorithm)
 
 std::string MessageEncoder::decode(const std::string &message)
 {
-    std::string decodeMessage = currentAlgorithm->decode(message);
-    return decodeMessage;
+    return currentAlgorithm->decode(message);
 }
 
 std::string MessageEncoder::encode(const std::string &message)
 {
-    std::string encodeMessage = currentAlgorithm->encode(message);
-    return encodeMessage;
+    return currentAlgorithm->encode(message);
 }
 
 std::vector<std::string> MessageEncoder::getAllAlgorithms() {
     std::vector<std::string> allAlgsName = {};
-    for (std::pair<std::string, BaseEncoderExecutor*> alg : allAlgorithms)
+    for (const std::pair<std::string, BaseEncoderExecutor*> &alg : allAlgorithms)
     {
         allAlgsName.push_back(alg.first);
     }
