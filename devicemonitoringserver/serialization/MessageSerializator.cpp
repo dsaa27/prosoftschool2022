@@ -30,34 +30,25 @@ MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::s
 
     is >> input;
     uint64_t type = std::stoull(input);
-
-    uint8_t value;
-    int64_t valueToCorrect;
-    uint64_t timeStamp;
-    uint64_t errorCode;
     MessageStruct result;
     switch(type)
     {
         case messageType::Command:
             result.type = messageType::Command;
             is >> input;
-            valueToCorrect = std::stoll(input);
-            result.valueToCorrect = valueToCorrect;
+            result.valueToCorrect = std::stoll(input);
             break;
         case messageType::Meterage:
             result.type = messageType::Meterage;
             is >> input;
-            value = std::stoul(input);
-            result.phase.value = value;
+            result.phase.value =  std::stoul(input);
             is >> input;
-            timeStamp = std::stoull(input);
-            result.phase.timeStamp = timeStamp;
+            result.phase.timeStamp = std::stoull(input);
             break;
         case messageType::Error:
             result.type = messageType::Error;
             is >> input;
-            errorCode = std::stoull(input);
-            result.errorCode = errorCode;
+            result.errorCode = std::stoull(input);
             break;
         default:
             break;
