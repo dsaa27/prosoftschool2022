@@ -27,7 +27,6 @@ std::string MessageSerializator::serialize(MessageStruct message) {
 MessageSerializator::MessageStruct MessageSerializator::deserialize(const std::string &message) {
     std::string input;
     std::istringstream is(message);
-
     is >> input;
     uint64_t type = std::stoull(input);
     MessageStruct result;

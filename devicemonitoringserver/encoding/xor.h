@@ -4,7 +4,9 @@
 #include <string>
 #include "BaseEncoderExecutor.h"
 
-
+/*!
+ * \brief класс для шифрования и дешифрования сообщений методом xor
+ */
 class Xor : public BaseEncoderExecutor
 {
 public:
