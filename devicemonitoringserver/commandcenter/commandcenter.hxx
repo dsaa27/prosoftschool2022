@@ -7,17 +7,17 @@
 
 class command_center {
   private:
-    std::map<std::uint64_t, std::vector<Phase>> _devmap;
-    std::map<std::uint64_t, std::uint64_t> _last;
-    // std::map<std::uint64_t, std::pair<Phase, double>> _sd; // ско
+    std::map<std::uint64_t, std::vector<Phase>> _devmap{};
+    std::map<std::uint64_t, std::uint64_t> _last{};
+    // std::map<std::uint64_t, std::pair<Phase, double>> _sd{}; // ско
 
-    int64_t correction_value(const std::uint64_t device, const Phase&);
-    auto find_phase(const std::uint64_t dev, const std::uint64_t stamp);
-    bool has_schedule(const std::uint64_t device);
+    int64_t correction_value(const std::uint64_t idev, const Phase&);
+    auto find_phase(const std::uint64_t idev, const std::uint64_t tstamp);
+    bool has_schedule(const std::uint64_t idev);
 
   public:
-    std::unique_ptr<message> check(const std::uint64_t device, const meterage&);
+    std::unique_ptr<message> check(const std::uint64_t idev, const meterage&);
 
     void add(const DeviceWorkSchedule&);
-    void rem(const std::uint64_t device);
+    void rem(const std::uint64_t idev);
 };

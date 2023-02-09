@@ -2,35 +2,40 @@
 #include "../message.hxx"
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 #include <memory>
 #include <utility>
-#include<iostream>
 
-void command_center::add(const DeviceWorkSchedule& schedule) {
+void
+command_center::add(const DeviceWorkSchedule& schedule) {
     _devmap[schedule.deviceId] = schedule.schedule;
 }
 
-void command_center::rem(const std::uint64_t device) {
-    _devmap.erase(device);
+void
+command_center::rem(const std::uint64_t idev) {
+    _devmap.erase(idev);
+    _last.erase(idev);
 }
 
-auto command_center::find_phase(const std::uint64_t idev,
-                                const std::uint64_t stamp) {
+auto
+command_center::find_phase(const std::uint64_t idev,
+                           const std::uint64_t stamp) {
 
     const std::vector<Phase>& schedule{_devmap[idev]};
 
-    return std::find_if(schedule.begin(), schedule.end(),
-                        [stamp](const Phase p) {
-                        return p.timeStamp == stamp; });
+    return std::find_if(
+        schedule.begin(), schedule.end(),
+        [stamp](const Phase p) { return p.timeStamp == stamp; });
 }
 
-bool command_center::has_schedule(const std::uint64_t device) {
-    return _devmap.find(device) != _devmap.end();
+bool
+command_center::has_schedule(const std::uint64_t idev) {
+    return _devmap.find(idev) != _devmap.end();
 }
 
-std::unique_ptr<message> command_center::check(const std::uint64_t device,
-                                               const meterage& meterage) {
-    const auto last = _last.find(device);
+std::unique_ptr<message>
+command_center::check(const std::uint64_t idev, const meterage& meterage) {
+    const auto last = _last.find(idev);
 
     if (last != _last.end()) {
         if (meterage.timestamp() < last->second) {
@@ -38,16 +43,16 @@ std::unique_ptr<message> command_center::check(const std::uint64_t device,
         }
     }
 
-    if (!has_schedule(device)) {
+    if (!has_schedule(idev)) {
         return std::make_unique<error>(ERR_TYPE::NOSCHEDULE);
     }
 
-    const auto phase = find_phase(device, meterage.timestamp());
+    const auto phase = find_phase(idev, meterage.timestamp());
 
-    if (phase == std::end(_devmap[device])) {
+    if (phase == std::end(_devmap[idev])) {
         return std::make_unique<error>(ERR_TYPE::NOTIMESTAMP);
     }
 
-    _last[device] = meterage.timestamp();
+    _last[idev] = meterage.timestamp();
     return std::make_unique<command>(phase->value - meterage.value());
 }
