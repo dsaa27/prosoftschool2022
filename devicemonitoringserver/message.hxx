@@ -50,5 +50,8 @@ struct error : message {
         return MSG_TYPE::ERROR;
     }
 
+    error(const ERR_TYPE err) : _err{err} {
+    }
+
     ~error(void) = default;
 };

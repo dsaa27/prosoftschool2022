@@ -48,6 +48,7 @@ std::string serializator::serialize(const message* const msg) const {
             return "";
         }
 
+        ret  += static_cast<char>(err->type());
         ret += static_cast<char>(err->_err);
         return ret;
     }
@@ -68,7 +69,7 @@ serializator::deserialize(const std::string& msg) const {
     case MSG_TYPE::COMMAND: {
         const uint64_t value{
             std::stoull(std::string{msg.begin() + 1, msg.end()})};
-        return std::unique_ptr<message>(new command(value));
+        return std::unique_ptr<message>{new command(value)};
     }
 
     case MSG_TYPE::METERAGE: {
@@ -84,7 +85,12 @@ serializator::deserialize(const std::string& msg) const {
         const uint64_t value{std::stoull(
             std::string{msg.begin() + splitter_pos + 1, msg.end()})};
 
-        return std::unique_ptr<message>(new meterage(timestamp, value));
+        return std::unique_ptr<message>{new meterage(timestamp, value)};
+    }
+
+    case MSG_TYPE::ERROR: {
+        const ERR_TYPE err{static_cast<ERR_TYPE>(msg[1])};
+        return std::unique_ptr<message>{new error(err)};
     }
 
     default:
