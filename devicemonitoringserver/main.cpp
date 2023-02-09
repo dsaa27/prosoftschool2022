@@ -29,22 +29,22 @@ int main()
     RUN_TEST(tr, monitoringServerTest1);
 
         //Проверка работы MessageSerializer
-    string Type1 = {"Meterage"}, Type2;
-    uint8_t Meterage1 = 82;
-    uint8_t Meterage2;
-    uint64_t Time1 = 5, Time2;
-    double Command = -7.5;
-    string Type_error = {"NoTimestamp"};
+//    string Type1 = {"Meterage"}, Type2;
+//    uint8_t Meterage1 = 82;
+//    uint8_t Meterage2;
+//    uint64_t Time1 = 5, Time2;
+//    double Command = -31;
+//    string Type_error = {"NoTimestamp"};
 
-    MessageSerialiser Message;
+//    MessageSerialiser Message;
 
 
-    string Write1 = Message.serialize_Message(Meterage1,Time1);
-    string Write2 = Message.serialize_Message(Command);
-    string Write3 = Message.serialize_Message(Type_error);
+//    string Write1 = Message.serialize_Message(Meterage1,Time1);
+//    string Write2 = Message.serialize_Message(Command);
+//    string Write3 = Message.serialize_Message(Type_error);
 
-    cout << Write1 << endl;
-//    cout << Write2 << endl;
+    //cout << Write1 << endl;
+    //cout << Write2 << endl;
 //    cout << Write3 << endl;
 
 
@@ -111,27 +111,27 @@ int main()
 
 
 
-    CommandCenter commandcenter;
+//    CommandCenter commandcenter;
 
-    //DeviceMonitoringServer devicemonitoringserver;
+//    //DeviceMonitoringServer devicemonitoringserver;
 
-    string MessageToCommandCenter = "TestMessage";
+//    string MessageToCommandCenter = "TestMessage";
 
-    string MessageFromCommandCenter = "";
+//    string MessageFromCommandCenter = "";
 
     //1 вариант: devicemonitoringserver.SendMessageToCommandCenter(commandcenter, MessageToCommandCenter, MessageFromCommandCenter);
 
     //commandcenter.GetCommandMessage(MessageToCommandCenter, MessageFromCommandCenter);
 
 
-    map <int, int> mp;
+//    map <int, int> mp;
 
-    mp[1] = 4;
-    mp[2] = 3;
+//    mp[1] = 4;
+//    mp[2] = 3;
 
-    map <int, int>::iterator it = mp.begin();
+//    map <int, int>::iterator it = mp.begin();
 
-    it++;
+//    it++;
 
 /*    for (int i=0; it != mp.end(); it++, i++){
         if(it -> first == 1) cout << "already use" << endl;
@@ -170,7 +170,6 @@ int main()
 //    u_meterages = u_meterages + com;
 
 //    cout << u_meterages << endl;
-
 
     return 0;
 }
