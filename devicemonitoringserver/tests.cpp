@@ -22,8 +22,8 @@ void monitoringServerTest1()
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
 
-    std::vector<uint8_t> meterages {32,5,150};
-    std::vector<Phase> phases {{0,1},{1,5},{2,250}};
+    std::vector<uint8_t> meterages {32,5,150,10};
+    std::vector<Phase> phases {{0,1},{1,5},{2,250},{3,200}};
     DeviceWorkSchedule schedule {deviceId,phases};
 
     server.setDeviceWorkSchedule(schedule);
