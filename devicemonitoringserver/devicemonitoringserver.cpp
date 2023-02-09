@@ -37,6 +37,7 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
 {
     delete m_connectionServer;
 
+    delete m_encoder;
     delete m_serial;
     delete m_commandcenter;
 }
@@ -75,9 +76,10 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
     std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessageDecode = " << Message << std::endl;
 
     std::string Messagefromserver = Message;
-    //std::string Messagetoserver = "";
 
     std::string Message_from_ComCent = m_commandcenter->GetMessage(deviceId, Messagefromserver);
+
+    Message_from_ComCent = m_encoder->encode(Message_from_ComCent);
 
     std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessagefromComCent = " << Message_from_ComCent << std::endl;
 
