@@ -1,112 +1,79 @@
 #include "commandcenter.h"
 #include <vector>
+#include <math.h>
 
-/*
-CommandCenter::CommandCenter()
+
+void CommandCenter::SetSchedule(DeviceWorkSchedule &Schedule)
 {
 
-}
-*/
-
-void CommandCenter::RegisterDevice(uint64_t& deviceId)
-{
-    Device NewDevice;
-
-    //NewDevice.deviceId = deviceId;
-
-    std::map <uint64_t, Device>::iterator  it = m_Device_Map.begin();
-
-    for (int i=0; it != m_Device_Map.end(); it++, i++) //проверка на попытку регистрации устройства которое уже существует
-    {
-        if (it -> first == deviceId) return;
-    }
-
-    m_Device_Map[deviceId] = NewDevice;
-
-    //m_Device_Vector.push_back(NewDevice);
+    if (m_Device_Map.find(Schedule.deviceId) == m_Device_Map.end())
+        m_Device_Map.insert(std::make_pair(Schedule.deviceId,Schedule.schedule));
 }
 
-
-void CommandCenter::SetSchedule(uint64_t& deviceId, DeviceWorkSchedule &Schedule)
+std::string CommandCenter::GetMessage(uint64_t& deviceId, std::string &Message_fromServer)
 {
-    Device NewDevice;
+    uint8_t meterage_from_device = m_serialize.GetMeterage(Message_fromServer);
 
-    std::map <uint64_t, Device>::iterator  it = m_Device_Map.begin();
+    uint64_t timeStamp_from_device = m_serialize.GetTimeStamp(Message_fromServer);
 
-    for (int i=0; it != m_Device_Map.end(); it++, i++)
+    std::string Message_toServer;
+
+
+    if (m_Device_Map.find(deviceId) == m_Device_Map.end())
     {
-        if (it->first == deviceId)
-        {
-            NewDevice = it->second;
-
-            NewDevice.Schedule = Schedule;
-
-            it->second = NewDevice;
-        }
-        else return; //такого устройства в командном центре не существует, необходимо провести регистрацию нового устройства
+        Message_toServer = m_serialize.serialize_Message("NoSchedule");
+        return Message_toServer;
     }
 
-    //std::map <uint64_t, Device>::iterator  it = m_Device_Map.find(deviceId);
+    uint64_t expTimeStamp_from_schedule_max = m_Device_Map[deviceId].back().timeStamp;
+    uint64_t expTimeStamp_from_schedule_min = m_Device_Map[deviceId].at(0).timeStamp;
 
+    if ((timeStamp_from_device < expTimeStamp_from_schedule_min) || (timeStamp_from_device > expTimeStamp_from_schedule_max))
+    {
+        Message_toServer = m_serialize.serialize_Message("NoTimestamp");
+        return Message_toServer;
+    }
+
+    if (timeStamp_from_device < m_Device_info[deviceId].expectedTimestamp)
+    {
+        Message_toServer = m_serialize.serialize_Message("Obsolete");
+        return Message_toServer;
+    }
+
+    std::vector <Phase> schedule = m_Device_Map[deviceId];
+
+    int buffer;
+
+    for (int i = 0; i < schedule.size(); i++)
+    {
+        if (schedule[i].timeStamp == timeStamp_from_device)
+        {
+            buffer = i;
+            break;
+        }
+
+    }
+
+    double command_to_server = schedule.at(buffer).value - meterage_from_device;
+
+    Message_toServer = m_serialize.serialize_Message(command_to_server);
+
+    double MSE = m_Device_info[deviceId].MSE;
+    double count = m_Device_info[deviceId].count_of_calculation;
+
+    m_Device_info[deviceId].MSE = sqrt((pow(MSE, 2) * count + pow(command_to_server, 2))/(count + 1));
+
+    m_Device_info[deviceId].expectedTimestamp = timeStamp_from_device;
+
+    m_Device_info[deviceId].count_of_calculation++;
+
+    return Message_toServer;
 }
 
 
-void CommandCenter::GetMessage(uint64_t& deviceId, std::string &Message_fromServer, std::string &Message_toServer)
+double CommandCenter::GetMSE(uint64_t deviceId)
 {
-    uint8_t meterage_from_device = m_serialize->GetMeterage(Message_fromServer);
-    uint64_t timeStamp_from_device = m_serialize->GetTimeStamp(Message_fromServer);
-
-    if (m_Device_Map.count(deviceId) == 0)
-    {
-        Message_toServer = m_serialize->serialize_Message("NoSchedule");
-    }
-
-    std::map <uint64_t, Device>::iterator  it = m_Device_Map.find(deviceId);
-    Device ExpDevice = it -> second;
-
-    if (ExpDevice.expectedTimestamp > timeStamp_from_device)
-    {
-        ExpDevice.expectedTimestamp++;
-        Message_toServer = m_serialize->serialize_Message("Obsolete");
-    }
-    else
-    {
-
-    const auto& Exp_schedule = ExpDevice.Schedule.schedule;
-
-    uint64_t left = 0;
-    uint64_t right = Exp_schedule.size()-1;
-    uint64_t mid = (left+right)/2;
-
-
-    while ((Exp_schedule[mid].timeStamp != timeStamp_from_device) && left < right)
-        {
-        if (Exp_schedule[mid].timeStamp < timeStamp_from_device) left = mid + 1;
-        else right = mid - 1;
-        mid = (left+right)/2;
-        }
-
-    if (Exp_schedule[mid].timeStamp != timeStamp_from_device)
-        {
-        ExpDevice.expectedTimestamp++;
-        Message_toServer = m_serialize->serialize_Message("NoTimestamp");
-        }
-    else
-        {
-
-        double new_MSE = Exp_schedule[mid].value - meterage_from_device;
-
-        ExpDevice.m_MSE[ExpDevice.expectedTimestamp] = new_MSE;
-
-        ExpDevice.last_MSE = new_MSE;
-
-        Message_toServer = m_serialize->serialize_Message(new_MSE); //отправка команды сервер и далее устройству
-
-        ExpDevice.expectedTimestamp++;
-        }
-    }
-
-    it -> second = ExpDevice;
-
-    //delete ExpDevice;
+    if (m_Device_info.find(deviceId) == m_Device_info.end())
+        return 0;
+    return m_Device_info[deviceId].MSE;
 }
