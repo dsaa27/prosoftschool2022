@@ -76,7 +76,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 void DeviceMock::onMessageReceived(const std::string& /*message*/)
 {
     // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
+    // записать ее в список полученных команд
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -102,8 +102,10 @@ void DeviceMock::startMeterageSending()
 
 void DeviceMock::sendNextMeterage()
 {
-    if (m_timeStamp >= m_meterages.size())
+    if (m_timeStamp >= m_meterages.size()) {
         return;
+    }
+
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;

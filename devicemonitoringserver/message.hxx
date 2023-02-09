@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
 
-enum class MSG_TYPE : uint8_t { METERAGE = 0u, COMMAND, ERROR };
+enum class MSG_TYPE : std::uint8_t { METERAGE = 0u, COMMAND, ERROR };
 
-enum class ERR_TYPE : uint8_t { NOSCHEDULE = 0u, NOTIMESTAMP, OBSOLETE };
+enum class ERR_TYPE : std::uint8_t { NOSCHEDULE = 0u, NOTIMESTAMP, OBSOLETE };
 
 struct message {
   public:
@@ -13,11 +13,11 @@ struct message {
 
 struct meterage : message {
   private:
-    uint64_t _timestamp;
-    uint64_t _value;
+    std::uint64_t _timestamp;
+    std::uint8_t _value;
 
   public:
-    meterage(const uint64_t timestamp, const uint64_t value)
+    meterage(const std::uint64_t timestamp, const std::uint8_t value)
         : _timestamp{timestamp}, _value{value} {
     }
 
@@ -29,7 +29,7 @@ struct meterage : message {
         return _timestamp;
     }
 
-    std::uint64_t value(void) const {
+    std::uint8_t value(void) const {
         return _value;
     }
 
@@ -38,18 +38,18 @@ struct meterage : message {
 
 struct command : message {
   private:
-    uint64_t _value;
+    std::int8_t _value;
 
   public:
     MSG_TYPE type(void) const {
         return MSG_TYPE::COMMAND;
     }
 
-    std::uint64_t value(void) const {
+    std::int8_t value(void) const {
         return _value;
     }
 
-    command(const uint64_t value) : _value(value) {
+    command(const std::int8_t value) : _value(value) {
     }
 
     ~command(void) = default;

@@ -10,7 +10,7 @@ int main(void) {
 
     {
         cout << "Test #1" << endl;
-        const uint64_t value{1001u};
+        const std::int8_t value{-71};
 
         const serializator ser{};
         const unique_ptr<const message> msg{new command(value)};
@@ -20,13 +20,15 @@ int main(void) {
 
         assert(deser_msg);
         assert(MSG_TYPE::COMMAND == deser_msg->type());
+
         assert(value ==
                dynamic_cast<const command* const>(deser_msg.get())->value());
     }
 
     {
         cout << "Test #2" << endl;
-        const std::uint64_t timestamp{1234567890u}, value{987654321u};
+        const std::uint64_t timestamp{1234567890u};
+        const std::uint8_t value{23u};
 
         const serializator ser{};
         const unique_ptr<const message> msg{new meterage(timestamp, value)};

@@ -30,7 +30,7 @@ public:
     bool bind(uint64_t deviceId);
     /*!
      * \brief Подключить устройство к серверу.
-     * \param serverId - идентификатор сревера
+     * \param serverId - идентификатор сервера
      * \return false в случае ошибки
      */
     bool connectToServer(uint64_t serverId);

@@ -9,8 +9,8 @@
  */
 struct Phase
 {
-    uint64_t timeStamp = 0; ///< Метка времени начала этапа
-    uint8_t value = 0;      ///< Целевое значение этапа
+    std::uint64_t timeStamp{0u}; ///< Метка времени начала этапа
+    std::uint8_t value{0u};      ///< Целевое значение этапа
 };
 
 /*!
@@ -18,8 +18,8 @@ struct Phase
  */
 struct DeviceWorkSchedule
 {
-    uint64_t deviceId = 0;       ///< Идентификатор устройства
-    std::vector<Phase> schedule; ///< План работы устройства
+    std::uint64_t deviceId{0u};    ///< Идентификатор устройства
+    std::vector<Phase> schedule{}; ///< План работы устройства
 };
 
 #endif // DEVICEWORKSCHEDULE_H

@@ -67,8 +67,9 @@ serializator::deserialize(const std::string& msg) const {
     switch (msg_type) {
 
     case MSG_TYPE::COMMAND: {
-        const uint64_t value{
-            std::stoull(std::string{msg.begin() + 1, msg.end()})};
+        const int8_t value{static_cast<int8_t>(
+            std::stoi(std::string{msg.begin() + 1, msg.end()}))};
+
         return std::unique_ptr<message>{new command(value)};
     }
 

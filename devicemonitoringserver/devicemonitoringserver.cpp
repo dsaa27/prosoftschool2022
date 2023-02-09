@@ -101,6 +101,7 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
         DeviceMonitoringServer* m_server = nullptr;
         uint64_t m_clientId = 0;
     };
+
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
 }
