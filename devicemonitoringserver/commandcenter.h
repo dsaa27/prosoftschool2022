@@ -10,52 +10,46 @@
 
 struct Device{
 
-    //uint64_t deviceId = 0;
-
-    DeviceWorkSchedule Schedule;
-
     uint64_t expectedTimestamp = 0;
 
-    //uint64_t - метка времени на котором было получено СКО
-    //double - значение СКО
-    std::map <uint64_t, double> m_MSE;
+    double count_of_calculation = 0;
 
-    double last_MSE;
+    double MSE;
 };
 
 
 class CommandCenter
 {
 public:
-    //CommandCenter();
-    /*!
-     * \brief Реализация алгоритма регистрации нового устройства в памяти комадного центра
-     * \param deviceId - ID нового устройста
-     */
-    void RegisterDevice (uint64_t& deviceId);
-
     /*!
      * \brief Реализация алгоритма выдачи решения от командного центра
      * \param Message_fromServer - сообщение, которое приходит от сервера
      * \param Message_toServer - сообщение, которое выдаёт командный центр (ошибка или команда)
      */
-    void GetMessage (uint64_t& deviceId, std::string& Message_fromServer, std::string& Message_toServer);
+    std::string GetMessage (uint64_t& deviceId, std::string& Message_fromServer);
 
     /*!
      * \brief Реализация алгоритма задания плана работы устройства
      * \param deviceId - ID устройста для которого задаётся план работы
      * \param Schedule - план работу устройства, который необходимо задать для устройства
      */
-    void SetSchedule (uint64_t& deviceId, DeviceWorkSchedule& Schedule);
+    void SetSchedule (DeviceWorkSchedule& Schedule);
+
+    /*!
+     * \brief Реализация алгоритма возврата СКО (MSE)
+     * \param deviceId - ID устройста для которого задаётся план работы
+     */
+    double GetMSE(uint64_t deviceId);
 
 private:
     //uint64_t - ключ, ID устройства
-    //Device - значения устройства
-    std::map <uint64_t, Device> m_Device_Map;
 
-    MessageSerialiser* m_serialize;
+    std::map <uint64_t, std::vector<Phase>> m_Device_Map;
 
-    //std::vector <Device> m_Device_Vector;
+    std::map <uint64_t, Device> m_Device_info;
+
+    MessageSerialiser m_serialize;
+
 };
 
 
