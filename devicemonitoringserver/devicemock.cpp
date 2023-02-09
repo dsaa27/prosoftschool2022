@@ -3,6 +3,8 @@
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
 
+static std::string respond;
+
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -79,7 +81,9 @@ bool DeviceMock::connectToServer(uint64_t serverId)
 
 void DeviceMock::sendMessage(const std::string& message) const
 {
+    std::cout << "sendMessage: " << "Send Message = " << message << std::endl;
     m_clientConnection->sendMessage(message);
+
 }
 
 void DeviceMock::onMessageReceived(const std::string& message)
@@ -108,7 +112,12 @@ void DeviceMock::onMessageReceived(const std::string& message)
         m_meterages.back() = static_cast <uint8_t> (u_buffermeterages);
     }
 
+    respond = message;
+
+    std::cout << "DeviceMock::onMessageReceived: " << "DecodeMessagefromServer = " << respond << std::endl;
+
     sendNextMeterage(); // Отправляем следующее измерение
+
 }
 
 void DeviceMock::onConnected()
@@ -149,13 +158,16 @@ void DeviceMock::sendNextMeterage()
 
     //m_encoder->choice_algoithm("RO3");
 
+
     Message = m_encoder->encode(Message);
-    m_clientConnection->sendMessage(Message);
+    std::cout << "sendNextMeterage: " << "Send Message = " << Message << std::endl;
+    sendMessage(Message);
+
 
 }
 
 void DeviceMock::setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm)
 {
     m_encoder->registration_algorithm(EncodeAlgoritm);
-    std::cout << 1 << std::endl;
 }
+
