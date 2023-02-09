@@ -81,7 +81,7 @@ bool DeviceMock::connectToServer(uint64_t serverId)
 
 void DeviceMock::sendMessage(const std::string& message) const
 {
-    std::cout << "sendMessage: " << "Send Message = " << message << std::endl;
+    std::cout << "DeviceMock::sendMessage" << "Send Message = " << message << std::endl;
     m_clientConnection->sendMessage(message);
 
 }
@@ -105,14 +105,16 @@ void DeviceMock::onMessageReceived(const std::string& message)
     {
         m_CommandFromServer.push_back(m_serial->GetCommand(Message));
 
-        double u_buffermeterages = static_cast <double> (m_meterages.back());
+        double u_buffermeterages = static_cast <double> (m_meterages.at(m_cout_of_meterages));
 
-        u_buffermeterages = u_buffermeterages + m_CommandFromServer.back();
+        u_buffermeterages = u_buffermeterages + m_CommandFromServer.at(m_cout_of_meterages);
 
-        m_meterages.back() = static_cast <uint8_t> (u_buffermeterages);
+        m_meterages.at(m_cout_of_meterages) = static_cast <uint8_t> (u_buffermeterages);
+
+        m_cout_of_meterages++;
     }
 
-    respond = message;
+    respond = Message;
 
     std::cout << "DeviceMock::onMessageReceived: " << "DecodeMessagefromServer = " << respond << std::endl;
 
@@ -152,15 +154,11 @@ void DeviceMock::sendNextMeterage()
 
     std::string Message = m_serial->serialize_Message(meterage,timeStamp);
 
-//    RO3 ro3;
-//    BaseEncoderExecutor *p_U1 = reinterpret_cast <BaseEncoderExecutor*> (&ro3);
-//    m_encoder->registration_algorithm(p_U1);
-
-    //m_encoder->choice_algoithm("RO3");
+    std::cout << "DeviceMock::sendNextMeterage: " << "Message = " << Message << std::endl;
 
 
     Message = m_encoder->encode(Message);
-    std::cout << "sendNextMeterage: " << "Send Message = " << Message << std::endl;
+    std::cout << "DeviceMock::sendNextMeterage: " << "Send EncodeMessage = " << Message << std::endl;
     sendMessage(Message);
 
 
