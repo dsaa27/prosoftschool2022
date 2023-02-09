@@ -22,18 +22,31 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
         DeviceMonitoringServer* m_server = nullptr;
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
+
+    auto* messageEncoder = new MessageEncoder;
+    m_encoder = messageEncoder;
+
+    auto* messageSerialiser = new MessageSerialiser;
+    m_serial = messageSerialiser;
+
+    auto* commandcenter = new CommandCenter;
+    m_commandcenter = commandcenter;
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
 {
     delete m_connectionServer;
+
+    delete m_serial;
+    delete m_commandcenter;
 }
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& Schedule)
 {
     //TO DO
     DeviceWorkSchedule Schedule1 = Schedule;
-    m_commandcenter->SetSchedule(m_this_deviceId, Schedule1);
+    //m_commandcenter->RegisterDevice(m_this_deviceId);
+    m_commandcenter->SetSchedule(Schedule1);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -51,25 +64,29 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
     //TO DO
+
+    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send Message = " << message << std::endl;
     std::string Message = message;
 
     m_this_deviceId = deviceId;
 
     Message = m_encoder->decode(Message);
 
+    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessageDecode = " << Message << std::endl;
+
     std::string Messagefromserver = Message;
-    std::string Messagetoserver = "";
+    //std::string Messagetoserver = "";
 
-    m_commandcenter->GetMessage(deviceId, Messagefromserver, Messagetoserver);
+    std::string Message_from_ComCent = m_commandcenter->GetMessage(deviceId, Messagefromserver);
 
-    sendMessage(deviceId, Messagetoserver);
+    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessagefromComCent = " << Message_from_ComCent << std::endl;
+
+    sendMessage(deviceId, Message_from_ComCent);
 }
 
 void DeviceMonitoringServer::setEncodingAlgoritm(BaseEncoderExecutor *EncodeAlgoritm)
 {
-    std::cout << 2 << std::endl;
     m_encoder->registration_algorithm(EncodeAlgoritm);
-    std::cout << 3 << std::endl;
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
