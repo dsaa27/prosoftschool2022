@@ -13,6 +13,8 @@ public:
     virtual ~AbstractMessage() = default;
 
     virtual std::string convert2string() const = 0;
+
+    virtual Enumerations::MessageType getMessageType() const = 0;
 };
 
 struct MeterageMessage final : public AbstractMessage
@@ -28,6 +30,11 @@ struct MeterageMessage final : public AbstractMessage
         ost << static_cast<int>(Enumerations::MessageType::meterage) << " "
             << timeStamp << " " << static_cast<short>(measureValue);
         return ost.str();
+    }
+
+    Enumerations::MessageType getMessageType() const final
+    {
+        return Enumerations::MessageType::meterage;
     }
 
     uint64_t timeStamp = 0;
@@ -48,6 +55,11 @@ struct CommandMessage final : public AbstractMessage
         return ost.str();
     }
 
+    Enumerations::MessageType getMessageType() const final
+    {
+        return Enumerations::MessageType::command;
+    }
+
     double correction;
 };
 
@@ -63,6 +75,11 @@ struct ErrorMessage final : public AbstractMessage
         ost << static_cast<int>(Enumerations::MessageType::error) << " "
             << static_cast<int>(errorType);
         return ost.str();
+    }
+
+    Enumerations::MessageType getMessageType() const final
+    {
+        return Enumerations::MessageType::error;
     }
 
     Enumerations::ErrorType errorType;

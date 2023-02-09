@@ -5,6 +5,8 @@
 #include "server/abstractconnection.h"
 #include "servermock/connectionservermock.h"
 
+#include <iostream>
+
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
 {
@@ -29,9 +31,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
 {
-    // TODO
+    m_commandCenter.setDeviceWorkSchedule(deviceWorkSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,14 +48,21 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& messageString)
 {
     // TODO
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(messageString);
+    AbstractMessage *sendingMessage = m_commandCenter.receiveAndSendMessage(deviceId, receivedMessage);
+    sendMessage(deviceId, m_messageSerializer.serializeMessage(*sendingMessage));
+    delete sendingMessage;
+    delete receivedMessage;
+
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
+void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
     // TODO, если нужен
+    std::cout << "server is disconnected from client " << clientId << std::endl;
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -102,4 +111,14 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     };
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
+}
+
+double DeviceMonitoringServer::getCurrentStandardDeviation(uint64_t deviceId)
+{
+    return m_commandCenter.getCurrentStandardDeviation(deviceId);
+}
+
+void DeviceMonitoringServer::disconnect()
+{
+    m_connectionServer->disconnect();
 }

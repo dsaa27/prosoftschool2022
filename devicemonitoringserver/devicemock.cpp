@@ -3,6 +3,8 @@
 #include "handlers/abstractmessagehandler.h"
 #include "server/abstractclientconnection.h"
 
+#include <iostream>
+
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -73,11 +75,12 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& messageString)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
-    sendNextMeterage(); // Отправляем следующее измерение
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(messageString);
+    m_receivedMessages.push_back(receivedMessage);
+    sendNextMeterage();
+
 }
 
 void DeviceMock::onConnected()
@@ -105,7 +108,13 @@ void DeviceMock::sendNextMeterage()
     if (m_timeStamp >= m_meterages.size())
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
+    MeterageMessage *presentMeterageMessage = new MeterageMessage(m_timeStamp, meterage);
+    sendMessage(m_messageSerializer.serializeMessage(*presentMeterageMessage));
     ++m_timeStamp;
-    // TODO: Сформировать std::string и передать в sendMessage
+    delete presentMeterageMessage;
+}
+
+const std::vector<AbstractMessage*>& DeviceMock::response()
+{
+    return m_receivedMessages;
 }

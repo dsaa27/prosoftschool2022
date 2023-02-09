@@ -29,6 +29,8 @@ namespace unitTestFunctions
 
     DeviceWorkSchedule* createRandomDeviceWorkSchedule();
 
+    std::vector<uint8_t> createRandomMeterageVector(size_t vectorSize);
+
     void testCommandCenterSetUnsetDeviceWorkSchedule();
 
     void testCommandCenterReceiveAndSendMessage();

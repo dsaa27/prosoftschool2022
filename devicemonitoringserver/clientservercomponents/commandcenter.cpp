@@ -3,18 +3,18 @@
 
 #include <cmath>
 
+void CommandCenter::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
+{
+    m_schedules[deviceWorkSchedule->deviceId] = deviceWorkSchedule;
+    m_calculators[deviceWorkSchedule->deviceId] = new StandardDeviationCalculator();
+}
+
 CommandCenter::~CommandCenter()
 {
     for (auto it = m_schedules.cbegin(); it != m_schedules.cend(); ++it)
         delete it->second;
     for (auto it = m_calculators.cbegin(); it != m_calculators.cend(); ++it)
         delete it->second;
-}
-
-void CommandCenter::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
-{
-    m_schedules[deviceWorkSchedule->deviceId] = deviceWorkSchedule;
-    m_calculators[deviceWorkSchedule->deviceId] = new StandardDeviationCalculator();
 }
 
 void CommandCenter::unsetDeviceWorkSchedule (uint64_t deviceId)

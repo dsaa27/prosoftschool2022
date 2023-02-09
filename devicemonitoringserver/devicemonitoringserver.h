@@ -2,6 +2,8 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
+#include "clientservercomponents/messageserializer.h"
+#include "clientservercomponents/commandcenter.h"
 
 #include <cstdint>
 #include <string>
@@ -27,11 +29,15 @@ public:
     /*!
      * \brief Установить план работы устройств.
      */
-    void setDeviceWorkSchedule(const DeviceWorkSchedule&);
+    void setDeviceWorkSchedule(DeviceWorkSchedule *);
     /*!
      * \brief Начать прием подключений по идентификатору \a serverId
      */
     bool listen(uint64_t serverId);
+
+    double getCurrentStandardDeviation(uint64_t deviceId);
+
+    void disconnect();
 
 private:
     /*!
@@ -63,6 +69,8 @@ private:
 
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;
+    CommandCenter m_commandCenter;
+    MessageSerializer m_messageSerializer;
 };
 
 #endif // DEVICEMONITORINGSERVER_H

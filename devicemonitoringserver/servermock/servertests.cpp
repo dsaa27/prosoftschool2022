@@ -331,6 +331,7 @@ void clientServerTest()
                                              // когда таск выполнится, то с помощью findServer и findClient найдутся указателя на client и server
     ASSERT(!client->connected());            // затем создадутся новые connectionChannel, которые соединятся между собой с connect() (то есть запомнят указателя peer на приемник)
     ASSERT_EQUAL(client->peerId(), 0u);      // далее addConnection у server, где будет создан ConnectionMock и проверно, что соединения с таким clientId еще не было и занесено в словарь подключений
+                                             // затем server->m_newConnectionHandler в данном тесте установит MassageHandler и DisconnectedHandler
     ASSERT(!server->connection(clientId));   // client->setChannel() подключит channelConnection к себе с проверкой, что он уже не подключен и отправкой сообщения о подключении
     ASSERT_EQUAL(ostr.str(), "");
     while (taskQueue.processTask())
