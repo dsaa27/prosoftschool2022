@@ -10,17 +10,18 @@ int main(void) {
 
     {
         cout << "Test #1" << endl;
+        const uint64_t value{1001u};
 
         const serializator ser{};
-        const unique_ptr<const message> msg{new command(1001)};
+        const unique_ptr<const message> msg{new command(value)};
 
         const std::string ser_msg{ser.serialize(msg.get())};
         const auto deser_msg = ser.deserialize(ser_msg);
 
         assert(deser_msg);
         assert(MSG_TYPE::COMMAND == deser_msg->type());
-        assert(1001 ==
-               dynamic_cast<const command* const>(deser_msg.get())->_value);
+        assert(value ==
+               dynamic_cast<const command* const>(deser_msg.get())->value());
     }
 
     {
@@ -38,24 +39,58 @@ int main(void) {
 
         assert(
             timestamp ==
-            dynamic_cast<const meterage* const>(deser_msg.get())->_timestamp);
+            dynamic_cast<const meterage* const>(deser_msg.get())->timestamp());
 
         assert(value ==
-               dynamic_cast<const meterage* const>(deser_msg.get())->_value);
+               dynamic_cast<const meterage* const>(deser_msg.get())->value());
     }
 
     {
         cout << "Test #3" << endl;
-        const ERR_TYPE err{ERR_TYPE::NOSCHEDULE};
 
-        const serializator ser{};
-        const unique_ptr<const message> msg{new error(err)};
+        {
+            const ERR_TYPE err{ERR_TYPE::NOSCHEDULE};
 
-        const std::string ser_msg{ser.serialize(msg.get())};
-        const auto deser_msg = ser.deserialize(ser_msg);
+            const serializator ser{};
+            const unique_ptr<const message> msg{new error(err)};
 
-        assert(deser_msg);
-        assert(MSG_TYPE::ERROR == deser_msg->type());
-        assert(err == dynamic_cast<const error* const>(deser_msg.get())->_err);
+            const std::string ser_msg{ser.serialize(msg.get())};
+            const auto deser_msg = ser.deserialize(ser_msg);
+
+            assert(deser_msg);
+            assert(MSG_TYPE::ERROR == deser_msg->type());
+            assert(err ==
+                   dynamic_cast<const error* const>(deser_msg.get())->err());
+        }
+
+        {
+            const ERR_TYPE err{ERR_TYPE::NOTIMESTAMP};
+
+            const serializator ser{};
+            const unique_ptr<const message> msg{new error(err)};
+
+            const std::string ser_msg{ser.serialize(msg.get())};
+            const auto deser_msg = ser.deserialize(ser_msg);
+
+            assert(deser_msg);
+            assert(MSG_TYPE::ERROR == deser_msg->type());
+            assert(err ==
+                   dynamic_cast<const error* const>(deser_msg.get())->err());
+        }
+
+        {
+            const ERR_TYPE err{ERR_TYPE::OBSOLETE};
+
+            const serializator ser{};
+            const unique_ptr<const message> msg{new error(err)};
+
+            const std::string ser_msg{ser.serialize(msg.get())};
+            const auto deser_msg = ser.deserialize(ser_msg);
+
+            assert(deser_msg);
+            assert(MSG_TYPE::ERROR == deser_msg->type());
+            assert(err ==
+                   dynamic_cast<const error* const>(deser_msg.get())->err());
+        }
     }
 }

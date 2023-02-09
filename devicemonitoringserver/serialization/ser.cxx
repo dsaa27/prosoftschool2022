@@ -21,7 +21,7 @@ std::string serializator::serialize(const message* const msg) const {
         }
 
         ret += static_cast<char>(msg->type());
-        ret += std::to_string(cmd->_value);
+        ret += std::to_string(cmd->value());
 
         return ret;
     }
@@ -34,9 +34,9 @@ std::string serializator::serialize(const message* const msg) const {
         }
 
         ret += static_cast<char>(msg->type());
-        ret += std::to_string(met->_timestamp);
+        ret += std::to_string(met->timestamp());
         ret += ',';
-        ret += std::to_string(met->_value);
+        ret += std::to_string(met->value());
 
         return ret;
     }
@@ -49,7 +49,7 @@ std::string serializator::serialize(const message* const msg) const {
         }
 
         ret  += static_cast<char>(err->type());
-        ret += static_cast<char>(err->_err);
+        ret += static_cast<char>(err->err());
         return ret;
     }
 

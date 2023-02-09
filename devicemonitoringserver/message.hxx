@@ -12,7 +12,7 @@ struct message {
 };
 
 struct meterage : message {
-  public:
+  private:
     uint64_t _timestamp;
     uint64_t _value;
 
@@ -25,15 +25,28 @@ struct meterage : message {
         return MSG_TYPE::METERAGE;
     }
 
+    std::uint64_t timestamp(void) const {
+        return _timestamp;
+    }
+
+    std::uint64_t value(void) const {
+        return _value;
+    }
+
     ~meterage(void) = default;
 };
 
 struct command : message {
-  public:
+  private:
     uint64_t _value;
 
+  public:
     MSG_TYPE type(void) const {
         return MSG_TYPE::COMMAND;
+    }
+
+    std::uint64_t value(void) const {
+        return _value;
     }
 
     command(const uint64_t value) : _value(value) {
@@ -43,11 +56,16 @@ struct command : message {
 };
 
 struct error : message {
-  public:
+  private:
     ERR_TYPE _err;
 
+  public:
     MSG_TYPE type(void) const {
         return MSG_TYPE::ERROR;
+    }
+
+    ERR_TYPE err(void) const {
+        return _err;
     }
 
     error(const ERR_TYPE err) : _err{err} {
