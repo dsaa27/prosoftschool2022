@@ -12,7 +12,7 @@ struct message {
 };
 
 struct meterage : message {
-  private:
+  public:
     uint64_t _timestamp;
     uint64_t _value;
 
@@ -43,7 +43,8 @@ struct command : message {
 };
 
 struct error : message {
-    ERR_TYPE err;
+  public:
+    ERR_TYPE _err;
 
     MSG_TYPE type(void) const {
         return MSG_TYPE::ERROR;
