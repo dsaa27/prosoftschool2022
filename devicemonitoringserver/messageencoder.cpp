@@ -6,28 +6,15 @@ std::string MessageEncoder::encode(std::string &message)
     return v_NewEncodeAlgoritm->encode(message);
 }
 
-//std::string MessageEncoder::encode(std::string &message, BaseEncoderExecutor* NewEncodeAlgoritm)
-//{
-//    return NewEncodeAlgoritm->encode(message);
-//}
-
 std::string MessageEncoder::decode(std::string &message)
 {
     return v_NewEncodeAlgoritm->decode(message);
 }
 
-
-//std::string MessageEncoder::decode(std::string &message,BaseEncoderExecutor* NewEncodeAlgoritm)
-//{
-//    return NewEncodeAlgoritm->decode(message);
-//}
-
-
 void MessageEncoder::registration_algorithm(BaseEncoderExecutor* NewEncodeAlgoritm)
 {
     v_NewEncodeAlgoritm = NewEncodeAlgoritm;
 }
-
 
 void MessageEncoder::choice_algoithm(std::string &message)
 {
