@@ -74,11 +74,12 @@ private:
 
 
 
-
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
+
+    int m_cout_of_meterages = 0;
 
     MessageSerialiser* m_serial = nullptr;
     MessageEncoder* m_encoder = nullptr;
