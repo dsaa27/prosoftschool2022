@@ -75,7 +75,7 @@ private:
 
 private:
     SingletonEncoder* encoder = SingletonEncoder::getInstance();
-    MessageSerializator* serializator = new MessageSerializator();
+    MessageSerializator serializator;
     std::vector<std::string> responses = {};
     std::vector<uint64_t> receivedCommands = {};
     AbstractClientConnection* m_clientConnection = nullptr;

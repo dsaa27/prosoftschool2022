@@ -7,15 +7,15 @@ std::string MessageSerializator::serialize(MessageStruct message) {
     {
         case messageType::Command:
             os << messageType::Command << " ";
-            os << int64_t(message.valueToCorrect);
+            os << message.valueToCorrect;
             break;
         case messageType::Error:
             os << messageType::Error << " ";
-            os << uint64_t(message.errorCode);
+            os << static_cast<uint64_t>(message.errorCode);
             break;
         case messageType::Meterage:
             os << messageType::Meterage << " ";
-            os << uint64_t(message.phase.value) << " ";
+            os << static_cast<uint64_t>(message.phase.value) << " ";
             os << message.phase.timeStamp;
             break;
         default:

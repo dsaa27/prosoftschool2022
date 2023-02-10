@@ -16,12 +16,17 @@ class MessageSerializator {
 public:
     MessageSerializator() = default;
     ~MessageSerializator() = default;
+
+    /*!
+    * \brief типы сообщений
+    */
     enum messageType
     {
-        Meterage = 0,
-        Command = 1,
-        Error = 2
+        Meterage = 0, // измерение
+        Command = 1, // команда
+        Error = 2 // ошибка
     };
+
     /*!
     * \brief результат десериализованного сообщения.
     */

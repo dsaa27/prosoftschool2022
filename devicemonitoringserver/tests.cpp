@@ -21,7 +21,7 @@ void monitoringServerStandardTest()
     std::vector<uint8_t> mets = {32, 2};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-        phases.push_back({i, mets[i - 1]});
+        phases.emplace_back(Phase{i, mets[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2});
@@ -78,7 +78,7 @@ void monitoringServerTestErrorNoTimestamp()
     std::vector<uint8_t> mets = {12};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-        phases.push_back({i, mets[i - 1]});
+        phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
@@ -111,7 +111,7 @@ void monitoringServerTestNegativeValue()
     std::vector<uint8_t> mets = {3};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-        phases.push_back({i, mets[i - 1]});
+        phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
@@ -144,7 +144,7 @@ void monitoringServerTestComplex()
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-        phases.push_back({i, mets[i - 1]});
+        phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
@@ -176,7 +176,7 @@ void monitoringServerTestStandardDeviation()
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
     for (uint64_t i = 1; i < mets.size() + 1; i++)
-        phases.push_back({i, mets[i - 1]});
+        phases.emplace_back(Phase{i, mets[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2, 8, 3, 7});
@@ -218,9 +218,9 @@ void monitoringServerTestTwoDevices()
     std::vector<Phase> phases;
     std::vector<Phase> phases2;
     for (uint64_t i = 1; i < mets1.size() + 1; i++)
-        phases.push_back({i, mets1[i - 1]});
+        phases.emplace_back(Phase {i, mets1[i - 1]});
     for (uint64_t i = 1; i < mets2.size() + 1; i++)
-        phases2.push_back({i, mets2[i - 1]});
+        phases2.emplace_back(Phase {i, mets2[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId1, phases};
     DeviceWorkSchedule const deviceWorkSchedule2 = {deviceId2, phases2};
 
@@ -265,10 +265,10 @@ void encodingTest()
     std::vector<std::string> actualAlgs = encoder->getAvailableAlgorithms();
     std::vector<std::string> expectedAlgs = {"Mirror", "Multiply41", "ROT3"};
     ASSERT_EQUAL(expectedAlgs, actualAlgs);
-    ASSERT_EQUAL(encoder->encode("1234"), "");
-    ASSERT_EQUAL(encoder->decode("1234"), "");
+    ASSERT(!encoder->encode("1234"));
+    ASSERT(!encoder->decode("1234"));
     encoder->chooseAlgorithm("ROT3");
-    ASSERT_EQUAL(encoder->encode("1234"), "1237");
+    ASSERT_EQUAL(*encoder->encode("1234"), "1237");
     ASSERT_EQUAL(encoder->addAlgorithm(nullptr), false);
     delete encoder;
 }
@@ -277,10 +277,10 @@ void encodingTestRot3()
 {
     MessageEncoder* encoder = new MessageEncoder();
     encoder->chooseAlgorithm("ROT3");
-    ASSERT_EQUAL(encoder->encode("1234"), "1237");
-    ASSERT_EQUAL(encoder->decode("1237"), "1234");
-    ASSERT_EQUAL(encoder->encode("12 34 -2"), "15 37 1");
-    ASSERT_EQUAL(encoder->decode("15 37 1"), "12 34 -2");
+    ASSERT_EQUAL(*encoder->encode("1234"), "1237");
+    ASSERT_EQUAL(*encoder->decode("1237"), "1234");
+    ASSERT_EQUAL(*encoder->encode("12 34 -2"), "15 37 1");
+    ASSERT_EQUAL(*encoder->decode("15 37 1"), "12 34 -2");
     delete encoder;
 }
 
@@ -288,8 +288,8 @@ void encodingTestMirror()
 {
     MessageEncoder* encoder = new MessageEncoder();
     encoder->chooseAlgorithm("Mirror");
-    ASSERT_EQUAL(encoder->encode("41 23"), "14 32");
-    ASSERT_EQUAL(encoder->decode("14 32"), "41 23");
+    ASSERT_EQUAL(*encoder->encode("41 23"), "14 32");
+    ASSERT_EQUAL(*encoder->decode("14 32"), "41 23");
     delete encoder;
 }
 
@@ -297,8 +297,8 @@ void encodingTestMultiply41()
 {
     MessageEncoder* encoder = new MessageEncoder();
     encoder->chooseAlgorithm("Multiply41");
-    ASSERT_EQUAL(encoder->encode("1 -11"), "41 -451");
-    ASSERT_EQUAL(encoder->decode("41 -451"), "1 -11");
+    ASSERT_EQUAL(*encoder->encode("1 -11"), "41 -451");
+    ASSERT_EQUAL(*encoder->decode("41 -451"), "1 -11");
     delete encoder;
 }
 
@@ -311,10 +311,10 @@ void encodingTestXor()
     std::vector<std::string> expectedAlgs = {"Mirror", "Multiply41", "ROT3", "Xor"};
     ASSERT_EQUAL(expectedAlgs, actualAlgs);
     encoder->chooseAlgorithm("Xor");
-    ASSERT_EQUAL(encoder->encode("12"), "pq");
-    ASSERT_EQUAL(encoder->decode("pq"), "12");
-    ASSERT_EQUAL(encoder->encode("1 -2"), "pcoe");
-    ASSERT_EQUAL(encoder->decode("pcoe"), "1 -2");
+    ASSERT_EQUAL(*encoder->encode("12"), "pq");
+    ASSERT_EQUAL(*encoder->decode("pq"), "12");
+    ASSERT_EQUAL(*encoder->encode("1 -2"), "pcoe");
+    ASSERT_EQUAL(*encoder->decode("pcoe"), "1 -2");
     delete encoder;
 }
 

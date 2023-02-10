@@ -2,6 +2,7 @@
 #include "serialization/MessageSerializator.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
+#include <optional>
 #include <server/abstractclientconnection.h>
 
 
@@ -77,10 +78,12 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
-    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
-    std::string decodeMessage = messageEncoder->decode(message);
-    MessageSerializator::MessageStruct res =  serializator->deserialize(decodeMessage);
-    responses.push_back(decodeMessage);
+    MessageEncoder* const messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
+    std::optional<std::string> decodedMessage = messageEncoder->decode(message);
+    if (!decodedMessage)
+        return;
+    MessageSerializator::MessageStruct res =  serializator.deserialize(*decodedMessage);
+    responses.push_back(*decodedMessage);
     //if (res.errorCode > 100)
         //Обработка ошибки.
         //std::cout<< "error; ";
@@ -97,7 +100,6 @@ void DeviceMock::onConnected()
 
 void DeviceMock::onDisconnected()
 {
-    delete serializator;
     receivedCommands.clear();
 }
 
@@ -114,19 +116,19 @@ void DeviceMock::startMeterageSending()
 
 void DeviceMock::sendNextMeterage()
 {
-    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
     if (m_timeStamp >= m_meterages.size())
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
     ++m_timeStamp;
+    MessageEncoder* const messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
     MessageSerializator::MessageStruct res;
     res.valueToCorrect = -1;
     res.type = MessageSerializator::Meterage;
     res.phase = {m_timeStamp, meterage};
-    std::string message = serializator->serialize(res);
-    std::string encodeMessage = messageEncoder->encode(message);
-    sendMessage(encodeMessage);
+    std::string message = serializator.serialize(res);
+    std::optional<std::string> encodedMessage = messageEncoder->encode(message);
+    if (encodedMessage)
+        sendMessage(*encodedMessage);
 }
 
 std::vector<std::string> DeviceMock::getResponses() {

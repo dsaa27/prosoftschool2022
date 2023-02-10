@@ -5,6 +5,7 @@
 #include <handlers/abstractnewconnectionhandler.h>
 #include <server/abstractconnection.h>
 #include <servermock/connectionservermock.h>
+#include <optional>
 #include <vector>
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
@@ -28,14 +29,12 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
 {
-    delete commandCenter;
-    delete serializator;
     delete m_connectionServer;
 }
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& deviceWorkSchedule)
 {
-    commandCenter->addDevice(deviceWorkSchedule);
+    commandCenter.addDevice(deviceWorkSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -53,37 +52,39 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
     MessageEncoder* messageEncoder = encoder->getDeviceEncoder(deviceId);
-    if (messageEncoder == nullptr)
+    if (!messageEncoder)
         return;
 
-    std::string decodeMessage = messageEncoder->decode(message);
-    MessageSerializator::MessageStruct result = serializator->deserialize(decodeMessage);
-
+    std::optional<std::string> decodedMessage = messageEncoder->decode(message);
+    if (!decodedMessage)
+        return;
+    MessageSerializator::MessageStruct result = serializator.deserialize(*decodedMessage);
     Phase currentPhase = result.phase;
-    int64_t valueToCorrect = commandCenter->checkMeterageInPhase(currentPhase, deviceId);
+    CommandCenter::CheckResult checkResult = commandCenter.checkMeterageInPhase(currentPhase, deviceId);
 
     MessageSerializator::MessageStruct newMessage;
     std::string serializedMessage;
-    if (valueToCorrect <= 100)
+    if (checkResult.errorCode == CommandCenter::errorType::NoError)
     {
-        newMessage.valueToCorrect = valueToCorrect;
-        newMessage.type = MessageSerializator::Command;
-        serializedMessage = serializator->serialize(newMessage);
+        newMessage.valueToCorrect = checkResult.valueToCorrect;
+        newMessage.type = MessageSerializator::messageType::Command;
+        serializedMessage = serializator.serialize(newMessage);
     }
     else
     {
-        newMessage.type = MessageSerializator::Error;
-        newMessage.errorCode = valueToCorrect;
-        serializedMessage = serializator->serialize(newMessage);
+        newMessage.type = MessageSerializator::messageType::Error;
+        newMessage.errorCode = checkResult.errorCode;
+        serializedMessage = serializator.serialize(newMessage);
     }
-    std::string newEncodeMessage = messageEncoder->encode(serializedMessage);
-    sendMessage(deviceId, newEncodeMessage);
+    std::optional<std::string> newEncodeMessage = messageEncoder->encode(serializedMessage);
+    if (newEncodeMessage)
+        sendMessage(deviceId, *newEncodeMessage);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
     encoder->deleteDevice(clientId);
-    commandCenter->deleteDevice(clientId);
+    commandCenter.deleteDevice(clientId);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -135,5 +136,5 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
 }
 
 double DeviceMonitoringServer::getStandardDeviation(uint64_t deviceId) {
-    return commandCenter->getStandardDeviation(deviceId);
+    return commandCenter.getStandardDeviation(deviceId);
 }
