@@ -14,9 +14,9 @@ public:
 
     std::string decode (const std::string &encodedMessage);
 
-    void chooseCodingAlgorithm(const std::string& codeName);
+    bool chooseCodingAlgorithm(const std::string &codingAlgorithmName);
 
-    void registrateNewAlgorithm(BaseEncoderExecutor* newCoder);
+    void registrateNewAlgorithm(BaseEncoderExecutor *newCoder);
 
 private:
     std::unordered_map<std::string, BaseEncoderExecutor*> m_coderLibrary;

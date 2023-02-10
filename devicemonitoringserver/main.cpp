@@ -14,5 +14,6 @@ int main()
     RUN_TEST(tr, monitoringServerTest1);
     RUN_TEST(tr, messageSerializerTest);
     RUN_TEST(tr, commandCenterTest);
+    RUN_TEST(tr, messageEncoderTest);
     return 0;
 }

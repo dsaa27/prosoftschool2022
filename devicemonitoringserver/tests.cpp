@@ -5,9 +5,8 @@
 #include "servermock/clientconnectionmock.h"
 #include "servermock/connectionservermock.h"
 #include "servermock/taskqueue.h"
-
-//#include "clientservercomponents/messageserializer.h"
 #include "unit_tests_functions/unittestfunctions.h"
+#include "unit_tests_functions/testmessageencoderfunctions.h"
 
 
 void messageSerializerTest()
@@ -25,6 +24,15 @@ void commandCenterTest()
     testCommandCenterSetUnsetDeviceWorkSchedule();
     testCommandCenterReceiveAndSendMessage();
     testStandardDeviationCalculation();
+}
+
+void messageEncoderTest()
+{
+    using namespace testMessageEncoderFunctions;
+
+    testROT3CodingAlgorithm();
+    testMirrorCodingAlgorithm();
+    testMultiply41CodingAlgorithm();
 }
 
 void monitoringServerTest1()

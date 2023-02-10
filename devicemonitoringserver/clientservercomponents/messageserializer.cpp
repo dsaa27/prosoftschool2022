@@ -40,7 +40,6 @@ void MessageSerializer::checkInvalidDeserializeMessageArgument(const std::string
         using namespace Enumerations;
         bool flagInvalidArgument = false;
 
-        //split message by spaces
         std::istringstream istream(messageAsString);
         std::vector <std::string> messageSplitBySpace;
         std::string currentWord;

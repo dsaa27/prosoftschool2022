@@ -55,6 +55,8 @@ add_executable(server_monitoring_device_prosoft
   unit_tests_functions/unittestfunctions.h
   unit_tests_functions/unittestfunctions.cpp
   deviceworkschedule.cpp
+  unit_tests_functions/testmessageencoderfunctions.h
+  unit_tests_functions/testmessageencoderfunctions.cpp
 )
 target_link_libraries(server_monitoring_device_prosoft Qt${QT_VERSION_MAJOR}::Core)
 

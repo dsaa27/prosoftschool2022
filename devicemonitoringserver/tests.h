@@ -11,4 +11,6 @@ void messageSerializerTest();
 
 void commandCenterTest();
 
+void messageEncoderTest();
+
 #endif // TESTS_H
