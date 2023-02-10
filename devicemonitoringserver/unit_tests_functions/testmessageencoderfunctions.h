@@ -8,6 +8,10 @@ namespace testMessageEncoderFunctions
     void testMirrorCodingAlgorithm();
 
     void testMultiply41CodingAlgorithm();
+
+    void testMixedCodeAlgorithms();
+
+    void testInductiveEncoding();
 }
 
 #endif // TESTMESSAGEENCODERFUNCTIONS_H

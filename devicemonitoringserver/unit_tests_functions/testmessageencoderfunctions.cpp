@@ -71,7 +71,7 @@ void testMessageEncoderFunctions::testMultiply41CodingAlgorithm()
 
     decoded = messageEncoder.decode(encoded);
 
-    const double epsilon = 1e-2;
+    const double epsilon = 1e-2; //lose data from trancating double numbers
 
     std::istringstream istreamOrigin(origin);
     std::istringstream istreamDecoded(decoded);
@@ -83,4 +83,51 @@ void testMessageEncoderFunctions::testMultiply41CodingAlgorithm()
         ASSERT(std::abs(std::stod(currentWordOrigin) - std::stod(currentWordDecoded)) < epsilon);
     }
 
+}
+
+void testMessageEncoderFunctions::testMixedCodeAlgorithms()
+{
+    MessageEncoder messageEncoder;
+
+    std::string origin = "Mary might have been waiting outside for you...";
+    std::string decoded;
+    std::string encoded;
+
+    messageEncoder.chooseCodingAlgorithm("ROT3");
+    encoded = messageEncoder.encode(origin);
+    decoded = messageEncoder.decode(encoded);
+    ASSERT_EQUAL(decoded, origin);
+
+    messageEncoder.chooseCodingAlgorithm("Mirror");
+    encoded = messageEncoder.encode(origin);
+    decoded = messageEncoder.decode(encoded);
+    ASSERT_EQUAL(decoded, origin);
+}
+
+void testMessageEncoderFunctions::testInductiveEncoding()
+{
+    MessageEncoder messageEncoder;
+
+    std::string origin = "380asdjklfj2mu2j f8sdufpoiwjoiq38fu98asj aosiudf oiasdmfp oiausdf8j2l3kr mj";
+    std::string decoded;
+    std::string transitive;
+
+    messageEncoder.chooseCodingAlgorithm("ROT3");
+    transitive = messageEncoder.encode(origin); // (
+    messageEncoder.chooseCodingAlgorithm("Mirror");
+    transitive = messageEncoder.encode(transitive); // ({
+    transitive = messageEncoder.encode(transitive); // ({{
+    transitive = messageEncoder.decode(transitive); // ({{}
+    messageEncoder.chooseCodingAlgorithm("ROT3");
+    transitive = messageEncoder.encode(transitive); // ({{}(
+    messageEncoder.chooseCodingAlgorithm("Mirror");
+    transitive = messageEncoder.encode(transitive); // ({{}({
+    transitive = messageEncoder.decode(transitive); // ({{}({}
+    messageEncoder.chooseCodingAlgorithm("ROT3");
+    transitive = messageEncoder.decode(transitive); // ({{}({})
+    messageEncoder.chooseCodingAlgorithm("Mirror");
+    transitive = messageEncoder.decode(transitive); // ({{}({})}
+    messageEncoder.chooseCodingAlgorithm("ROT3");
+    decoded = messageEncoder.decode(transitive); // ({{}({}))
+    ASSERT_EQUAL(decoded, origin);
 }

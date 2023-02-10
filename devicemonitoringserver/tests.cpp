@@ -33,6 +33,8 @@ void messageEncoderTest()
     testROT3CodingAlgorithm();
     testMirrorCodingAlgorithm();
     testMultiply41CodingAlgorithm();
+    testMixedCodeAlgorithms();
+    testInductiveEncoding();
 }
 
 void monitoringServerTest1()
