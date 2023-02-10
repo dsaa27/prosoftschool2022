@@ -18,7 +18,7 @@ main(void) {
 
         assert(MSG_TYPE::ERROR == response->type());
         assert(ERR_TYPE::NOSCHEDULE ==
-               dynamic_cast<error*>(response.get())->err());
+               dynamic_cast<const error*>(response.get())->err());
     }
 
     {
@@ -36,7 +36,7 @@ main(void) {
 
             assert(MSG_TYPE::COMMAND == response->type());
             assert(43u - 17u ==
-                   dynamic_cast<command*>(response.get())->value());
+                   dynamic_cast<const command*>(response.get())->value());
         }
 
         {
@@ -44,14 +44,14 @@ main(void) {
 
             assert(MSG_TYPE::COMMAND == response->type());
             assert(23u - 41u ==
-                   dynamic_cast<command*>(response.get())->value());
+                   dynamic_cast<const command*>(response.get())->value());
         }
 
         {
             const auto response = cc.check(idev, meterage(2u, 10u));
 
             assert(MSG_TYPE::COMMAND == response->type());
-            assert(0u == dynamic_cast<command*>(response.get())->value());
+            assert(0u == dynamic_cast<const command*>(response.get())->value());
         }
     }
 
@@ -69,7 +69,7 @@ main(void) {
 
         assert(MSG_TYPE::ERROR == response->type());
         assert(ERR_TYPE::NOTIMESTAMP ==
-               dynamic_cast<error*>(response.get())->err());
+               dynamic_cast<const error*>(response.get())->err());
     }
 
     {
@@ -86,7 +86,8 @@ main(void) {
             const auto response = cc.check(idev, {1u, 81u});
 
             assert(MSG_TYPE::COMMAND == response->type());
-            assert(23 - 81 == dynamic_cast<command*>(response.get())->value());
+            assert(23 - 81 ==
+                   dynamic_cast<const command*>(response.get())->value());
         }
 
         {
@@ -94,7 +95,7 @@ main(void) {
 
             assert(MSG_TYPE::ERROR == response->type());
             assert(ERR_TYPE::OBSOLETE ==
-                   dynamic_cast<error*>(response.get())->err());
+                   dynamic_cast<const error*>(response.get())->err());
         }
     }
 
