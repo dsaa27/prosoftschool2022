@@ -1,3 +1,4 @@
 build-devicemonitoringserver*
 devicemonitoringserver/*.user
 .gitignore
+.idea
