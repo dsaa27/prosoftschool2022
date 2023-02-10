@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "clientservercomponents/messageserializer.h"
+#include "clientservercomponents/messageencoder.h"
 
 #include <string>
 #include <vector>
@@ -76,6 +77,7 @@ private:
     uint64_t m_timeStamp = 0;
     MessageSerializer m_messageSerializer;
     std::vector<AbstractMessage*> m_receivedMessages;
+    MessageEncoder m_messageEncoder;
 };
 
 #endif // DEVICE_H

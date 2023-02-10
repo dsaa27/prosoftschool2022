@@ -4,6 +4,7 @@
 #include "common.h"
 #include "clientservercomponents/messageserializer.h"
 #include "clientservercomponents/commandcenter.h"
+#include "clientservercomponents/messageencoder.h"
 
 #include <cstdint>
 #include <string>
@@ -71,6 +72,7 @@ private:
     AbstractConnectionServer* m_connectionServer = nullptr;
     CommandCenter m_commandCenter;
     MessageSerializer m_messageSerializer;
+    MessageEncoder m_messageEncoder;
 };
 
 #endif // DEVICEMONITORINGSERVER_H

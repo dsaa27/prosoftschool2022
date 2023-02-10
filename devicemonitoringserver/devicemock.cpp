@@ -53,6 +53,7 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
         DeviceMock* m_client = nullptr;
     };
     m_clientConnection->setMessageHandler(new MessageHandler(this));
+    m_messageEncoder.chooseCodingAlgorithm("Mirror");
 }
 
 DeviceMock::~DeviceMock()
@@ -77,7 +78,8 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& messageString)
 {
-    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(messageString);
+    std::string transitiveString = m_messageEncoder.decode(messageString);
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(transitiveString);
     m_receivedMessages.push_back(receivedMessage);
     sendNextMeterage();
 
@@ -109,7 +111,8 @@ void DeviceMock::sendNextMeterage()
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
     MeterageMessage *presentMeterageMessage = new MeterageMessage(m_timeStamp, meterage);
-    sendMessage(m_messageSerializer.serializeMessage(*presentMeterageMessage));
+    std::string transitiveString = m_messageSerializer.serializeMessage(*presentMeterageMessage);
+    sendMessage(m_messageEncoder.encode(transitiveString));
     ++m_timeStamp;
     delete presentMeterageMessage;
 }

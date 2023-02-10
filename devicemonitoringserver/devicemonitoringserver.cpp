@@ -24,6 +24,7 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
         DeviceMonitoringServer* m_server = nullptr;
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
+    m_messageEncoder.chooseCodingAlgorithm("Mirror");
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
@@ -50,19 +51,19 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& messageString)
 {
-    // TODO
-    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(messageString);
+    std::string transitiveString = m_messageEncoder.decode(messageString);
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(transitiveString);
     AbstractMessage *sendingMessage = m_commandCenter.receiveAndSendMessage(deviceId, receivedMessage);
-    sendMessage(deviceId, m_messageSerializer.serializeMessage(*sendingMessage));
+    transitiveString = m_messageSerializer.serializeMessage(*sendingMessage);
+    sendMessage(deviceId, m_messageEncoder.encode(transitiveString));
+
     delete sendingMessage;
     delete receivedMessage;
-
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
     // TODO, если нужен
-    std::cout << "server is disconnected from client " << clientId << std::endl;
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
