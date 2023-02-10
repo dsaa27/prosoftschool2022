@@ -64,6 +64,7 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 
     MessageSerializator::MessageStruct newMessage;
     std::string serializedMessage;
+
     if (checkResult.errorCode == CommandCenter::errorType::NoError)
     {
         newMessage.valueToCorrect = checkResult.valueToCorrect;
