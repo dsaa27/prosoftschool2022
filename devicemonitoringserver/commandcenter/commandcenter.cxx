@@ -5,6 +5,11 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <cmath>
+
+#include <iostream>
+using namespace std;
+
 
 void
 command_center::add(const DeviceWorkSchedule& schedule) {
@@ -59,6 +64,56 @@ command_center::check(const std::uint64_t idev, const meterage& meterage) {
         return std::make_unique<error>(ERR_TYPE::NOTIMESTAMP);
     }
 
-    update_last_stamp(idev, meterage.timestamp());
-    return std::make_unique<command>(phase->value - meterage.value());
+    const auto correction = phase->value - meterage.value();
+    const auto stamp = meterage.timestamp();
+
+    // cout << correction << ' ' << stamp << endl;
+
+    put_asd_to_hist(idev, stamp, correction);
+    update_last_stamp(idev, stamp);
+
+    return std::make_unique<command>(correction);
+}
+
+// средняя ошибка управления
+double
+command_center::avg(const std::uint64_t idev) {
+    double sum = 0;
+    for (auto x : _devdiff[idev]) {
+        sum += x.second;
+    }
+    return sum / _devdiff[idev].size();
+}
+
+// среднее квадратичное ошибки управления
+double
+command_center::_asd(const uint64_t idev, const uint64_t stamp, const uint64_t corr) {
+    _devdiff[idev][stamp] = corr;
+
+    double ret{.0};
+    const double avg{command_center::avg(idev)};
+
+    for (auto x : _devdiff[idev]) {
+        ret += std::pow(x.second - avg, 2);
+        // cout << int(x.second) << ' ' << avg << endl;
+    }
+
+    // cout << "____" << endl;
+
+    return std::sqrt(ret / _devdiff[idev].size());
+}
+
+void
+command_center::put_asd_to_hist(const std::uint64_t idev,
+                                const std::uint64_t stamp,
+                                const uint64_t corr) {
+
+    if (_devasd.find(idev) == _devasd.end()) {
+        _devasd[idev] = {};
+    }
+    _devasd[idev][stamp] = _asd(idev, stamp, corr);
+}
+
+double command_center::asd(uint64_t idev, uint64_t stamp) {
+    return _devasd[idev][stamp];
 }
