@@ -61,6 +61,7 @@ add_executable(server_monitoring_device_prosoft
   unittest/serialization.cpp
   unittest/codealgorithm.cpp
   unittest/commandcenter.cpp
+  unittest/commandcentertask/typemessage.cpp
 )
 target_link_libraries(server_monitoring_device_prosoft Qt${QT_VERSION_MAJOR}::Core)
 

@@ -2,6 +2,7 @@
 #include "../deviceworkschedule.h"
 
 #include <cmath>
+#include <iostream>
 
 void CommandCenter::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
 {
@@ -41,11 +42,11 @@ MeterageMessage* CommandCenter::handleMessage(AbstractMessage *receivedAbstractM
 {
     MeterageMessage *receivedMeterageMessage = dynamic_cast<MeterageMessage*>(receivedAbstractMessage);
 
-    if(receivedAbstractMessage) {
+    if(receivedMeterageMessage) {
         return receivedMeterageMessage;
     } else {
         delete receivedAbstractMessage;
-        throw std::invalid_argument("CommandCenter has invalid message");
+        throw std::invalid_argument("handleMessage has invalid message");
     }
 }
 

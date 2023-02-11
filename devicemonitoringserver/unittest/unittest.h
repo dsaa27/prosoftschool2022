@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <string>
 
-#include "../deviceworkschedule.h"
+#include "../clientservercomponents/abstractmessage.h"
+#include "../clientservercomponents/commandcenter.h"
 
 namespace unitTest
 {
@@ -17,28 +18,6 @@ namespace unitTest
     void messageEncoder();
 
     void commandCenter();
-
-    void testCheckInvalidDeserializeMessageArgument();
-
-    DeviceWorkSchedule* createRandomDeviceWorkSchedule();
-
-    std::vector<uint8_t> createRandomMeterageVector(size_t vectorSize);
-
-    void testCommandCenterReceiveAndSendMessage();
-
-    void testCommandtMessage();
-
-    void testErrorMessage();
-
-    void testNoScheduleError();
-
-    void testNoTimeStampError();
-
-    void testObsoleteError();
-
-    void testIncorrectFormatMessage();
-
-    void testStandardDeviationCalculation();
 
     namespace serialization
     {
@@ -97,6 +76,12 @@ namespace unitTest
             void obsoleteError();
 
             void noTimeStampError();
+
+            void incorrectFormat();
+
+            void catchInvalidArgumentException
+                (CommandCenter &commandCenter, uint64_t deviceId,
+                 std::string &receivedExceptionMessage, AbstractMessage *incorrectFormatMessage);
         }
     }
 }

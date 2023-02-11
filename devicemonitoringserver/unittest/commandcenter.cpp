@@ -53,40 +53,61 @@ double unitTest::commandCenterTask::calculateStandardDeviation(double inaccuracy
     return sqrt(sumOfDeviationSquares/allInaccuracies.size());
 }
 
-//void unitTest::commandCenterTask::standardDeviationCalculation()
-//{
-//    CommandCenter commandCenter;
+void unitTest::commandCenterTask::standardDeviationCalculation()
+{
+    CommandCenter commandCenter;
 
-//     uint64_t deviceId = 10213;
-//     std::vector<Phase> correctScheduleVector = {{0, 14}, {10, 23}, {20, 5}, {30, 3}, {40, 99}, {55, 38}, {61, 34}};
-//     DeviceWorkSchedule *correctDeviceWorkSchedule = new DeviceWorkSchedule(correctScheduleVector, deviceId);
+     uint64_t deviceId = 10213;
+     std::vector<Phase> scheduleVector = {{0, 14}, {10, 23}, {20, 5}, {30, 3}, {40, 99}, {55, 38}, {61, 34}};
+     DeviceWorkSchedule *correctDeviceWorkSchedule = new DeviceWorkSchedule(scheduleVector, deviceId);
 
-//     commandCenter.setDeviceWorkSchedule(correctDeviceWorkSchedule);
+     commandCenter.setDeviceWorkSchedule(correctDeviceWorkSchedule);
 
-//     const double epsilon = 1e-4;
+     const double epsilon = 1e-6;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {0, 14}, {0, 1});
-//     ASSERT((calculateStandardDeviation(1 - 14) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     MeterageMessage *currentMeterageMessage;
+     AbstractMessage *currentReceivedMessage;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {10, 23}, {10, 43});
-//     ASSERT((calculateStandardDeviation(43 - 23) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
 
-//     sendOneCommandMessage(commandCenter, deviceId, {20, 5}, {20, 55});
-//     ASSERT((calculateStandardDeviation(55 - 5) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     currentMeterageMessage = new MeterageMessage({0, 1});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(1 - 14) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {30, 3}, {30, 15});
-//     ASSERT((calculateStandardDeviation(15 - 3) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     currentMeterageMessage = new MeterageMessage({10, 43});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(43 - 23) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {40, 99}, {40, 10});
-//     ASSERT((calculateStandardDeviation(10 - 99) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     currentMeterageMessage = new MeterageMessage({20, 55});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(55 - 5) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {55, 38}, {55, 38});
-//     ASSERT((calculateStandardDeviation(38 - 38) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     currentMeterageMessage = new MeterageMessage({30, 15});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(15 - 3) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     sendOneCommandMessage(commandCenter, deviceId, {61, 34}, {61, 10});
-//     ASSERT((calculateStandardDeviation(10 - 34) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     currentMeterageMessage = new MeterageMessage({40, 10});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(10 - 99) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     commandCenter.unsetDeviceWorkSchedule(deviceId);
+     currentMeterageMessage = new MeterageMessage({55, 38});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(38 - 38) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
 
-//     delete correctDeviceWorkSchedule;
-//}
+     currentMeterageMessage = new MeterageMessage({61, 10});
+     currentReceivedMessage = commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+     ASSERT((calculateStandardDeviation(10 - 34) - commandCenter.getCurrentStandardDeviation(deviceId)) < epsilon);
+     delete currentReceivedMessage;
+
+     commandCenter.unsetDeviceWorkSchedule(deviceId);
+
+     delete correctDeviceWorkSchedule;
+}
+
+
+
