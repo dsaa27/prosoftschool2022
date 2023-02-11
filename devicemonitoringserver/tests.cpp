@@ -268,7 +268,7 @@ void encodingTest()
     ASSERT(!encoder->encode("1234"));
     ASSERT(!encoder->decode("1234"));
     encoder->chooseAlgorithm("ROT3");
-    ASSERT_EQUAL(*encoder->encode("1234"), "1237");
+    ASSERT_EQUAL(*encoder->encode("1234"), "4567");
     ASSERT_EQUAL(encoder->addAlgorithm(nullptr), false);
     delete encoder;
 }
@@ -277,10 +277,23 @@ void encodingTestRot3()
 {
     MessageEncoder* encoder = new MessageEncoder();
     encoder->chooseAlgorithm("ROT3");
-    ASSERT_EQUAL(*encoder->encode("1234"), "1237");
-    ASSERT_EQUAL(*encoder->decode("1237"), "1234");
-    ASSERT_EQUAL(*encoder->encode("12 34 -2"), "15 37 1");
-    ASSERT_EQUAL(*encoder->decode("15 37 1"), "12 34 -2");
+    ASSERT_EQUAL(*encoder->encode("1234"), "4567");
+    ASSERT_EQUAL(*encoder->decode("4567"), "1234");
+
+    ASSERT_EQUAL(*encoder->encode("12 34 -2"), "45#67#05");
+
+    ASSERT_EQUAL(*encoder->decode("45#67#05"), "12 34 -2");
+    std:: string strWithMax;
+    strWithMax += CHAR_MAX;
+    std:: string encoded;
+    encoded += CHAR_MIN + 2 - (CHAR_MAX - CHAR_MAX);
+    ASSERT_EQUAL(*encoder->encode(strWithMax), encoded);
+    ASSERT_EQUAL(*encoder->decode(encoded), strWithMax);
+    strWithMax[0] -= 2;
+    encoded = CHAR_MIN + 2 - (CHAR_MAX - strWithMax[0]);
+
+    ASSERT_EQUAL(*encoder->encode(strWithMax), encoded);
+    ASSERT_EQUAL(*encoder->decode(encoded), strWithMax);
     delete encoder;
 }
 
@@ -297,8 +310,20 @@ void encodingTestMultiply41()
 {
     MessageEncoder* encoder = new MessageEncoder();
     encoder->chooseAlgorithm("Multiply41");
-    ASSERT_EQUAL(*encoder->encode("1 -11"), "41 -451");
-    ASSERT_EQUAL(*encoder->decode("41 -451"), "1 -11");
+    std::string encoded;
+    std:: string str = "1 ";
+    int16_t mul41 = '1' * 41;
+    char intPart = mul41 / CHAR_MAX;
+    char ost = mul41 % CHAR_MAX;
+    encoded.push_back(intPart);
+    encoded.push_back(ost);
+    mul41 = ' '  * 41;
+    ost = mul41 % CHAR_MAX;
+    intPart = mul41 / CHAR_MAX;
+    encoded.push_back(intPart);
+    encoded.push_back(ost);
+    ASSERT_EQUAL(*encoder->encode("1 "), encoded);
+    ASSERT_EQUAL(*encoder->decode(encoded), "1 ");
     delete encoder;
 }
 

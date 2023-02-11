@@ -1,45 +1,32 @@
 #include "Multiply41.h"
-#include <sstream>
-#include <iostream>
 #include <string>
-#include <algorithm>
 
 std::string Multiply41::encode(const std::string& message) const
 {
-    std::ostringstream os;
-    std::istringstream is(message);
-    std::string input;
-    while (!is.eof())
+    std::string encodedMessage;
+    char symbol;
+    for(int i = 0; i < message.size(); i++)
     {
-        is >> input;
-        if (input.empty())
-            continue;
-        int64_t number = std::stoll(input);
-        int64_t numMul41 = number * 41;
-        os << numMul41;
-        if (!is.eof())
-            os << ' ';
+        int16_t mul41 = message[i] * 41;
+        char ost = mul41 % CHAR_MAX;
+        char intPart = mul41 / CHAR_MAX;
+        encodedMessage.push_back(intPart);
+        encodedMessage.push_back(ost);
     }
-    return os.str();
+    return encodedMessage;
 }
 
 std::string Multiply41::decode(const std::string& message) const
 {
-    std::ostringstream os;
-    std::istringstream is(message);
-    std::string input;
-    while (!is.eof())
+    std::string decodedMessage;
+    char symbol;
+    for(int i = 0; i < message.size() - 1; i++)
     {
-        is >> input;
-        if (input.empty())
-            continue;
-        int64_t number = std::stoll(input);
-        int64_t numDiv41 = number / 41;
-        os << numDiv41;
-        if (!is.eof())
-            os << ' ';
+        symbol = (static_cast<int16_t>(message[i]) * CHAR_MAX + static_cast<int16_t>(message[i + 1])) / 41;
+        decodedMessage.push_back(symbol);
+        i++;
     }
-    return os.str();
+    return decodedMessage;
 }
 
 std::string Multiply41::getName() const {

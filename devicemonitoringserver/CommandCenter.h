@@ -25,9 +25,12 @@ public:
         Obsolete // Поступило измерение с устаревшей меткой времени
     };
 
+    /*!
+    * \brief результат проверки текущего измерения
+    */
     struct CheckResult final {
-        int64_t valueToCorrect;
-        errorType errorCode = NoError;
+        int64_t valueToCorrect; //значение на которое нужно скорректировать параметр
+        errorType errorCode = NoError;// код ошибки
     };
 
     /*!

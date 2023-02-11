@@ -110,7 +110,7 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Mirror");
+    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Multiply41");
     sendNextMeterage();
 }
 
