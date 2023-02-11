@@ -93,11 +93,12 @@ struct Multiply41EncoderExecutor final : public BaseEncoderExecutor
     std::string encode(const std::string& originString) final
     {
         std::stringstream ss;
+        std::string currentMultipliedBy41Char;
 
-        std::istringstream istream(originString);
-        std::string currentWord;
-        while ( getline( istream, currentWord, ' ' ) )
-            ss << std::setprecision(6) << multiply41(currentWord) << " ";
+        for (uint8_t now : originString) {
+            currentMultipliedBy41Char = multiply41(static_cast<int>(now));
+            ss << currentMultipliedBy41Char << " ";
+        }
 
         return ss.str().erase(ss.str().size() - 1); //erase last space \s
     }
@@ -109,9 +110,9 @@ struct Multiply41EncoderExecutor final : public BaseEncoderExecutor
         std::istringstream istream(encodedString);
         std::string currentWord;
         while ( getline( istream, currentWord, ' ' ) )
-            ss << devide41(currentWord) + " ";
+            ss << devide41(currentWord);
 
-        return ss.str().erase(ss.str().size() - 1); //erase last space \s
+        return ss.str();
     }
 
     std::string name() final
@@ -119,22 +120,17 @@ struct Multiply41EncoderExecutor final : public BaseEncoderExecutor
         return "Multiply41";
     }
 private:
-    std::string multiply41 (const std::string &origingDoubleAsString)
+    std::string multiply41 (int charAsInt)
     {
-        double originDouble = std::stod(origingDoubleAsString);
-        originDouble *= 41;
-        std::ostringstream ostream;
-        ostream << originDouble;
-        return ostream.str();
+        int multipliedBy41Int = charAsInt * 41;
+        return std::to_string(multipliedBy41Int);
     }
 
-    std::string devide41 (const std::string &origingDoubleAsString)
+    uint8_t devide41 (const std::string &intAsString)
     {
-        double originDouble = std::stod(origingDoubleAsString);
-        originDouble /= 41;
-        std::ostringstream ostream;
-        ostream << originDouble;
-        return ostream.str();
+        int originInt = std::stoi(intAsString);
+        originInt /= 41;
+        return static_cast<uint8_t>(originInt);
     }
 };
 

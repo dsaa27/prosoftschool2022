@@ -22,6 +22,8 @@ struct MeterageMessage final : public AbstractMessage
     MeterageMessage (uint64_t timeStamp, uint8_t measureValue)
         :timeStamp(timeStamp), measureValue(measureValue) {}
 
+    MeterageMessage() : MeterageMessage(0, 0) {}
+
     ~MeterageMessage() = default;
 
     std::string convert2string() const final
@@ -45,6 +47,8 @@ struct CommandMessage final : public AbstractMessage
 {
     CommandMessage (double correction) : correction(correction) {}
 
+    CommandMessage() : CommandMessage(0) {}
+
     ~CommandMessage() = default;
 
     std::string convert2string() const final
@@ -66,6 +70,8 @@ struct CommandMessage final : public AbstractMessage
 struct ErrorMessage final : public AbstractMessage
 {
     ErrorMessage(Enumerations::ErrorType errorType) : errorType(errorType) {}
+
+    ErrorMessage() : ErrorMessage(Enumerations::ErrorType::noSchedule) {}
 
     ~ErrorMessage() = default;
 

@@ -40,7 +40,6 @@ void messageEncoderTest()
 void monitoringServerTest1()
 {
     using namespace Enumerations;
-    // TODO: дописать тест
     CommandCenter testingCommandMessage;
     MessageSerializer testingMessageSerializer;
     DeviceWorkSchedule *deviceWorkSchedule = unitTestFunctions::createRandomDeviceWorkSchedule();

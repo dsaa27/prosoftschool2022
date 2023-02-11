@@ -6,37 +6,95 @@
 
 #include <random>
 
-void unitTestFunctions::testMeasureMessageSerialization
-    (uint64_t timeStamp, uint8_t measureValue, const std::string expectSerializedMessage)
+void testMeasureMessageSerialization()
 {
+    std::vector<std::string> expectedSerializedVector = {"1 1 5",
+                                                         "1 2 100",
+                                                         "1 124124 34",
+                                                         "1 35897320489273 0",
+                                                         "1 0 0"};
+    std::vector<std::string> serializedVector;
     MessageSerializer messageSerializer;
+    MeterageMessage currentMeterageMessage;
 
-    MeterageMessage newMeterageMessage(timeStamp, measureValue);
+    currentMeterageMessage = {1, 5};
+    serializedVector.push_back(messageSerializer.serializeMessage(currentMeterageMessage));
+    currentMeterageMessage = {2, 100};
+    serializedVector.push_back(messageSerializer.serializeMessage(currentMeterageMessage));
+    currentMeterageMessage = {124124, 34};
+    serializedVector.push_back(messageSerializer.serializeMessage(currentMeterageMessage));
+    currentMeterageMessage = {35897320489273ULL,0};
+    serializedVector.push_back(messageSerializer.serializeMessage(currentMeterageMessage));
+    currentMeterageMessage = {0, 0};
+    serializedVector.push_back(messageSerializer.serializeMessage(currentMeterageMessage));
 
-    ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newMeterageMessage));
+    ASSERT_EQUAL(serializedVector, expectedSerializedVector);
 }
 
-void unitTestFunctions::testCommandMessageSerialization
-    (double correction, const std::string expectSerializedMessage)
+void testCommandMessageSerialization()
 {
+    std::vector<std::string> expectedSerializedVector = {"2 0",
+                                                         "2 0.01",
+                                                         "2 0.333333",
+                                                         "2 0.010101",
+                                                         "2 0.012987",
+                                                         "2 -0.027027",
+                                                         "2 -0.0588235"};
+    std::vector<std::string> serializedVector;
     MessageSerializer messageSerializer;
+    CommandMessage currentCommandMessage;
+    std::string currentSerializedMessage;
 
-    CommandMessage newCommandMessage(correction);
+    currentCommandMessage = {0.0};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {0.01};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {1.0 / 3};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {1.0 / 99};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {1.0 / 77};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {1.0 / -37};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentCommandMessage = {1.0 / -17};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentCommandMessage);
+    serializedVector.push_back(currentSerializedMessage);
 
-    ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newCommandMessage));
+    ASSERT_EQUAL(serializedVector, expectedSerializedVector);
 }
 
-void unitTestFunctions::testErrorMessageSerialization
-    (Enumerations::ErrorType errorType, const std::string expectSerializedMessage)
+void testErrorMessageSerialization()
 {
+    using namespace Enumerations;
+    std::vector<std::string> expectedSerializedVector = {"3 1",
+                                                         "3 2",
+                                                         "3 3"};
+    std::vector<std::string> serializedVector;
     MessageSerializer messageSerializer;
+    ErrorMessage currentErrorMessage;
+    std::string currentSerializedMessage;
 
-    ErrorMessage newErrorMessage(errorType);
+    currentErrorMessage = {ErrorType::noSchedule};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentErrorMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentErrorMessage = {ErrorType::noTimestamp};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentErrorMessage);
+    serializedVector.push_back(currentSerializedMessage);
+    currentErrorMessage = {ErrorType::obsolete};
+    currentSerializedMessage = messageSerializer.serializeMessage(currentErrorMessage);
+    serializedVector.push_back(currentSerializedMessage);
 
-    ASSERT_EQUAL(expectSerializedMessage, messageSerializer.serializeMessage(newErrorMessage));
+    ASSERT_EQUAL(serializedVector, expectedSerializedVector);
 }
 
-void unitTestFunctions::testMeasureMessageDeserialization
+void testMeasureMessageDeserialization
     (const std::string messageAsString, uint64_t timeStamp, uint8_t measureValue)
 {
     MessageSerializer messageSerializer;
@@ -50,7 +108,7 @@ void unitTestFunctions::testMeasureMessageDeserialization
     ASSERT_EQUAL(deserializedMeterageMessage->timeStamp, timeStamp);
 }
 
-void unitTestFunctions::testCommandMessageDeserialization
+void testCommandMessageDeserialization
     (const std::string messageAsString, double correction)
 {
     MessageSerializer messageSerializer;
@@ -65,7 +123,7 @@ void unitTestFunctions::testCommandMessageDeserialization
     ASSERT(std::abs(deserializedCommandMessage->correction - correction) <= epsilon);
 }
 
-void unitTestFunctions::testErrorMessageDeserialization
+void testErrorMessageDeserialization
     (const std::string messageAsString, Enumerations::ErrorType errorType)
 {
     MessageSerializer messageSerializer;
@@ -92,25 +150,9 @@ void unitTestFunctions::testCheckInvalidDeserializeMessageArgument
 
 void unitTestFunctions::testMessageSerialization()
 {
-    using namespace Enumerations;
-
-    testMeasureMessageSerialization(1, 5, "1 1 5");
-    testMeasureMessageSerialization(2, 100, "1 2 100");
-    testMeasureMessageSerialization(124124, 34, "1 124124 34");
-    testMeasureMessageSerialization(35897320489273ULL, 0, "1 35897320489273 0");
-    testMeasureMessageSerialization(0, 0, "1 0 0");
-
-    testCommandMessageSerialization(0.0, "2 0");
-    testCommandMessageSerialization(0.01, "2 0.01");
-    testCommandMessageSerialization(1.0 / 3, "2 0.333333");
-    testCommandMessageSerialization(1.0 / 99, "2 0.010101");
-    testCommandMessageSerialization(1.0 / 77, "2 0.012987");
-    testCommandMessageSerialization(1.0 / -37, "2 -0.027027");
-    testCommandMessageSerialization(1.0 / -17, "2 -0.0588235");
-
-    testErrorMessageSerialization(ErrorType::noSchedule, "3 1");
-    testErrorMessageSerialization(ErrorType::noTimestamp, "3 2");
-    testErrorMessageSerialization(ErrorType::obsolete, "3 3");
+    testMeasureMessageSerialization();
+    testCommandMessageSerialization();
+    testErrorMessageSerialization();
 }
 
 void unitTestFunctions::testMessageDeserialization()
