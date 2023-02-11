@@ -3,9 +3,13 @@
 #include <assert.h>
 #include <iostream>
 #include <memory>
+
+#include "../encoder/message_encoder.hxx"
+
 using namespace std;
 
-int main(void) {
+int
+main(void) {
     cout << __FILE_NAME__ << endl;
 
     {
@@ -93,6 +97,108 @@ int main(void) {
             assert(MSG_TYPE::ERROR == deser_msg->type());
             assert(err ==
                    dynamic_cast<const error* const>(deser_msg.get())->err());
+        }
+    }
+
+    // команда под шифром mirror
+    {
+        cout << "Test #4" << endl;
+
+        const serializator ser{};
+        const message_encoder menc{ENC_TYPE::MIRR};
+
+        for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
+
+            const std::unique_ptr<const message> msg{
+                new const command(corr_val)};
+
+            const std::string ser_msg{ser.serialize(msg.get())};
+
+            // сообщение шифруется
+            const std::string enc_ser_msg{menc.encode(ser_msg)};
+
+            // сообщение расшифровывается
+            const std::string denc_ser_msg{menc.decode(enc_ser_msg)};
+
+            // f(f^-1(x)) =?= x
+            assert(denc_ser_msg == ser_msg);
+
+            const std::unique_ptr<const message> deser_msg{
+                ser.deserialize(denc_ser_msg)};
+
+            assert(deser_msg);
+            assert(MSG_TYPE::COMMAND == deser_msg->type());
+
+            assert(corr_val ==
+                   dynamic_cast<const command*>(deser_msg.get())->value());
+        }
+    }
+
+    // команда под шифром mul41
+    {
+        cout << "Test #5" << endl;
+
+        const serializator ser{};
+        const message_encoder menc{ENC_TYPE::MUL41};
+
+        for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
+
+            const std::unique_ptr<const message> msg{
+                new const command(corr_val)};
+
+            const std::string ser_msg{ser.serialize(msg.get())};
+
+            // сообщение шифруется
+            const std::string enc_ser_msg{menc.encode(ser_msg)};
+
+            // сообщение расшифровывается
+            const std::string denc_ser_msg{menc.decode(enc_ser_msg)};
+
+            // f(f^-1(x)) =?= x
+            assert(denc_ser_msg == ser_msg);
+
+            const std::unique_ptr<const message> deser_msg{
+                ser.deserialize(denc_ser_msg)};
+
+            assert(deser_msg);
+            assert(MSG_TYPE::COMMAND == deser_msg->type());
+
+            assert(corr_val ==
+                   dynamic_cast<const command*>(deser_msg.get())->value());
+        }
+    }
+
+    // команда под шифром rot3
+    {
+        cout << "Test #6" << endl;
+
+        const serializator ser{};
+        const message_encoder menc{ENC_TYPE::ROT3};
+
+        for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
+
+            const std::unique_ptr<const message> msg{
+                new const command(corr_val)};
+
+            const std::string ser_msg{ser.serialize(msg.get())};
+
+            // сообщение шифруется
+            const std::string enc_ser_msg{menc.encode(ser_msg)};
+
+            // сообщение расшифровывается
+            const std::string denc_ser_msg{menc.decode(enc_ser_msg)};
+
+            // f(f^-1(x)) =?= x
+            assert(denc_ser_msg == ser_msg);
+
+            const std::unique_ptr<const message> deser_msg{
+                ser.deserialize(denc_ser_msg)};
+
+            assert(deser_msg);
+            assert(MSG_TYPE::COMMAND == deser_msg->type());
+
+            assert(corr_val ==
+                   dynamic_cast<const command*>(deser_msg.get())->value());
         }
     }
 }

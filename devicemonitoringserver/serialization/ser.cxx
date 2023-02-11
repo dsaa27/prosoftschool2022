@@ -1,11 +1,10 @@
 #include "ser.hxx"
 #include "../message.hxx"
-#include <cstring>
-#include <iostream>
 #include <memory>
 #include <string>
 
-std::string serializator::serialize(const message* const msg) const {
+std::string
+serializator::serialize(const message* const msg) const {
     if (nullptr == msg) {
         return "";
     }
@@ -35,7 +34,7 @@ std::string serializator::serialize(const message* const msg) const {
 
         ret += static_cast<char>(msg->type());
         ret += std::to_string(met->timestamp());
-        ret += ',';
+        ret += ' ';
         ret += std::to_string(met->value());
 
         return ret;
@@ -48,7 +47,7 @@ std::string serializator::serialize(const message* const msg) const {
             return "";
         }
 
-        ret  += static_cast<char>(err->type());
+        ret += static_cast<char>(err->type());
         ret += static_cast<char>(err->err());
         return ret;
     }
@@ -60,7 +59,7 @@ std::string serializator::serialize(const message* const msg) const {
     return "";
 }
 
-std::unique_ptr<message>
+std::unique_ptr<const message>
 serializator::deserialize(const std::string& msg) const {
     const auto msg_type{static_cast<MSG_TYPE>(msg[0])};
 
@@ -70,28 +69,28 @@ serializator::deserialize(const std::string& msg) const {
         const int8_t value{static_cast<int8_t>(
             std::stoi(std::string{msg.begin() + 1, msg.end()}))};
 
-        return std::unique_ptr<message>{new command(value)};
+        return std::make_unique<const command>(value);
     }
 
     case MSG_TYPE::METERAGE: {
-        const std::string::size_type splitter_pos{msg.find(',')};
+        const std::string::size_type splitter_pos{msg.find(' ')};
 
         if (std::string::npos == splitter_pos) {
             return nullptr;
         }
 
-        const uint64_t timestamp{std::stoull(
+        const std::uint64_t timestamp{std::stoull(
             std::string{msg.begin() + 1, msg.begin() + splitter_pos})};
 
-        const uint64_t value{std::stoull(
+        const std::uint64_t value{std::stoull(
             std::string{msg.begin() + splitter_pos + 1, msg.end()})};
 
-        return std::unique_ptr<message>{new meterage(timestamp, value)};
+        return std::make_unique<const meterage>(meterage(timestamp, value));
     }
 
     case MSG_TYPE::ERROR: {
-        const ERR_TYPE err{static_cast<ERR_TYPE>(msg[1])};
-        return std::unique_ptr<message>{new error(err)};
+        const ERR_TYPE err{static_cast<const ERR_TYPE>(msg[1])};
+        return std::make_unique<const error>(err);
     }
 
     default:

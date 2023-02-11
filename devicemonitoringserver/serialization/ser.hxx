@@ -1,10 +1,14 @@
 #pragma once
 #include "../message.hxx"
+#include <memory>
 #include <string>
-#include<memory>
 
 class serializator {
   public:
-    std::string serialize(const message* const) const;
-    std::unique_ptr<message> deserialize(const std::string& msg) const;
+
+    std::string
+    serialize(const message* const) const;
+
+    std::unique_ptr<const message>
+    deserialize(const std::string& msg) const;
 };
