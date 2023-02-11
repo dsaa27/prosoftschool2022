@@ -156,6 +156,7 @@ main(void) {
 
             // avg: 23
             // sum: (23 - 23)^2
+            // sqrt(0 / 1) = 0
 
             assert(std::abs(0.0 - cc.asd(idev, 0)) < prec);
         }
@@ -169,6 +170,7 @@ main(void) {
 
             // avg: (23 + 3) / 2 = 13
             // sum: (23 - 13)^2 + (3 - 13)^2 = 200
+            // sqrt(200 / 2) = 10
 
             assert(std::abs(10.0 - cc.asd(idev, 1)) < prec);
         }
@@ -188,6 +190,14 @@ main(void) {
         }
 
         {
+            const auto response = cc.check(idev, {1, 20});
+
+            assert(MSG_TYPE::ERROR == response->type());
+            assert(ERR_TYPE::OBSOLETE ==
+                   dynamic_cast<const error*>(response.get())->err());
+        }
+
+        {
             const auto response = cc.check(idev, {3, 15});
 
             assert(MSG_TYPE::COMMAND == response->type());
@@ -198,6 +208,14 @@ main(void) {
             // sqrt(346 / 4) = 9.300537
 
             assert(std::abs(9.300537 - cc.asd(idev, 3)) < prec);
+        }
+
+        {
+            const auto response = cc.check(idev, {4, 8});
+
+            assert(MSG_TYPE::ERROR == response->type());
+            assert(ERR_TYPE::NOTIMESTAMP ==
+                   dynamic_cast<const error*>(response.get())->err());
         }
     }
 }
