@@ -1,50 +1,85 @@
 #include "message_encoder.hxx"
-#include "base_encoder.hxx"
-#include "mul41/mul41.hxx"
-#include "mirr/mirr.hxx"
-#include "rot3/rot3.hxx"
-#include <assert.h>
-#include <vector>
+#include <cassert>
 #include <iostream>
 using namespace std;
 
-int main(void) {
+int
+main(void) {
     cout << __FILE_NAME__ << endl;
 
-    cout << "Test #1" << endl;
     {
-        base_encoder* encoder{new rot3()};
-        message_encoder message_encoder{encoder};
+        cout << "Test #1" << endl;
 
-        std::string plain_text_in{"Hello world!"};
-        std::string cipher_text{message_encoder.encode(plain_text_in)};
+        message_encoder enc;
+        assert("mirror" == enc.curr_encoder());
+    }
 
-        std::string plain_text_out = message_encoder.decode(cipher_text);
-        delete encoder;
+    {
+        cout << "Test #2" << endl;
+
+        {
+            message_encoder enc(ENC_TYPE::MIRR);
+            assert("mirror" == enc.curr_encoder());
+        }
+
+        {
+            message_encoder enc(ENC_TYPE::MUL41);
+            assert("multiply41" == enc.curr_encoder());
+        }
+
+        {
+            message_encoder enc(ENC_TYPE::ROT3);
+            assert("rot3" == enc.curr_encoder());
+        }
+    }
+
+    {
+        cout << "Test #3" << endl;
+
+        message_encoder enc(ENC_TYPE::ROT3);
+        enc.set_encoder(ENC_TYPE::MUL41);
+
+        assert("multiply41" == enc.curr_encoder());
+    }
+
+    {
+        cout << "Test #4" << endl;
+
+        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
+
+        message_encoder enc(ENC_TYPE::ROT3);
+
+        const std::string cipher_text{enc.encode(plain_text_in)};
+        const std::string plain_text_out{enc.decode(cipher_text)};
 
         assert(plain_text_in == plain_text_out);
     }
 
-    cout << "Test #2" << endl;
     {
-        vector<base_encoder*> encoders{new rot3(), new mul41(), new mirr()};
-        message_encoder message_encoder{};
+        cout << "Test #5" << endl;
 
-        for (auto encoder : encoders) {
-            message_encoder.register_encoder(encoder);
-        }
+        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
 
-        message_encoder.choose_encoder(encoders[1]->name());
-        assert(message_encoder.curr_encoder_name() == "multiply41");
+        message_encoder enc(ENC_TYPE::MUL41);
 
-        std::string plain_text_in{"Hello world!"};
-        std::string cipher_text{message_encoder.encode(plain_text_in)};
+        const std::string cipher_text{enc.encode(plain_text_in)};
+        const std::string plain_text_out{enc.decode(cipher_text)};
 
-        std::string plain_text_out = message_encoder.decode(cipher_text);
+        assert(plain_text_in == plain_text_out);
+    }
 
-        for (auto encoder : encoders) {
-            delete encoder;
-        }
+    {
+        cout << "Test #6" << endl;
+
+        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
+
+        message_encoder enc(ENC_TYPE::MIRR);
+
+        const std::string cipher_text{enc.encode(plain_text_in)};
+        const std::string plain_text_out{enc.decode(cipher_text)};
 
         assert(plain_text_in == plain_text_out);
     }

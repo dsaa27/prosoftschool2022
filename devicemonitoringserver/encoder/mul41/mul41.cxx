@@ -61,6 +61,8 @@ std::string mul41::decode(const std::string& message) const {
         }
 
         else {
+            // встретился нуль символ
+            // 0 * 441 = 0
             ret += '\0';
             i++;
         }

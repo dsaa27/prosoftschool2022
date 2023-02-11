@@ -1,22 +1,30 @@
 #pragma once
-#include <map>
-#include <string>
 #include "base_encoder.hxx"
+#include <map>
+#include <memory>
+#include <string>
+
+enum class ENC_TYPE : std::uint8_t { MIRR = 0u, MUL41, ROT3 };
 
 class message_encoder {
   private:
-    std::map<const std::string, base_encoder*> encoder_table;
-    const base_encoder* main_encoder;
+    std::map<ENC_TYPE, std::shared_ptr<const base_encoder>> _encoder_table;
+    std::shared_ptr<const base_encoder> _curr;
 
   public:
-    void choose_encoder(const std::string& name);
-    void register_encoder(base_encoder*);
+    void
+    set_encoder(const ENC_TYPE type);
 
-    std::string encode(const std::string&) const;
-    std::string decode(const std::string&) const;
+    std::string
+    encode(const std::string&) const;
 
-    std::string curr_encoder_name(void) const;
+    std::string
+    decode(const std::string&) const;
 
-    message_encoder(base_encoder*);
-    message_encoder(void) = default;
+    // временно string, ENC_TYPE нужен
+    std::string
+    curr_encoder(void) const;
+
+    message_encoder(void);
+    message_encoder(ENC_TYPE);
 };

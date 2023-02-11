@@ -1,28 +1,38 @@
 #include "message_encoder.hxx"
 #include "base_encoder.hxx"
+#include "mirr/mirr.hxx"
+#include "mul41/mul41.hxx"
+#include "rot3/rot3.hxx"
+#include <memory>
 
-message_encoder::message_encoder(base_encoder* encoder)
-    : main_encoder{nullptr} {
-    register_encoder(encoder);
-    choose_encoder(encoder->name());
+message_encoder::message_encoder(void)
+    : _encoder_table{{ENC_TYPE::MIRR, std::make_shared<const mirr>()},
+                     {ENC_TYPE::MUL41, std::make_shared<const mul41>()},
+                     {ENC_TYPE::ROT3, std::make_shared<const rot3>()}},
+
+      _curr{_encoder_table[ENC_TYPE::MIRR]} {
 }
 
-void message_encoder::register_encoder(base_encoder* encoder) {
-    encoder_table[encoder->name()]= encoder;
+message_encoder::message_encoder(ENC_TYPE et)
+    : _encoder_table{{ENC_TYPE::MIRR, std::make_shared<const mirr>()},
+                     {ENC_TYPE::MUL41, std::make_shared<const mul41>()},
+                     {ENC_TYPE::ROT3, std::make_shared<const rot3>()}},
+      _curr{_encoder_table[et]} {
 }
 
-void message_encoder::choose_encoder(const std::string& name) {
-    main_encoder = encoder_table[name];
+void message_encoder::set_encoder(const ENC_TYPE et) {
+    _curr = _encoder_table[et];
 }
 
-std::string message_encoder::encode(const std::string& message) const {
-    return main_encoder->encode(message);
+std::string message_encoder::encode(const std::string& data) const {
+    return _curr->encode(data);
 }
 
-std::string message_encoder::decode(const std::string& message) const {
-    return main_encoder->decode(message);
+std::string message_encoder::decode(const std::string& data) const {
+    return _curr->decode(data);
 }
 
-std::string message_encoder::curr_encoder_name(void) const {
-    return main_encoder->name();
+// временно
+std::string message_encoder::curr_encoder(void) const {
+    return _curr->name();
 }
