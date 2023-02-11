@@ -19,7 +19,7 @@ class SingletonEncoder {
        /*!
        * \brief список устройств и их шифровальщиков
        */
-        std::map<uint64_t, MessageEncoder*> devicesEncoder;
+        std::map<uint64_t, MessageEncoder*> m_devicesEncoder;
         static SingletonEncoder * p_instance;
         SingletonEncoder()=default;
         ~SingletonEncoder();

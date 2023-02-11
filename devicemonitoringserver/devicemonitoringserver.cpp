@@ -34,7 +34,7 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& deviceWorkSchedule)
 {
-    commandCenter.addDevice(deviceWorkSchedule);
+    m_commandCenter.addDevice(deviceWorkSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -51,16 +51,16 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    MessageEncoder* messageEncoder = encoder->getDeviceEncoder(deviceId);
+    MessageEncoder* messageEncoder = m_encoder->getDeviceEncoder(deviceId);
     if (!messageEncoder)
         return;
 
     std::optional<std::string> decodedMessage = messageEncoder->decode(message);
     if (!decodedMessage)
         return;
-    MessageSerializator::MessageStruct result = serializator.deserialize(*decodedMessage);
+    MessageSerializator::MessageStruct result = m_serializator.deserialize(*decodedMessage);
     Phase currentPhase = result.phase;
-    CommandCenter::CheckResult checkResult = commandCenter.checkMeterageInPhase(currentPhase, deviceId);
+    CommandCenter::CheckResult checkResult = m_commandCenter.checkMeterageInPhase(currentPhase, deviceId);
 
     MessageSerializator::MessageStruct newMessage;
     std::string serializedMessage;
@@ -69,13 +69,13 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
     {
         newMessage.valueToCorrect = checkResult.valueToCorrect;
         newMessage.type = MessageSerializator::messageType::Command;
-        serializedMessage = serializator.serialize(newMessage);
+        serializedMessage = m_serializator.serialize(newMessage);
     }
     else
     {
         newMessage.type = MessageSerializator::messageType::Error;
         newMessage.errorCode = checkResult.errorCode;
-        serializedMessage = serializator.serialize(newMessage);
+        serializedMessage = m_serializator.serialize(newMessage);
     }
     std::optional<std::string> newEncodeMessage = messageEncoder->encode(serializedMessage);
     if (newEncodeMessage)
@@ -84,8 +84,8 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    encoder->deleteDevice(clientId);
-    commandCenter.deleteDevice(clientId);
+    m_encoder->deleteDevice(clientId);
+    m_commandCenter.deleteDevice(clientId);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -137,5 +137,5 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
 }
 
 double DeviceMonitoringServer::getStandardDeviation(uint64_t deviceId) {
-    return commandCenter.getStandardDeviation(deviceId);
+    return m_commandCenter.getStandardDeviation(deviceId);
 }

@@ -74,10 +74,10 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
-    SingletonEncoder* encoder = SingletonEncoder::getInstance();
-    MessageSerializator serializator;
-    std::vector<std::string> responses = {};
-    std::vector<uint64_t> receivedCommands = {};
+    SingletonEncoder* m_encoder = SingletonEncoder::getInstance();
+    MessageSerializator m_serializator;
+    std::vector<std::string> m_responses;
+    std::vector<uint64_t> m_receivedCommands;
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;

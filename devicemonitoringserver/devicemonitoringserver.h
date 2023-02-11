@@ -73,9 +73,9 @@ private:
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
-    MessageSerializator serializator;
-    SingletonEncoder* encoder = SingletonEncoder::getInstance();
-    CommandCenter commandCenter;
+    MessageSerializator m_serializator;
+    SingletonEncoder* m_encoder = SingletonEncoder::getInstance();
+    CommandCenter m_commandCenter;
     AbstractConnectionServer* m_connectionServer = nullptr;
 };
 

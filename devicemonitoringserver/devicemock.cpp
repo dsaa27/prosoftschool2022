@@ -78,16 +78,16 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
-    MessageEncoder* const messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
+    MessageEncoder* const messageEncoder = m_encoder->getDeviceEncoder(m_clientConnection->bindedId());
     std::optional<std::string> decodedMessage = messageEncoder->decode(message);
     if (!decodedMessage)
         return;
-    MessageSerializator::MessageStruct res =  serializator.deserialize(*decodedMessage);
-    responses.push_back(*decodedMessage);
+    MessageSerializator::MessageStruct res =  m_serializator.deserialize(*decodedMessage);
+    m_responses.push_back(*decodedMessage);
     //if (res.errorCode > 100)
         //Обработка ошибки.
         //std::cout<< "error; ";
-    receivedCommands.push_back(res.type);
+    m_receivedCommands.push_back(res.type);
     sendNextMeterage();
 }
 
@@ -95,12 +95,12 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
 void DeviceMock::onConnected()
 {
-    receivedCommands = {};
+    m_receivedCommands = {};
 }
 
 void DeviceMock::onDisconnected()
 {
-    receivedCommands.clear();
+    m_receivedCommands.clear();
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
@@ -110,7 +110,7 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Multiply41");
+    m_encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Multiply41");
     sendNextMeterage();
 }
 
@@ -120,18 +120,18 @@ void DeviceMock::sendNextMeterage()
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
     ++m_timeStamp;
-    MessageEncoder* const messageEncoder = encoder->getDeviceEncoder(m_clientConnection->bindedId());
+    MessageEncoder* const messageEncoder = m_encoder->getDeviceEncoder(m_clientConnection->bindedId());
     MessageSerializator::MessageStruct res;
     res.valueToCorrect = -1;
     res.type = MessageSerializator::Meterage;
     res.phase = {m_timeStamp, meterage};
-    std::string message = serializator.serialize(res);
+    std::string message = m_serializator.serialize(res);
     std::optional<std::string> encodedMessage = messageEncoder->encode(message);
     if (encodedMessage)
         sendMessage(*encodedMessage);
 }
 
 std::vector<std::string> DeviceMock::getResponses() {
-    return responses;
+    return m_responses;
 }
 
