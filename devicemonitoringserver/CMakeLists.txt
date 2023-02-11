@@ -23,6 +23,8 @@ add_executable(server_monitoring_device_prosoft
   devicemock.h
   devicemock.cpp
   common.h
+  randomgenerate.h
+  randomgenerate.cpp
   servermock/servertests.cpp
   servermock/clientconnectionmock.cpp
   servermock/clientconnectionmock.h
@@ -52,11 +54,13 @@ add_executable(server_monitoring_device_prosoft
   clientservercomponents/messageencoder.cpp
   clientservercomponents/baseencoderexecutor.h
   clientservercomponents/abstractmessage.h
-  unit_tests_functions/unittestfunctions.h
-  unit_tests_functions/unittestfunctions.cpp
   deviceworkschedule.cpp
-  unit_tests_functions/testmessageencoderfunctions.h
-  unit_tests_functions/testmessageencoderfunctions.cpp
+  unittest/unittest.h
+  unittest/unittest.cpp
+  unittest/deserialization.cpp
+  unittest/serialization.cpp
+  unittest/codealgorithm.cpp
+  unittest/commandcenter.cpp
 )
 target_link_libraries(server_monitoring_device_prosoft Qt${QT_VERSION_MAJOR}::Core)
 

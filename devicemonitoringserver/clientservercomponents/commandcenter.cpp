@@ -29,38 +29,90 @@ DeviceWorkSchedule* CommandCenter::getDeviceWorkSchedule (uint64_t deviceId)
     return it != m_schedules.cend() ? it->second : nullptr;
 }
 
-AbstractMessage* CommandCenter::receiveAndSendMessage(uint64_t deviceId, AbstractMessage *receivedMessage)
+AbstractMessage* CommandCenter::receiveAndSendMessage(uint64_t deviceId, AbstractMessage *receivedAbstractMessage)
 {
-    MeterageMessage *receivedMeterageMessage = dynamic_cast<MeterageMessage*>(receivedMessage);
-    if(receivedMeterageMessage)
-    {
-        DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
-        if (deviceWorkSchedule) {
-            StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
-            if (   (receivedMeterageMessage->timeStamp > deviceCalculator->lastTimeStamp)
-                   ||
-                   (deviceCalculator->inaccuracys.size() == 0)) {
-                uint8_t expectedValue = deviceWorkSchedule->findScheduleValue(receivedMeterageMessage->timeStamp);
-                if (expectedValue == DeviceWorkSchedule::unfoundValue) {
-                    return new ErrorMessage(Enumerations::ErrorType::noTimestamp);
-                } else {
-                    int inaccuracy = receivedMeterageMessage->measureValue - expectedValue;
-                    double correction = ((inaccuracy == 0) ? 0 : (1.0 / inaccuracy));
-                    deviceCalculator->inaccuracys.push_back(inaccuracy);
-                    deviceCalculator->calculateStandartDeviation();
-                    deviceCalculator->lastTimeStamp = receivedMeterageMessage->timeStamp;
-                    return new CommandMessage(correction);
-                }
-            } else {
-                return new ErrorMessage (Enumerations::ErrorType::obsolete);
-            }
-        } else {
-            return new ErrorMessage(Enumerations::ErrorType::noSchedule);
-        }
+    MeterageMessage *handledAbstractMessage = handleMessage(receivedAbstractMessage);
+    AbstractMessage *madeMessage = makeMessage(deviceId, handledAbstractMessage);
+    delete handledAbstractMessage;
+    return madeMessage;
+}
+
+MeterageMessage* CommandCenter::handleMessage(AbstractMessage *receivedAbstractMessage)
+{
+    MeterageMessage *receivedMeterageMessage = dynamic_cast<MeterageMessage*>(receivedAbstractMessage);
+
+    if(receivedAbstractMessage) {
+        return receivedMeterageMessage;
     } else {
-        throw std::invalid_argument("receiveAndSentMessage has invalid argument");
+        delete receivedAbstractMessage;
+        throw std::invalid_argument("CommandCenter has invalid message");
+    }
+}
+
+AbstractMessage* CommandCenter::makeMessage(uint64_t deviceId, MeterageMessage* meterageMessage)
+{
+    AbstractMessage* madeMessage;
+
+    madeMessage = makeNoScheduleMessage(deviceId);
+    if(madeMessage)
+        return madeMessage;
+
+    madeMessage = makeObsoleteMessage(deviceId, meterageMessage);
+    if(madeMessage)
+        return madeMessage;
+
+    madeMessage = makeNoTimeStampMessage(deviceId, meterageMessage);
+    if(madeMessage)
+        return madeMessage;
+
+    madeMessage = makeCommandMessage(deviceId, meterageMessage);
+    return madeMessage;
+}
+
+AbstractMessage* CommandCenter::makeNoScheduleMessage(uint64_t deviceId)
+{
+    DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
+    if(deviceWorkSchedule) {
+        return nullptr;
+    } else {
+        return new ErrorMessage(Enumerations::ErrorType::noSchedule);
+    }
+}
+
+AbstractMessage* CommandCenter::makeObsoleteMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
+{
+    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
+    if ((handledAbstractMessage->timeStamp > deviceCalculator->lastTimeStamp)
+        ||
+        (deviceCalculator->inaccuracys.size() == 0)) {
+        return nullptr;
+    } else {
+        return new ErrorMessage (Enumerations::ErrorType::obsolete);
+    }
+}
+
+AbstractMessage* CommandCenter::makeNoTimeStampMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
+{
+    DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
+    uint8_t expectedValue = deviceWorkSchedule->findScheduleValue(handledAbstractMessage->timeStamp);
+    if (expectedValue == DeviceWorkSchedule::unfoundValue) {
+        return new ErrorMessage(Enumerations::ErrorType::noTimestamp);
+    } else {
         return nullptr;
     }
+}
+
+AbstractMessage* CommandCenter::makeCommandMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
+{
+    DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
+    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
+    uint8_t expectedValue = deviceWorkSchedule->findScheduleValue(handledAbstractMessage->timeStamp);
+    int inaccuracy = handledAbstractMessage->measureValue - expectedValue;
+    double correction = ((inaccuracy == 0) ? 0 : (1.0 / inaccuracy));
+    deviceCalculator->inaccuracys.push_back(inaccuracy);
+    deviceCalculator->calculateStandartDeviation();
+    deviceCalculator->lastTimeStamp = handledAbstractMessage->timeStamp;
+    return new CommandMessage(correction);
 }
 
 CommandCenter::StandardDeviationCalculator::StandardDeviationCalculator()

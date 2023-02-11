@@ -59,6 +59,8 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
 DeviceMock::~DeviceMock()
 {
     delete m_clientConnection;
+    for (auto it = m_receivedMessages.begin(); it != m_receivedMessages.end(); it++)
+        delete *it;
 }
 
 bool DeviceMock::bind(uint64_t deviceId)
@@ -82,7 +84,6 @@ void DeviceMock::onMessageReceived(const std::string& messageString)
     AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(transitiveString);
     m_receivedMessages.push_back(receivedMessage);
     sendNextMeterage();
-
 }
 
 void DeviceMock::onConnected()
@@ -114,7 +115,6 @@ void DeviceMock::sendNextMeterage()
     std::string transitiveString = m_messageSerializer.serializeMessage(*presentMeterageMessage);
     sendMessage(m_messageEncoder.encode(transitiveString));
     ++m_timeStamp;
-    delete presentMeterageMessage;
 }
 
 const std::vector<AbstractMessage*>& DeviceMock::response()

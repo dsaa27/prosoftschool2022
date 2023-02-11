@@ -56,9 +56,6 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
     AbstractMessage *sendingMessage = m_commandCenter.receiveAndSendMessage(deviceId, receivedMessage);
     transitiveString = m_messageSerializer.serializeMessage(*sendingMessage);
     sendMessage(deviceId, m_messageEncoder.encode(transitiveString));
-
-    delete sendingMessage;
-    delete receivedMessage;
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)

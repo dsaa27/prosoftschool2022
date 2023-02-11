@@ -1,6 +1,7 @@
 #include "test_runner.h"
 #include "tests.h"
 #include "servermock/servertests.h"
+#include "unittest/unittest.h"
 
 int main()
 {
@@ -12,8 +13,8 @@ int main()
 
     // TODO: собственные тесты
     RUN_TEST(tr, monitoringServerTest1);
-    RUN_TEST(tr, messageSerializerTest);
-    RUN_TEST(tr, commandCenterTest);
-    RUN_TEST(tr, messageEncoderTest);
+    RUN_TEST(tr, unitTest::messageSerializer);
+    RUN_TEST(tr, unitTest::commandCenter);
+    RUN_TEST(tr, unitTest::messageEncoder);
     return 0;
 }

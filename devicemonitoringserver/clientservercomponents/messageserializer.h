@@ -6,14 +6,14 @@
 #include <cstdint>
 
 #include "abstractmessage.h"
-#include "../unit_tests_functions/unittestfunctions.h"
+#include "../unittest/unittest.h"
 
 
 class MessageSerializer
 {
-    friend void unitTestFunctions::testCheckInvalidDeserializeMessageArgument(
-            const std::string messageAsString,
-            const std::string exceptionMessage);
+    friend void unitTest::deserialization::catchInvalidArgumentException(
+            std::string &receivedExceptionMessage, const std::string& wrongDeserializeMessage);
+
 public:
     MessageSerializer() = default;
 

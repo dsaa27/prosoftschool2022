@@ -5,47 +5,17 @@
 #include "servermock/clientconnectionmock.h"
 #include "servermock/connectionservermock.h"
 #include "servermock/taskqueue.h"
-#include "unit_tests_functions/unittestfunctions.h"
-#include "unit_tests_functions/testmessageencoderfunctions.h"
-
-
-void messageSerializerTest()
-{
-    using namespace unitTestFunctions;
-
-    testMessageSerialization();
-    testMessageDeserialization();
-}
-
-void commandCenterTest()
-{
-    using namespace unitTestFunctions;
-
-    testCommandCenterSetUnsetDeviceWorkSchedule();
-    testCommandCenterReceiveAndSendMessage();
-    testStandardDeviationCalculation();
-}
-
-void messageEncoderTest()
-{
-    using namespace testMessageEncoderFunctions;
-
-    testROT3CodingAlgorithm();
-    testMirrorCodingAlgorithm();
-    testMultiply41CodingAlgorithm();
-    testMixedCodeAlgorithms();
-    testInductiveEncoding();
-}
+#include "randomgenerate.h"
 
 void monitoringServerTest1()
 {
     using namespace Enumerations;
     CommandCenter testingCommandMessage;
     MessageSerializer testingMessageSerializer;
-    DeviceWorkSchedule *deviceWorkSchedule = unitTestFunctions::createRandomDeviceWorkSchedule();
+    DeviceWorkSchedule *deviceWorkSchedule = randomGenerate::createRandomDeviceWorkSchedule();
     testingCommandMessage.setDeviceWorkSchedule(new DeviceWorkSchedule(*deviceWorkSchedule));
     size_t meterageDataSize = deviceWorkSchedule->schedule.size();
-    std::vector<uint8_t> meterages = unitTestFunctions::createRandomMeterageVector(meterageDataSize);
+    std::vector<uint8_t> meterages = randomGenerate::createRandomMeterageVector(meterageDataSize);
 
     TaskQueue taskQueue;
     DeviceMock device(new ClientConnectionMock(taskQueue));
@@ -92,12 +62,7 @@ void monitoringServerTest1()
 
             delete expectedErrorMessage;
         }
-
-        delete temporaryMeterageMessage;
     }
 
     ASSERT_EQUAL(testingCommandMessage.getCurrentStandardDeviation(deviceId), server.getCurrentStandardDeviation(deviceId));
-
-    // ASSERT_EQUAL(device.responces(), expected);
-
 }
