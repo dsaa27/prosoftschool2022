@@ -6,20 +6,21 @@
 #include "message.h"
 constexpr double multyplier = 100.0;
 constexpr uint8_t maxBufferSize = 20;
+//constexpr uint8_t maxBufferSize = 4;
 
 class DeviceWorkSchedule;
 class CommandCenter;
 
 struct Device {
-    Device();
-    ~Device();
 
     class MyBuffer {
     private:
-        int* head = buffer;
-        int buffer[maxBufferSize]{0};
+    //public:
+        int* head = &buffer[0];
+        std::array<int,maxBufferSize> buffer{};
         int tail{0};
     private:
+    //public:
         uint8_t maxSize{sizeof(buffer)/sizeof(int)};
     public:
         //добавить величину отклонения в кольцевой буфер
@@ -29,7 +30,7 @@ struct Device {
     };
     //последнее рассчитанное значение СКО для устройства
     double m_MSE;
-    MyBuffer* m_errors;
+    MyBuffer m_errors;
     const DeviceWorkSchedule* m_deviceWorkSchedule = nullptr;
     uint64_t m_expectedTimestamp = 0;
 

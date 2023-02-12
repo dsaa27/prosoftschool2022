@@ -4,23 +4,15 @@
 #include <cmath>
 #include <iostream>
 
-Device::Device() {
-    m_errors = new MyBuffer();
-}
-
-Device::~Device() {
-    delete m_errors;
-}
-
 void Device::MyBuffer::push(const int& value) {
     if (tail<maxSize) {
         *(head++) = value;
         ++tail;
     } else {
-        if (head != &buffer[maxSize]) {
+        if (head == &buffer[maxSize]) {
+            head = &buffer[0];
             *(head++) = value;
         } else {
-            head = &buffer[0];
             *(head++) = value;
         }
     }
@@ -40,9 +32,9 @@ void CommandCenter::setSchedule(const DeviceWorkSchedule& workSchedule) {
         return;
     const auto& it = m_devices.find(workSchedule.deviceId);
     if (it == m_devices.end()) {
-        auto *m_device = new Device;
-        m_devices.insert({workSchedule.deviceId, m_device});
-        m_device->m_deviceWorkSchedule = &workSchedule;
+        auto *device = new Device;
+        m_devices.insert({workSchedule.deviceId, device});
+        device->m_deviceWorkSchedule = &workSchedule;
     }
     else {
         it->second->m_deviceWorkSchedule = &workSchedule;
@@ -52,10 +44,10 @@ void CommandCenter::setSchedule(const DeviceWorkSchedule& workSchedule) {
 void CommandCenter::calculateMSE(uint64_t deviceId) const {
     const auto& it = m_devices.find(deviceId);
     auto errors = it->second->m_errors;
-    double average = std::accumulate(errors->buffer, errors->buffer+errors->tail, 0)/errors->tail;
+    double average = std::accumulate(errors.buffer.begin(), errors.buffer.begin()+errors.tail, 0)/errors.tail;
     std::vector<double> deviations;
-    for (uint8_t i = 0; i < errors->tail; ++i)
-        deviations.push_back(pow(std::abs(errors->buffer[i]-average), 2));
+    for (uint8_t i = 0; i < errors.tail; ++i)
+        deviations.push_back(pow(std::abs(errors.buffer[i]-average), 2));
     it->second->m_MSE = std::ceil(sqrt(std::accumulate(deviations.begin(), deviations.end(), 0.0)/deviations.size())*multyplier)/multyplier;
 };
 
@@ -106,7 +98,7 @@ Message* CommandCenter::makeDecision(uint64_t deviceId, const Message* clientMet
 
             deviceExpTmstmp = clientCurrentTmstmp;
             ++deviceExpTmstmp;
-            device->second->m_errors->push(deviation);
+            device->second->m_errors.push(deviation);
             calculateMSE(deviceId);
             return newCommand;
         }

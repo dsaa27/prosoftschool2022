@@ -120,9 +120,9 @@ void EncoderCustom::setkey(const std::string& inputkey) {
     const uint8_t max_size (maxKeySize);
     if (inputkey == "")
         return;
+    key.resize((inputkey.size() < max_size ? inputkey.size() : max_size));
     for (uint8_t i = 0u; i < (inputkey.size() < max_size ? inputkey.size() : max_size); ++i)
         key[i] = inputkey[i];
-    key.resize((inputkey.size() < max_size ? inputkey.size() : max_size));
 }
 
 MessageEncoder::~MessageEncoder() {

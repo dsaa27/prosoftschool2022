@@ -6,6 +6,7 @@
 #include "servermock/clientconnectionmock.h"
 #include "servermock/connectionservermock.h"
 #include "servermock/taskqueue.h"
+#include "commandcenter.h"
 #include <vector>
 #include <iostream>
 
@@ -616,34 +617,35 @@ void serializationTest()
 //Тест пройден успешно. В основной программе буфер хранит вплоть до 20 последних отклонений
 void BufferTest() {
     Device device;
-    device.m_errors->push(0);
-    ASSERT_EQUAL(device.m_errors->buffer[0], 0);
-    ASSERT_EQUAL(device.m_errors->tail, 1);
-    ASSERT_EQUAL(device.m_errors->maxSize, 4);
-    device.m_errors->push(1);
-    ASSERT_EQUAL(device.m_errors->buffer[0], 0);
-    ASSERT_EQUAL(device.m_errors->buffer[1], 1);
-    ASSERT_EQUAL(device.m_errors->tail, 2);
-    ASSERT_EQUAL(device.m_errors->maxSize, 4);
-    device.m_errors->push(2);
-    ASSERT_EQUAL(device.m_errors->buffer[0], 0);
-    ASSERT_EQUAL(device.m_errors->buffer[1], 1);
-    ASSERT_EQUAL(device.m_errors->buffer[2], 2);
-    ASSERT_EQUAL(device.m_errors->tail, 3);
-    ASSERT_EQUAL(device.m_errors->maxSize, 4);
-    device.m_errors->push(3);
-    ASSERT_EQUAL(device.m_errors->buffer[0], 0);
-    ASSERT_EQUAL(device.m_errors->buffer[1], 1);
-    ASSERT_EQUAL(device.m_errors->buffer[2], 2);
-    ASSERT_EQUAL(device.m_errors->buffer[3], 3);
-    ASSERT_EQUAL(device.m_errors->tail, 4);
-    ASSERT_EQUAL(device.m_errors->maxSize, 4);
-    device.m_errors->push(4);
-    ASSERT_EQUAL(device.m_errors->buffer[0], 4);
-    ASSERT_EQUAL(device.m_errors->buffer[1], 1);
-    ASSERT_EQUAL(device.m_errors->buffer[2], 2);
-    ASSERT_EQUAL(device.m_errors->buffer[3], 3);
-    ASSERT_EQUAL(device.m_errors->tail, 4);
-    ASSERT_EQUAL(device.m_errors->maxSize, 4);
+    device.m_errors.push(0);
+    ASSERT_EQUAL(device.m_errors.buffer[0], 0);
+    ASSERT_EQUAL(device.m_errors.tail, 1);
+    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    device.m_errors.push(1);
+    ASSERT_EQUAL(device.m_errors.buffer[0], 0);
+    ASSERT_EQUAL(device.m_errors.buffer[1], 1);
+    ASSERT_EQUAL(device.m_errors.tail, 2);
+    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    device.m_errors.push(2);
+    ASSERT_EQUAL(device.m_errors.buffer[0], 0);
+    ASSERT_EQUAL(device.m_errors.buffer[1], 1);
+    ASSERT_EQUAL(device.m_errors.buffer[2], 2);
+    ASSERT_EQUAL(device.m_errors.tail, 3);
+    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    device.m_errors.push(3);
+    ASSERT_EQUAL(device.m_errors.buffer[0], 0);
+    ASSERT_EQUAL(device.m_errors.buffer[1], 1);
+    ASSERT_EQUAL(device.m_errors.buffer[2], 2);
+    ASSERT_EQUAL(device.m_errors.buffer[3], 3);
+    ASSERT_EQUAL(device.m_errors.tail, 4);
+    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    device.m_errors.push(4);
+    ASSERT_EQUAL(device.m_errors.buffer[0], 4);
+    ASSERT_EQUAL(device.m_errors.buffer[1], 1);
+    ASSERT_EQUAL(device.m_errors.buffer[2], 2);
+    ASSERT_EQUAL(device.m_errors.buffer[3], 3);
+    ASSERT_EQUAL(device.m_errors.tail, 4);
+    ASSERT_EQUAL(device.m_errors.maxSize, 4);
 }
 */
+
