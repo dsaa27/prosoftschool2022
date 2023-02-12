@@ -7,15 +7,56 @@
 #include "servermock/taskqueue.h"
 #include "randomgenerate.h"
 
+
+namespace
+{
+
+std::vector<std::string> makeExpectedResponseStrings(
+        CommandCenter &commandCenter, DeviceWorkSchedule deviceWorkSchedule,
+        const std::vector<uint8_t> &meterages)
+{
+    commandCenter.setDeviceWorkSchedule(new DeviceWorkSchedule(deviceWorkSchedule));
+    const uint64_t deviceId = deviceWorkSchedule.deviceId;
+
+    std::vector<std::string> expectedResponseStrings(meterages.size());
+
+    MeterageMessage *currentMeterageMessage;
+    AbstractMessage *currentExpectedMessage;
+    for (uint64_t timeStamp = 0; timeStamp < meterages.size(); timeStamp++) {
+        currentMeterageMessage = new MeterageMessage(timeStamp, meterages[timeStamp]);
+        currentExpectedMessage =
+                commandCenter.receiveAndSendMessage(deviceId, currentMeterageMessage);
+        expectedResponseStrings[timeStamp] = currentExpectedMessage->convert2string();
+        delete currentExpectedMessage;
+    }
+
+    return expectedResponseStrings;
+}
+
+std::vector<std::string> makeResponseStrings
+    (const std::vector<AbstractMessage*> responses)
+{
+    std::vector<std::string> responsesStrings(responses.size());
+    for (int i = 0; i < responses.size(); i++)
+        responsesStrings[i] = responses[i]->convert2string();
+
+    return responsesStrings;
+}
+
+double makeExpectedStandardDeviation (CommandCenter &commandCenter, uint64_t deviceId)
+{
+    return commandCenter.getCurrentStandardDeviation(deviceId);
+}
+
+} //namespace
+
 void monitoringServerTest1()
 {
-    using namespace Enumerations;
-    CommandCenter testingCommandMessage;
-    MessageSerializer testingMessageSerializer;
-    DeviceWorkSchedule *deviceWorkSchedule = randomGenerate::createRandomDeviceWorkSchedule();
-    testingCommandMessage.setDeviceWorkSchedule(new DeviceWorkSchedule(*deviceWorkSchedule));
-    size_t meterageDataSize = deviceWorkSchedule->schedule.size();
-    std::vector<uint8_t> meterages = randomGenerate::createRandomMeterageVector(meterageDataSize);
+    const size_t meterageDataSize = 10;
+    DeviceWorkSchedule *deviceWorkSchedule =
+            randomGenerate::createRandomDeviceWorkSchedule(meterageDataSize);
+    std::vector<uint8_t> meterages =
+            randomGenerate::createRandomMeterageVector(meterageDataSize);
 
     TaskQueue taskQueue;
     DeviceMock device(new ClientConnectionMock(taskQueue));
@@ -34,35 +75,21 @@ void monitoringServerTest1()
     while (taskQueue.processTask())
         ;
 
-    const std::vector<AbstractMessage*>& responseMessages = device.response();
 
-    ASSERT_EQUAL(responseMessages.size(), meterageDataSize);
+    CommandCenter testingCommandCenter;
 
-    const double epsilon = 1e-5;
-    for (size_t timeStampMock = 0; timeStampMock < meterageDataSize; timeStampMock++)
-    {
-        AbstractMessage *responseAbstractMessage = responseMessages[timeStampMock];
-        MeterageMessage *temporaryMeterageMessage = new MeterageMessage(timeStampMock, meterages[timeStampMock]);
-        AbstractMessage *expectedAbstractMessage = testingCommandMessage.receiveAndSendMessage(deviceId, temporaryMeterageMessage);
+    std::vector<std::string> reponseStrings =
+            makeResponseStrings(device.response());
+    std::vector<std::string> expectedResponsesStrings =
+            makeExpectedResponseStrings(testingCommandCenter, *deviceWorkSchedule, meterages);
 
-        ASSERT_EQUAL(static_cast<int>(expectedAbstractMessage->getMessageType()),
-                     static_cast<int>(responseAbstractMessage->getMessageType()));
+    ASSERT_EQUAL(reponseStrings, expectedResponsesStrings);
 
-        if (static_cast<int>(MessageType::command) == static_cast<int>(expectedAbstractMessage->getMessageType())) {
-            CommandMessage *expectedCommandMessage = dynamic_cast<CommandMessage*>(expectedAbstractMessage);
-            CommandMessage *responseCommandMessage = dynamic_cast<CommandMessage*>(responseAbstractMessage);
-            ASSERT(std::abs(expectedCommandMessage->correction - responseCommandMessage->correction) < epsilon);
+    double expectedStandardDeviation =
+            makeExpectedStandardDeviation(testingCommandCenter, deviceId);
+    double standardDeviation =
+            server.getCurrentStandardDeviation(deviceId);
+    const double epsilon = 1e-6;
 
-            delete expectedCommandMessage;
-        } else {
-            ErrorMessage *expectedErrorMessage = dynamic_cast<ErrorMessage*>(expectedAbstractMessage);
-            ErrorMessage *responseErrorMessage = dynamic_cast<ErrorMessage*>(responseAbstractMessage);
-
-            ASSERT(expectedErrorMessage->errorType == responseErrorMessage->errorType);
-
-            delete expectedErrorMessage;
-        }
-    }
-
-    ASSERT_EQUAL(testingCommandMessage.getCurrentStandardDeviation(deviceId), server.getCurrentStandardDeviation(deviceId));
+    ASSERT(std::abs(standardDeviation - expectedStandardDeviation) < epsilon);
 }
