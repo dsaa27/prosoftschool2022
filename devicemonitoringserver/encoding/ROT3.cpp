@@ -5,7 +5,8 @@ std::string ROT3::encode(const std::string& message) const
 {
     std::string encodedMessage;
     char symbol;
-    for(int i = 0; i < message.size(); i++)
+    size_t messageSize = message.size();
+    for(int i = 0; i < messageSize; ++i)
     {
         symbol = message[i] < CHAR_MAX - 2 ? message[i] + 3 : CHAR_MIN + 2 - (CHAR_MAX - message[i]);
         encodedMessage.push_back(symbol);
@@ -17,7 +18,8 @@ std::string ROT3::decode(const std::string& message) const
 {
     std::string decodedMessage;
     char symbol;
-    for(int i = 0; i < message.size(); i++)
+    size_t messageSize = message.size();
+    for(int i = 0; i < messageSize; ++i)
     {
         symbol = message[i] > CHAR_MIN - 2 ? message[i] - 3 : CHAR_MAX - 3 - (CHAR_MIN  - message[i]);
         decodedMessage.push_back(symbol);

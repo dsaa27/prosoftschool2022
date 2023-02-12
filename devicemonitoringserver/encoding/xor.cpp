@@ -4,7 +4,8 @@ std::string Xor::encode(const std::string &message) const
 {
     char key[4] = {'A', 'C', 'B', 'W'};
         std::string output;
-        for (int i = 0; i < message.size(); i++)
+        size_t messageSize = message.size();
+        for(int i = 0; i < messageSize; ++i)
             output += message[i] ^ key[i % (sizeof(key) / sizeof(char))];
         return output;
 }

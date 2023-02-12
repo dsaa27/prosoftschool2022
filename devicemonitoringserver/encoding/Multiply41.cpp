@@ -20,7 +20,8 @@ std::string Multiply41::decode(const std::string& message) const
 {
     std::string decodedMessage;
     char symbol;
-    for(int i = 0; i < message.size() - 1; i++)
+    size_t messageSize = message.size();
+    for(int i = 0; i < messageSize - 1; ++i)
     {
         symbol = (static_cast<int16_t>(message[i]) * CHAR_MAX + static_cast<int16_t>(message[i + 1])) / 41;
         decodedMessage.push_back(symbol);

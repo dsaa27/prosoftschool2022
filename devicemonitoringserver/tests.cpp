@@ -20,7 +20,8 @@ void monitoringServerStandardTest()
     ASSERT(device.connectToServer(serverId));
     std::vector<uint8_t> mets = {32, 2};
     std::vector<Phase> phases;
-    for (uint64_t i = 1; i < mets.size() + 1; i++)
+    size_t metsSize = mets.size();
+    for (uint64_t i = 1; i < metsSize + 1; ++i)
         phases.emplace_back(Phase{i, mets[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
@@ -29,13 +30,16 @@ void monitoringServerStandardTest()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < mets.size()*2 + 2; i++)
+
+    for (int i = 0; i < metsSize*2 + 2; ++i)
         taskQueue.processTask();
 
     std::vector<std::string> responses = device.getResponses();
     if (responses.size() != expected.size())
         ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
+
+    size_t responsesSize = responses.size();
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
 }
 
@@ -55,12 +59,14 @@ void monitoringServerTestErrorNoSchedule()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; ++i)
         taskQueue.processTask();
     std::vector<std::string> responses = device.getResponses();
     if (responses.size() != expected.size())
-    ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
+        ASSERT(false);
+
+    size_t responsesSize = responses.size();
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
 }
 
@@ -77,7 +83,9 @@ void monitoringServerTestErrorNoTimestamp()
     ASSERT(device.connectToServer(serverId));
     std::vector<uint8_t> mets = {12};
     std::vector<Phase> phases;
-    for (uint64_t i = 1; i < mets.size() + 1; i++)
+
+    size_t metsSize = mets.size();
+    for (uint64_t i = 1; i < metsSize + 1; ++i)
         phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
@@ -87,13 +95,15 @@ void monitoringServerTestErrorNoTimestamp()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < mets.size()*2 + 2; i++)
+    for (int i = 0; i < metsSize*2 + 2; ++i)
         taskQueue.processTask();
 
     std::vector<std::string> responses = device.getResponses();
-    if (responses.size() != expected.size())
-    ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
+    size_t responsesSize = responses.size();
+    if (responsesSize != expected.size())
+        ASSERT(false);
+
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
 }
 
@@ -110,7 +120,8 @@ void monitoringServerTestNegativeValue()
     ASSERT(device.connectToServer(serverId));
     std::vector<uint8_t> mets = {3};
     std::vector<Phase> phases;
-    for (uint64_t i = 1; i < mets.size() + 1; i++)
+    size_t metsSize = mets.size();
+    for (uint64_t i = 1; i < metsSize + 1; ++i)
         phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
@@ -120,13 +131,15 @@ void monitoringServerTestNegativeValue()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < mets.size()*2 + 2; i++)
+    for (int i = 0; i < metsSize*2 + 2; ++i)
         taskQueue.processTask();
 
     std::vector<std::string> responses = device.getResponses();
-    if (responses.size() != expected.size())
-    ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
+    size_t responsesSize = responses.size();
+    if (responsesSize != expected.size())
+        ASSERT(false);
+
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
 }
 
@@ -143,7 +156,8 @@ void monitoringServerTestComplex()
     ASSERT(device.connectToServer(serverId));
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
-    for (uint64_t i = 1; i < mets.size() + 1; i++)
+    size_t metsSize = mets.size();
+    for (uint64_t i = 1; i < metsSize + 1; ++i)
         phases.emplace_back(Phase {i, mets[i - 1]});
 
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
@@ -153,12 +167,14 @@ void monitoringServerTestComplex()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < mets.size()*2 + 2; i++)
+    for (int i = 0; i < metsSize*2 + 2; ++i)
         taskQueue.processTask();
     std::vector<std::string> responses = device.getResponses();
-    if (responses.size() != expected.size())
+    size_t responsesSize = responses.size();
+    if (responsesSize != expected.size())
         ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
+
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
 }
 
@@ -175,7 +191,8 @@ void monitoringServerTestStandardDeviation()
     ASSERT(device.connectToServer(serverId));
     std::vector<uint8_t> mets = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
-    for (uint64_t i = 1; i < mets.size() + 1; i++)
+    size_t metsSize = mets.size();
+    for (uint64_t i = 1; i < metsSize + 1; ++i)
         phases.emplace_back(Phase{i, mets[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
@@ -184,15 +201,15 @@ void monitoringServerTestStandardDeviation()
     while (taskQueue.processTask())
         ;
     device.startMeterageSending();
-    for (int i = 0; i < mets.size()*2 + 2; i++)
+    for (int i = 0; i < metsSize*2 + 2; ++i)
         taskQueue.processTask();
     std::vector<std::string> responses = device.getResponses();
-    if (responses.size() != expected.size())
-    ASSERT(false);
-    for (int i = 0; i < responses.size(); i++)
-    {
+    size_t responsesSize = responses.size();
+    if (responsesSize != expected.size())
+        ASSERT(false);
+
+    for (int i = 0; i < responsesSize; ++i)
         ASSERT_EQUAL(responses[i], expected[i]);
-    }
     double sd = server.getStandardDeviation(deviceId);
     ASSERT_EQUAL(sd, 1.96);
 }
@@ -217,9 +234,11 @@ void monitoringServerTestTwoDevices()
     std::vector<uint8_t> mets1 = {31, 2, 4, 5, 6};
     std::vector<Phase> phases;
     std::vector<Phase> phases2;
-    for (uint64_t i = 1; i < mets1.size() + 1; i++)
+    size_t mets1Size = mets1.size();
+    size_t mets2Size = mets2.size();
+    for (uint64_t i = 1; i < mets1Size + 1; ++i)
         phases.emplace_back(Phase {i, mets1[i - 1]});
-    for (uint64_t i = 1; i < mets2.size() + 1; i++)
+    for (uint64_t i = 1; i < mets2Size + 1; ++i)
         phases2.emplace_back(Phase {i, mets2[i - 1]});
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId1, phases};
     DeviceWorkSchedule const deviceWorkSchedule2 = {deviceId2, phases2};
@@ -235,7 +254,7 @@ void monitoringServerTestTwoDevices()
         ;
     device2.startMeterageSending();
     device1.startMeterageSending();
-    for (int i = 0; i < mets1.size() * 2 + mets2.size() * 2 + 2; i++)
+    for (int i = 0; i < mets1Size * 2 + mets2Size * 2 + 2; ++i)
         taskQueue.processTask();
 
     std::vector<std::string> responsesDev1 = device1.getResponses();
@@ -249,9 +268,11 @@ void monitoringServerTestTwoDevices()
     if (responsesDev2.size() != expectedDev2.size())
         ASSERT(false);
 
-    for (int i = 0; i < responsesDev1.size(); i++)
+    size_t resp1Size = responsesDev1.size();
+    size_t resp2Size = responsesDev2.size();
+    for (int i = 0; i < resp1Size; ++i)
         ASSERT_EQUAL(responsesDev1[i], expectedDev1[i]);
-    for (int i = 0; i < responsesDev2.size(); i++)
+    for (int i = 0; i < resp2Size; ++i)
         ASSERT_EQUAL(responsesDev2[i], expectedDev2[i]);
     double sd = server.getStandardDeviation(deviceId1);
     ASSERT_EQUAL(sd, 1.96);
