@@ -54,7 +54,7 @@ void monitoringServerTest1()
 {
     const size_t meterageDataSize = 10;
     DeviceWorkSchedule *deviceWorkSchedule =
-            randomGenerate::createRandomDeviceWorkSchedule(meterageDataSize);
+            randomGenerate::createRandomDeviceWorkSchedule(meterageDataSize, 3);
     std::vector<uint8_t> meterages =
             randomGenerate::createRandomMeterageVector(meterageDataSize);
 

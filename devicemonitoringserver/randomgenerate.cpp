@@ -25,7 +25,8 @@ DeviceWorkSchedule* randomGenerate::createRandomDeviceWorkSchedule()
     return new DeviceWorkSchedule(schedule, deviceId);
 }
 
-DeviceWorkSchedule* randomGenerate::createRandomDeviceWorkSchedule(size_t scheduleSize)
+DeviceWorkSchedule* randomGenerate::createRandomDeviceWorkSchedule(
+        size_t scheduleSize, uint64_t startTimeStamp)
 {
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -40,7 +41,7 @@ DeviceWorkSchedule* randomGenerate::createRandomDeviceWorkSchedule(size_t schedu
     uint8_t currentValue;
     for (size_t i = 0; i < scheduleSize; i++) {
         currentValue = uint8_t_distribution(generator);
-        schedule[i] = {i, currentValue};
+        schedule[i] = {i + startTimeStamp, currentValue};
     }
 
     return new DeviceWorkSchedule(schedule, deviceId);
