@@ -9,7 +9,8 @@ namespace randomGenerate
 {
     DeviceWorkSchedule* createRandomDeviceWorkSchedule();
 
-    DeviceWorkSchedule* createRandomDeviceWorkSchedule(size_t scheduleSize);
+    DeviceWorkSchedule* createRandomDeviceWorkSchedule(
+            size_t scheduleSize, uint64_t startTimeStamp = 0);
 
     std::vector<uint8_t> createRandomMeterageVector(size_t vectorSize);
 }
