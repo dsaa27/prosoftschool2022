@@ -75,6 +75,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& /*message*/)
 {
+
     // TODO: Разобрать std::string, прочитать команду,
     // записать ее в список полученных комманд
     sendNextMeterage(); // Отправляем следующее измерение
@@ -107,5 +108,8 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
+   // Meterage* met1;
+    //Message * Message1 = met1;
+    // и тогда здесь передадим в метод сериализатора указатель на объект базового класса мессаге, который равен указателю на тип метераге
     // TODO: Сформировать std::string и передать в sendMessage
 }

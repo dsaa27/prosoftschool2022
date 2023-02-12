@@ -19,7 +19,7 @@ public:
      * \brief Конструктор.
      * \param clientConnection - владеющий указатель на объект класса клиента
      */
-    DeviceMock(AbstractClientConnection* clientConnection);
+        DeviceMock(AbstractClientConnection* clientConnection);
     ~DeviceMock();
 
     /*!
