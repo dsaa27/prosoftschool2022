@@ -1,13 +1,13 @@
 #include "servertests.h"
-#include "test_runner.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <servermock/clientconnectionmock.h>
-#include <servermock/connectionchannel.h>
-#include <servermock/connectionservermock.h>
-#include <servermock/object.h>
-#include <servermock/taskqueue.h>
+#include "../test_runner.h"
+#include "../handlers/abstractaction.h"
+#include "../handlers/abstractmessagehandler.h"
+#include "../handlers/abstractnewconnectionhandler.h"
+#include "../servermock/clientconnectionmock.h"
+#include "../servermock/connectionchannel.h"
+#include "../servermock/connectionservermock.h"
+#include "../servermock/object.h"
+#include "../servermock/taskqueue.h"
 
 namespace
 {
@@ -133,18 +133,18 @@ void connectionChannelTest()
         ASSERT_EQUAL(channel2.peerId(), peerId1);
         ASSERT(!channel1.connected());
         ASSERT(!channel2.connected());
-        channel1.connect(&channel2);
-        channel2.connect(&channel1);
+        channel1.connect(&channel2); // запомним адрес приемника
+        channel2.connect(&channel1); // запомним адрес приемника
         ASSERT(channel1.connected());
         ASSERT(channel2.connected());
-        channel1.sendMessage("1");
-        channel2.sendMessage("11");
-        channel1.sendMessage("2");
+        channel1.sendMessage("1"); // проверим, что применик есть; проверим, что он подключен к нам; тогда создадим message_task с нашим сообщением "1" и адресом приемника, положим в очередь тасков.
+        channel2.sendMessage("11"); // когда время придет для обработки этого таска, то приемник должен выполнить метод onMessageReceived с нашим сообщением "1" и messageHandler приемника должен
+        channel1.sendMessage("2"); // обработать наше сообщение "1" и положить его в вектор сообщений messages. Все!
         channel2.sendMessage("22");
         channel1.sendMessage("3");
         channel2.sendMessage("33");
-        channel1.disconnect();
-        channel1.sendMessage("4");
+        channel1.disconnect(); // запишем в m_connected = false и создадим таск дисконекта (DisconnectTask) с нашим адресом, затем вызовем disconectPeer() для такой же процедуры дисконекта у приемника.
+        channel1.sendMessage("4"); // Когда придет время для обработки DisconnectTask, у нас вызовется onDisconnected(), где вызовем () у m_diconnectedHandler и присвоем disconnected = true. Все!
         channel2.sendMessage("44");
         ASSERT(!channel1.connected());
         ASSERT(!channel2.connected());
@@ -321,17 +321,18 @@ void clientServerTest()
     const uint64_t clientId = 11;
     const uint64_t serverId = 1;
     ASSERT(!client->bind(0));
-    ASSERT(client->bind(clientId));
+    ASSERT(client->bind(clientId)); //даем нашему клиенту новое ID
     ASSERT(!client->bind(clientId));
     ASSERT(!server->listen(0));
-    ASSERT(server->listen(serverId));
+    ASSERT(server->listen(serverId)); // присваиваем нашему серверу его ID
     ASSERT(!server->listen(serverId));
     ASSERT(!client->connectToHost(0));
-    ASSERT(client->connectToHost(serverId));
-
-    ASSERT(!client->connected());
-    ASSERT_EQUAL(client->peerId(), 0u);
-    ASSERT(!server->connection(clientId));
+    ASSERT(client->connectToHost(serverId)); // если id клиента и сервера действительны, то мы загружаем новый таск ConnectToServerTask в очередь
+                                             // когда таск выполнится, то с помощью findServer и findClient найдутся указателя на client и server
+    ASSERT(!client->connected());            // затем создадутся новые connectionChannel, которые соединятся между собой с connect() (то есть запомнят указателя peer на приемник)
+    ASSERT_EQUAL(client->peerId(), 0u);      // далее addConnection у server, где будет создан ConnectionMock и проверно, что соединения с таким clientId еще не было и занесено в словарь подключений
+                                             // затем server->m_newConnectionHandler в данном тесте установит MassageHandler и DisconnectedHandler
+    ASSERT(!server->connection(clientId));   // client->setChannel() подключит channelConnection к себе с проверкой, что он уже не подключен и отправкой сообщения о подключении
     ASSERT_EQUAL(ostr.str(), "");
     while (taskQueue.processTask())
         ;

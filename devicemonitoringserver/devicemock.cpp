@@ -1,7 +1,9 @@
 #include "devicemock.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <server/abstractclientconnection.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "server/abstractclientconnection.h"
+
+#include <iostream>
 
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
@@ -51,11 +53,14 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
         DeviceMock* m_client = nullptr;
     };
     m_clientConnection->setMessageHandler(new MessageHandler(this));
+    m_messageEncoder.chooseCodingAlgorithm("Mirror");
 }
 
 DeviceMock::~DeviceMock()
 {
     delete m_clientConnection;
+    for (auto it = m_receivedMessages.begin(); it != m_receivedMessages.end(); it++)
+        delete *it;
 }
 
 bool DeviceMock::bind(uint64_t deviceId)
@@ -73,11 +78,12 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& messageString)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
-    sendNextMeterage(); // Отправляем следующее измерение
+    std::string transitiveString = m_messageEncoder.decode(messageString);
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(transitiveString);
+    m_receivedMessages.push_back(receivedMessage);
+    sendNextMeterage();
 }
 
 void DeviceMock::onConnected()
@@ -105,7 +111,13 @@ void DeviceMock::sendNextMeterage()
     if (m_timeStamp >= m_meterages.size())
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
+    MeterageMessage *presentMeterageMessage = new MeterageMessage(m_timeStamp, meterage);
+    std::string transitiveString = m_messageSerializer.serializeMessage(*presentMeterageMessage);
+    sendMessage(m_messageEncoder.encode(transitiveString));
     ++m_timeStamp;
-    // TODO: Сформировать std::string и передать в sendMessage
+}
+
+const std::vector<AbstractMessage*>& DeviceMock::response()
+{
+    return m_receivedMessages;
 }
