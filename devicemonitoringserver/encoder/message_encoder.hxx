@@ -4,16 +4,17 @@
 #include <memory>
 #include <string>
 
-enum class ENC_TYPE : std::uint8_t { MIRR = 0u, MUL41, ROT3 };
-
 class message_encoder {
   private:
-    std::map<ENC_TYPE, std::shared_ptr<const base_encoder>> _encoder_table;
-    std::shared_ptr<const base_encoder> _curr;
+    std::map<dms::encoder::ENC_TYPE,
+             std::shared_ptr<const dms::encoder::base_encoder>>
+        _encoder_table;
+
+    std::shared_ptr<const dms::encoder::base_encoder> _curr;
 
   public:
     void
-    set_encoder(const ENC_TYPE type);
+    set_encoder(const dms::encoder::ENC_TYPE type);
 
     std::string
     encode(const std::string&) const;
@@ -21,10 +22,9 @@ class message_encoder {
     std::string
     decode(const std::string&) const;
 
-    // временно string, ENC_TYPE нужен
-    std::string
+    dms::encoder::ENC_TYPE
     curr_encoder(void) const;
 
     message_encoder(void);
-    message_encoder(ENC_TYPE);
+    message_encoder(dms::encoder::ENC_TYPE);
 };

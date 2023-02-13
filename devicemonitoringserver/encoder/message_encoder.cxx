@@ -20,19 +20,23 @@ message_encoder::message_encoder(ENC_TYPE et)
       _curr{_encoder_table[et]} {
 }
 
-void message_encoder::set_encoder(const ENC_TYPE et) {
+void
+message_encoder::set_encoder(const ENC_TYPE et) {
     _curr = _encoder_table[et];
 }
 
-std::string message_encoder::encode(const std::string& data) const {
+std::string
+message_encoder::encode(const std::string& data) const {
     return _curr->encode(data);
 }
 
-std::string message_encoder::decode(const std::string& data) const {
+std::string
+message_encoder::decode(const std::string& data) const {
     return _curr->decode(data);
 }
 
 // временно
-std::string message_encoder::curr_encoder(void) const {
+std::string
+message_encoder::curr_encoder(void) const {
     return _curr->name();
 }

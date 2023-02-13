@@ -1,13 +1,15 @@
 #include "mirr.hxx"
 #include <string>
 
-const std::string mirr::_name{"mirror"};
+const std::string dms::encoder::mirr::_name{"mirror"};
 
-std::string mirr::name(void) const {
-    return _name;
+dms::encoder::ENC_TYPE
+dms::encoder::mirr::name(void) const {
+    return dms::encoder::ENC_TYPE::MIRR;
 }
 
-char mirr::encode(const char c) const {
+char
+dms::encoder::mirr::encode(const char c) const {
     if (100 <= c) {
         return c;
     }
@@ -18,12 +20,14 @@ char mirr::encode(const char c) const {
     return (low * 10 + high);
 }
 
-char mirr::decode(const char c) const {
+char
+dms::encoder::mirr::decode(const char c) const {
     return encode(c);
 }
 
-std::string mirr::encode(const std::string& message) const {
-    std::string ret;
+std::string
+dms::encoder::mirr::encode(const std::string& message) const {
+    std::string ret{};
 
     for (const char c : message) {
         ret += encode(c);
@@ -32,6 +36,7 @@ std::string mirr::encode(const std::string& message) const {
     return ret;
 }
 
-std::string mirr::decode(const std::string &message) const {
+std::string
+dms::encoder::mirr::decode(const std::string& message) const {
     return mirr::encode(message);
 }

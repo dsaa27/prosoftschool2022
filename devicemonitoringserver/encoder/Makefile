@@ -6,7 +6,6 @@ message_encoder_test: \
 	rot3.o \
 	mul41.o \
 	mirr.o
-
 	$(CXX) \
 	message_encoder_test.o \
 	message_encoder.o \

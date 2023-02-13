@@ -8,61 +8,49 @@ main(void) {
     cout << __FILE_NAME__ << endl;
 
     {
-        cout << "Test #1" << endl;
+        cout << "Метод кодировки по умолчанию" << endl;
 
-        message_encoder enc;
+        const message_encoder enc{};
         assert("mirror" == enc.curr_encoder());
     }
 
     {
-        cout << "Test #2" << endl;
+        cout << "Инициализация с разными методами кодировки" << endl;
 
         {
-            message_encoder enc(ENC_TYPE::MIRR);
+            const message_encoder enc(ENC_TYPE::MIRR);
             assert("mirror" == enc.curr_encoder());
         }
 
         {
-            message_encoder enc(ENC_TYPE::MUL41);
+            const message_encoder enc(ENC_TYPE::MUL41);
             assert("multiply41" == enc.curr_encoder());
         }
 
         {
-            message_encoder enc(ENC_TYPE::ROT3);
+            const message_encoder enc(ENC_TYPE::ROT3);
             assert("rot3" == enc.curr_encoder());
         }
     }
 
     {
-        cout << "Test #3" << endl;
+        cout << "Изменение текущего метода кодировки" << endl;
 
         message_encoder enc(ENC_TYPE::ROT3);
-        enc.set_encoder(ENC_TYPE::MUL41);
+        assert("rot3" == enc.curr_encoder());
 
+        enc.set_encoder(ENC_TYPE::MUL41);
         assert("multiply41" == enc.curr_encoder());
     }
 
     {
-        cout << "Test #4" << endl;
+        cout << "rot3" << endl;
 
-        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
-                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
+        const string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                   "MNOPQRSTUVWXYZ1234567890.,!@#$%^&*(){}"};
 
-        message_encoder enc(ENC_TYPE::ROT3);
-
-        const std::string cipher_text{enc.encode(plain_text_in)};
-        const std::string plain_text_out{enc.decode(cipher_text)};
-
-        assert(plain_text_in == plain_text_out);
-    }
-
-    {
-        cout << "Test #5" << endl;
-
-        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
-                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
-
-        message_encoder enc(ENC_TYPE::MUL41);
+        const message_encoder enc(ENC_TYPE::ROT3);
+        assert("rot3" == enc.curr_encoder());
 
         const std::string cipher_text{enc.encode(plain_text_in)};
         const std::string plain_text_out{enc.decode(cipher_text)};
@@ -71,15 +59,31 @@ main(void) {
     }
 
     {
-        cout << "Test #6" << endl;
+        cout << "multiply41" << endl;
 
-        const std::string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
-                                        "MNOPQRSTUVWXYZ1234567890!@#$%^&*()"};
+        const string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                   "MNOPQRSTUVWXYZ1234567890.,!@#$%^&*(){}"};
 
-        message_encoder enc(ENC_TYPE::MIRR);
+        const message_encoder enc(ENC_TYPE::MUL41);
+        assert("multiply41" == enc.curr_encoder());
 
         const std::string cipher_text{enc.encode(plain_text_in)};
         const std::string plain_text_out{enc.decode(cipher_text)};
+
+        assert(plain_text_in == plain_text_out);
+    }
+
+    {
+        cout << "mirror" << endl;
+
+        const string plain_text_in{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL"
+                                   "MNOPQRSTUVWXYZ1234567890.,!@#$%^&*(){}"};
+
+        const message_encoder enc(ENC_TYPE::MIRR);
+        assert("mirror" == enc.curr_encoder());
+
+        const string cipher_text{enc.encode(plain_text_in)};
+        const string plain_text_out{enc.decode(cipher_text)};
 
         assert(plain_text_in == plain_text_out);
     }
