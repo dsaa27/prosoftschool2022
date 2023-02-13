@@ -36,7 +36,6 @@ class dms::message::meterage : public dms::message::message {
     value(void) const;
 
     meterage(const std::uint64_t timestamp, const std::uint8_t value);
-    ~meterage(void) = default;
 };
 
 class dms::message::command : public dms::message::message {
@@ -51,7 +50,6 @@ class dms::message::command : public dms::message::message {
     value(void) const;
 
     command(const std::int8_t value);
-    ~command(void) = default;
 };
 
 struct dms::message::error : dms::message::message {
@@ -66,5 +64,4 @@ struct dms::message::error : dms::message::message {
     err(void) const;
 
     error(const dms::message::ERR_TYPE err);
-    ~error(void) = default;
 };

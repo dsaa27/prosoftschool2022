@@ -43,8 +43,10 @@ main(void) {
                 const unique_ptr<const dms::message::message> msg{
                     new const dms::message::meterage(timestamp, value)};
 
-                const auto ser_msg = ser.serialize(msg.get());
-                const auto deser_msg = ser.deserialize(ser_msg);
+                const std::string ser_msg{ser.serialize(msg.get())};
+
+                const std::unique_ptr<const dms::message::message> deser_msg{
+                    ser.deserialize(ser_msg)};
 
                 assert(deser_msg);
                 assert(dms::message::MSG_TYPE::METERAGE ==
@@ -155,7 +157,8 @@ main(void) {
             assert(dms::message::MSG_TYPE::COMMAND == deser_msg->type());
 
             assert(corr_val ==
-                   dynamic_cast<const dms::message::command*>(deser_msg.get())->value());
+                   dynamic_cast<const dms::message::command*>(deser_msg.get())
+                       ->value());
         }
     }
 
