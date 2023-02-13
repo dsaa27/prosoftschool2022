@@ -51,8 +51,18 @@ struct Commands : public Message {
 
 struct Errors : public Message {
 
-    TypeOfMessage type = Error;
+//	Errors(TypeOfError inputError){
+//		m_error = inputError;
+//	}
 
+    enum TypeOfError {
+        NoShedule,
+        NoTimeStamp,
+        Obsolete,
+    };
+
+    TypeOfMessage type = Error;
+    TypeOfError m_error;
 };
 
 

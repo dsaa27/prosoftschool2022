@@ -21,12 +21,18 @@ CppApplication {
         files: [
             "*.h",
             "*.cpp",
-            "../BaseEncoderExecutor.h",
+            "../baseencoderexecutor.h",
             "../messageencoder.cpp",
             "../messageencoder.h",
-            "../messageserializaror.h",
-            "C:/Users/User/Desktop/messageserializator.cpp.2E23542E06C8D1A7.idx",
-            "C:/Users/User/Desktop/messageserializator.cpp.o",
+            "../baseencoderexecutor.h",
+            "../messageserializator.h",
+            "../messageserializator.cpp",
+            "../encoder/ROT3.cpp",
+            "../encoder/ROT3.h",
+            "../Mirror.cpp",
+            "../Mirror.h",
+            "../Multiply41.cpp",
+            "../Multiply41.h"
         ]
     }
 }
