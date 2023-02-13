@@ -82,8 +82,8 @@ serializator::deserialize(const std::string& msg) const {
         const std::uint64_t timestamp{std::stoull(
             std::string{msg.begin() + 1, msg.begin() + splitter_pos})};
 
-        const std::uint64_t value{std::stoull(
-            std::string{msg.begin() + splitter_pos + 1, msg.end()})};
+        const std::uint8_t value{static_cast<std::uint8_t>(
+            std::stoi(std::string{msg.begin() + splitter_pos + 1, msg.end()}))};
 
         return std::make_unique<const meterage>(meterage(timestamp, value));
     }

@@ -10,7 +10,7 @@ main(void) {
     cout << __FILE_NAME__ << endl;
 
     {
-        cout << "Test #1" << endl;
+        cout << "No Schedule" << endl;
         const std::uint64_t idev{1000u};
 
         command_center cc{};
@@ -22,7 +22,7 @@ main(void) {
     }
 
     {
-        cout << "Test #2" << endl;
+        cout << "Command" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{
@@ -56,7 +56,7 @@ main(void) {
     }
 
     {
-        cout << "Test #3" << endl;
+        cout << "No Timestamp" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{.deviceId = idev,
@@ -73,7 +73,7 @@ main(void) {
     }
 
     {
-        cout << "Test #4" << endl;
+        cout << "Obsolete" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{.deviceId = idev,
@@ -100,7 +100,7 @@ main(void) {
     }
 
     {
-        cout << "Test #5" << endl;
+        cout << "Device Remove" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{.deviceId = idev,
@@ -135,7 +135,7 @@ main(void) {
     }
 
     {
-        cout << "Test #6" << endl;
+        cout << "Среднее квадратичное отклонение" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{
