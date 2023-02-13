@@ -3,10 +3,12 @@
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
+#include <cmath>
 #include "message.h"
 constexpr double multyplier = 100.0;
 constexpr uint8_t maxBufferSize = 20;
 //constexpr uint8_t maxBufferSize = 4;
+const double zero = std::nan("0.0");
 
 class DeviceWorkSchedule;
 class CommandCenter;
@@ -21,7 +23,7 @@ struct Device {
         int tail{0};
     private:
     //public:
-        uint8_t maxSize{sizeof(buffer)/sizeof(int)};
+        uint8_t maxIndex{sizeof(buffer)/sizeof(int) - 1};
     public:
         //добавить величину отклонения в кольцевой буфер
         void push(const int&);

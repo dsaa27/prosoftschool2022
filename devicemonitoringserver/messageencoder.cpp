@@ -7,7 +7,8 @@ int BaseEncoderExecutor::toInt(const char& charToInt) {
 
 std::string EncoderROT3::encode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         if (input[i] == ' ')
             output += input[i];
         else if (std::isdigit(input[i])) {
@@ -23,7 +24,8 @@ std::string EncoderROT3::encode(const std::string& input) {
 }
 std::string EncoderROT3::decode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         if (input[i] == ' ')
             output += input[i];
         else if (std::isdigit(input[i])) {
@@ -40,7 +42,8 @@ std::string EncoderROT3::decode(const std::string& input) {
 
 std::string EncoderMirror::encode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         if (input[i] == ' ')
             output += input[i];
         else if (std::isdigit(input[i])) {
@@ -56,7 +59,8 @@ std::string EncoderMirror::encode(const std::string& input) {
 }
 std::string EncoderMirror::decode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         if (input[i] == ' ')
             output += input[i];
         else if (std::isdigit(input[i])) {
@@ -74,7 +78,8 @@ std::string EncoderMirror::decode(const std::string& input) {
 
 std::string EncoderMultiply41::encode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         int val = input[i]*41;
         int first = val/100;
         int second = val%100;
@@ -85,7 +90,8 @@ std::string EncoderMultiply41::encode(const std::string& input) {
 }
 std::string EncoderMultiply41::decode(const std::string& input) {
     std::string output;
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    uint8_t inputSize = input.size();
+    for (uint8_t i = 0; i < inputSize; ++i) {
         int first = input[i++];
         int second = input[i];
         int val = (first*100+second)/41;
@@ -96,8 +102,9 @@ std::string EncoderMultiply41::decode(const std::string& input) {
 
 std::string EncoderCustom::encode (const std::string& input) {
     std::string output;
+    uint8_t inputSize = input.size();
     uint8_t j(0);
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    for (uint8_t i = 0; i < inputSize; ++i) {
         output += key[j++]^input[i];
         if (j == key.size()) {
             j = 0;
@@ -107,8 +114,9 @@ std::string EncoderCustom::encode (const std::string& input) {
 }
 std::string EncoderCustom::decode(const std::string& input) {
     std::string output;
+    uint8_t inputSize = input.size();
     uint8_t j(0);
-    for (uint8_t i = 0; i < input.size(); ++i) {
+    for (uint8_t i = 0; i < inputSize; ++i) {
         output += key[j++]^input[i];
         if (j == key.size()) {
             j = 0;
@@ -120,8 +128,9 @@ void EncoderCustom::setkey(const std::string& inputkey) {
     const uint8_t max_size (maxKeySize);
     if (inputkey == "")
         return;
-    key.resize((inputkey.size() < max_size ? inputkey.size() : max_size));
-    for (uint8_t i = 0u; i < (inputkey.size() < max_size ? inputkey.size() : max_size); ++i)
+    uint8_t keySize = inputkey.size() < max_size ? inputkey.size() : max_size;
+    key.resize(keySize);
+    for (uint8_t i = 0u; i < keySize; ++i)
         key[i] = inputkey[i];
 }
 

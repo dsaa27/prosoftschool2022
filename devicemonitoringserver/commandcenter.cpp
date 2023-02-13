@@ -1,21 +1,17 @@
 #include "commandcenter.h"
 #include "deviceworkschedule.h"
 #include <numeric>
-#include <cmath>
 #include <iostream>
 
 void Device::MyBuffer::push(const int& value) {
-    if (tail<maxSize) {
-        *(head++) = value;
-        ++tail;
+    if (head == &buffer[maxIndex]) {
+        *head = value;
+        head = &buffer[0];
     } else {
-        if (head == &buffer[maxSize]) {
-            head = &buffer[0];
-            *(head++) = value;
-        } else {
-            *(head++) = value;
-        }
+        *(head++) = value;
     }
+    if (tail <= maxIndex)
+        ++tail;
 }
 
 
@@ -53,10 +49,10 @@ void CommandCenter::calculateMSE(uint64_t deviceId) const {
 
 double CommandCenter::getMSE(uint64_t deviceId) const {
     if (!deviceId)
-        return 0.0;
+        return zero;
     const auto& it = m_devices.find(deviceId);
     if (it == m_devices.end())
-        return 0.0;
+        return zero;
     else {
         return it->second->m_MSE;
     }

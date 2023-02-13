@@ -4,20 +4,20 @@
 
 std::string MessageSerializator::serialize(const Message* incoming) {
     std::ostringstream bufferout;
-    if (auto* meterage_t = dynamic_cast<const Meterage*>(incoming)) {
-        bufferout << std::to_string(meterage_t->m_type) << " ";
-        bufferout << std::to_string(meterage_t->m_value) << " ";
-        bufferout << std::to_string(meterage_t->m_timestamp);
-    } else if (auto* command_t = dynamic_cast<const Command*>(incoming)) {
-        bufferout << std::to_string(command_t->m_type) << " ";
-        bufferout << std::to_string(command_t->m_value) << " ";
-        bufferout << std::to_string(command_t->m_up);
-    } else if (auto* error_t = dynamic_cast<const Error*>(incoming)) {
-        bufferout << std::to_string(error_t->m_type) << " ";
-        bufferout << std::to_string(error_t->m_errType);
-    } else if (auto* info_t = dynamic_cast<const Info*>(incoming)) {
-        bufferout << std::to_string(info_t->m_type) << " ";
-        bufferout << info_t->m_message;
+    if (auto* meterage = dynamic_cast<const Meterage*>(incoming)) {
+        bufferout << std::to_string(meterage->m_type) << " ";
+        bufferout << std::to_string(meterage->m_value) << " ";
+        bufferout << std::to_string(meterage->m_timestamp);
+    } else if (auto* command = dynamic_cast<const Command*>(incoming)) {
+        bufferout << std::to_string(command->m_type) << " ";
+        bufferout << std::to_string(command->m_value) << " ";
+        bufferout << std::to_string(command->m_up);
+    } else if (auto* error = dynamic_cast<const Error*>(incoming)) {
+        bufferout << std::to_string(error->m_type) << " ";
+        bufferout << std::to_string(error->m_errType);
+    } else if (auto* info = dynamic_cast<const Info*>(incoming)) {
+        bufferout << std::to_string(info->m_type) << " ";
+        bufferout << info->m_message;
     }
     return bufferout.str();
 }

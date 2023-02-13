@@ -88,26 +88,26 @@ void DeviceMock::onMessageReceived(const std::string& message)
     std::string deencodedSerializedMsg = m_encoder->proceedDecoding(message);
     const auto* commandFromServer = m_serializator->deserialize(deencodedSerializedMsg);
     std::ostringstream toCommandsList;
-    if (dynamic_cast<const Command*>(commandFromServer)) {
-        if (static_cast<const Command*>(commandFromServer)->m_up == true) {
-            toCommandsList << "Increase by " << std::to_string(static_cast<const Command*>(commandFromServer)->m_value) << " points";
+    if (const auto* command = dynamic_cast<const Command*>(commandFromServer)) {
+        if (command->m_up == true) {
+            toCommandsList << "Increase by " << std::to_string(command->m_value) << " points";
             m_messagesFromServer.push_back(toCommandsList.str());
         } else {
-            toCommandsList << "Decrease by " << std::to_string(static_cast<const Command*>(commandFromServer)->m_value) << " points";
+            toCommandsList << "Decrease by " << std::to_string(command->m_value) << " points";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
     }
-    if (dynamic_cast<const Error*>(commandFromServer)) {
-        if (static_cast<const Error*>(commandFromServer)->m_errType == Error::NoSchedule) {
-            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp-1) << ": no such schedule";
+    if (const auto* error = dynamic_cast<const Error*>(commandFromServer)) {
+        if (error->m_errType == Error::NoSchedule) {
+            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": no such schedule";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
-        if (static_cast<const Error*>(commandFromServer)->m_errType == Error::NoTimestamp) {
-            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp-1) << ": no timestamp";
+        if (error->m_errType == Error::NoTimestamp) {
+            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": no timestamp";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
-        if (static_cast<const Error*>(commandFromServer)->m_errType == Error::Obsolete) {
-            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp-1) << ": obsolete timestamp";
+        if (error->m_errType == Error::Obsolete) {
+            toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": obsolete timestamp";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
     }

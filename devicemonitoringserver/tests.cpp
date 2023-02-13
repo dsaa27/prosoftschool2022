@@ -620,32 +620,32 @@ void BufferTest() {
     device.m_errors.push(0);
     ASSERT_EQUAL(device.m_errors.buffer[0], 0);
     ASSERT_EQUAL(device.m_errors.tail, 1);
-    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    ASSERT_EQUAL(device.m_errors.maxIndex, 3);
     device.m_errors.push(1);
     ASSERT_EQUAL(device.m_errors.buffer[0], 0);
     ASSERT_EQUAL(device.m_errors.buffer[1], 1);
     ASSERT_EQUAL(device.m_errors.tail, 2);
-    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    ASSERT_EQUAL(device.m_errors.maxIndex, 3);
     device.m_errors.push(2);
     ASSERT_EQUAL(device.m_errors.buffer[0], 0);
     ASSERT_EQUAL(device.m_errors.buffer[1], 1);
     ASSERT_EQUAL(device.m_errors.buffer[2], 2);
     ASSERT_EQUAL(device.m_errors.tail, 3);
-    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    ASSERT_EQUAL(device.m_errors.maxIndex, 3);
     device.m_errors.push(3);
     ASSERT_EQUAL(device.m_errors.buffer[0], 0);
     ASSERT_EQUAL(device.m_errors.buffer[1], 1);
     ASSERT_EQUAL(device.m_errors.buffer[2], 2);
     ASSERT_EQUAL(device.m_errors.buffer[3], 3);
     ASSERT_EQUAL(device.m_errors.tail, 4);
-    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    ASSERT_EQUAL(device.m_errors.maxIndex, 3);
     device.m_errors.push(4);
     ASSERT_EQUAL(device.m_errors.buffer[0], 4);
     ASSERT_EQUAL(device.m_errors.buffer[1], 1);
     ASSERT_EQUAL(device.m_errors.buffer[2], 2);
     ASSERT_EQUAL(device.m_errors.buffer[3], 3);
     ASSERT_EQUAL(device.m_errors.tail, 4);
-    ASSERT_EQUAL(device.m_errors.maxSize, 4);
+    ASSERT_EQUAL(device.m_errors.maxIndex, 3);
 }
 */
 
