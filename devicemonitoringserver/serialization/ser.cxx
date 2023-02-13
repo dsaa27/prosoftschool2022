@@ -1,21 +1,21 @@
 #include "ser.hxx"
-#include "../message.hxx"
+#include "../message/message.hxx"
 #include <memory>
 #include <string>
 
 std::string
-serializator::serialize(const message* const msg) const {
-    if (nullptr == msg) {
+serializator::serialize(const dms::message::message* const msg) const {
+    if (!msg) {
         return "";
     }
 
     std::string ret{};
 
     switch (msg->type()) {
-    case MSG_TYPE::COMMAND: {
-        auto const cmd = dynamic_cast<const command* const>(msg);
+    case dms::message::MSG_TYPE::COMMAND: {
+        auto const cmd = dynamic_cast<const dms::message::command* const>(msg);
 
-        if (nullptr == cmd) {
+        if (!cmd) {
             return "";
         }
 
@@ -25,8 +25,8 @@ serializator::serialize(const message* const msg) const {
         return ret;
     }
 
-    case MSG_TYPE::METERAGE: {
-        auto const met = dynamic_cast<const meterage* const>(msg);
+    case dms::message::MSG_TYPE::METERAGE: {
+        auto const met = dynamic_cast<const dms::message::meterage* const>(msg);
 
         if (nullptr == met) {
             return "";
@@ -40,10 +40,10 @@ serializator::serialize(const message* const msg) const {
         return ret;
     }
 
-    case MSG_TYPE::ERROR: {
-        auto const err = dynamic_cast<const error* const>(msg);
+    case dms::message::MSG_TYPE::ERROR: {
+        auto const err = dynamic_cast<const dms::message::error* const>(msg);
 
-        if (nullptr == err) {
+        if (!err) {
             return "";
         }
 
@@ -59,20 +59,20 @@ serializator::serialize(const message* const msg) const {
     return "";
 }
 
-std::unique_ptr<const message>
+std::unique_ptr<const dms::message::message>
 serializator::deserialize(const std::string& msg) const {
-    const auto msg_type{static_cast<MSG_TYPE>(msg[0])};
+    const auto msg_type = static_cast<dms::message::MSG_TYPE>(msg[0]);
 
     switch (msg_type) {
 
-    case MSG_TYPE::COMMAND: {
-        const int8_t value{static_cast<int8_t>(
+    case dms::message::MSG_TYPE::COMMAND: {
+        const std::int8_t value{static_cast<int8_t>(
             std::stoi(std::string{msg.begin() + 1, msg.end()}))};
 
-        return std::make_unique<const command>(value);
+        return std::make_unique<const dms::message::command>(value);
     }
 
-    case MSG_TYPE::METERAGE: {
+    case dms::message::MSG_TYPE::METERAGE: {
         const std::string::size_type splitter_pos{msg.find(' ')};
 
         if (std::string::npos == splitter_pos) {
@@ -85,12 +85,14 @@ serializator::deserialize(const std::string& msg) const {
         const std::uint8_t value{static_cast<std::uint8_t>(
             std::stoi(std::string{msg.begin() + splitter_pos + 1, msg.end()}))};
 
-        return std::make_unique<const meterage>(meterage(timestamp, value));
+        return std::make_unique<const dms::message::meterage>(timestamp, value);
     }
 
-    case MSG_TYPE::ERROR: {
-        const ERR_TYPE err{static_cast<const ERR_TYPE>(msg[1])};
-        return std::make_unique<const error>(err);
+    case dms::message::MSG_TYPE::ERROR: {
+        const dms::message::ERR_TYPE err{
+            static_cast<const dms::message::ERR_TYPE>(msg[1])};
+
+        return std::make_unique<const dms::message::error>(err);
     }
 
     default:
