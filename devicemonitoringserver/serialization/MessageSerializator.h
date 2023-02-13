@@ -22,9 +22,9 @@ public:
     */
     enum messageType
     {
-        Meterage = 0, // измерение
-        Command = 1, // команда
-        Error = 2 // ошибка
+        Meterage, // измерение
+        Command, // команда
+        Error // ошибка
     };
 
     /*!

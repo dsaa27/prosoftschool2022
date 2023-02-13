@@ -26,6 +26,10 @@ void monitoringServerStandardTest()
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2});
+
+    ASSERT(device.chooseEncodingAlgorithm("Multiply41"));
+    ASSERT(server.chooseEncodingAlgorithm("Multiply41"));
+
     std::vector<std::string> expected = {"1 1", "1 0"};
     while (taskQueue.processTask())
         ;
@@ -55,6 +59,10 @@ void monitoringServerTestErrorNoSchedule()
     ASSERT(server.listen(serverId));
     ASSERT(device.connectToServer(serverId));
     device.setMeterages({31});
+
+    ASSERT(device.chooseEncodingAlgorithm("ROT3"));
+    ASSERT(server.chooseEncodingAlgorithm("ROT3"));
+
     std::vector<std::string> expected = {"2 101"};
     while (taskQueue.processTask())
         ;
@@ -91,6 +99,10 @@ void monitoringServerTestErrorNoTimestamp()
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({13, 1});
+
+    ASSERT(device.chooseEncodingAlgorithm("Multiply41"));
+    ASSERT(server.chooseEncodingAlgorithm("Multiply41"));
+
     std::vector<std::string> expected = {"1 -1", "2 102"};
     while (taskQueue.processTask())
         ;
@@ -127,6 +139,10 @@ void monitoringServerTestNegativeValue()
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({5});
+
+    ASSERT(device.chooseEncodingAlgorithm("Mirror"));
+    ASSERT(server.chooseEncodingAlgorithm("Mirror"));
+
     std::vector<std::string> expected = {"1 -2"};
     while (taskQueue.processTask())
         ;
@@ -163,6 +179,10 @@ void monitoringServerTestComplex()
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2, 8, 3, 7, 7});
+
+    ASSERT(device.chooseEncodingAlgorithm("Multiply41"));
+    ASSERT(server.chooseEncodingAlgorithm("Multiply41"));
+
     std::vector<std::string> expected = {"1 0", "1 0", "1 -4", "1 2", "1 -1", "2 102"};
     while (taskQueue.processTask())
         ;
@@ -197,6 +217,10 @@ void monitoringServerTestStandardDeviation()
     DeviceWorkSchedule const deviceWorkSchedule = {deviceId, phases};
     server.setDeviceWorkSchedule(deviceWorkSchedule);
     device.setMeterages({31, 2, 8, 3, 7});
+
+    ASSERT(device.chooseEncodingAlgorithm("ROT3"));
+    ASSERT(server.chooseEncodingAlgorithm("ROT3"));
+
     std::vector<std::string> expected = {"1 0", "1 0", "1 -4", "1 2", "1 -1"};
     while (taskQueue.processTask())
         ;
@@ -249,6 +273,9 @@ void monitoringServerTestTwoDevices()
     server.setDeviceWorkSchedule(deviceWorkSchedule2);
     device2.setMeterages({1, 3, 4});
 
+    ASSERT(device1.chooseEncodingAlgorithm("Multiply41"));
+    ASSERT(device2.chooseEncodingAlgorithm("Multiply41"));
+    ASSERT(server.chooseEncodingAlgorithm("Multiply41"));
 
     while (taskQueue.processTask())
         ;

@@ -78,8 +78,7 @@ void DeviceMock::sendMessage(const std::string& message) const
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
-    MessageEncoder* const messageEncoder = m_encoder->getDeviceEncoder(m_clientConnection->bindedId());
-    std::optional<std::string> decodedMessage = messageEncoder->decode(message);
+    std::optional<std::string> decodedMessage = m_encoder.decode(message);
     if (!decodedMessage)
         return;
     MessageSerializator::MessageStruct res =  m_serializator.deserialize(*decodedMessage);
@@ -110,8 +109,17 @@ void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
 
 void DeviceMock::startMeterageSending()
 {
-    m_encoder->getDeviceEncoder(m_clientConnection->bindedId())->chooseAlgorithm("Multiply41");
     sendNextMeterage();
+}
+
+bool DeviceMock::chooseEncodingAlgorithm(const std::string &name)
+{
+    return m_encoder.chooseAlgorithm(name);
+}
+
+bool DeviceMock::registerEncodingAlgorithm(BaseEncoderExecutor* algorithm)
+{
+    return m_encoder.addAlgorithm(algorithm);
 }
 
 void DeviceMock::sendNextMeterage()
@@ -120,13 +128,12 @@ void DeviceMock::sendNextMeterage()
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
     ++m_timeStamp;
-    MessageEncoder* const messageEncoder = m_encoder->getDeviceEncoder(m_clientConnection->bindedId());
     MessageSerializator::MessageStruct res;
     res.valueToCorrect = -1;
     res.type = MessageSerializator::Meterage;
     res.phase = {m_timeStamp, meterage};
     std::string message = m_serializator.serialize(res);
-    std::optional<std::string> encodedMessage = messageEncoder->encode(message);
+    std::optional<std::string> encodedMessage = m_encoder.encode(message);
     if (encodedMessage)
         sendMessage(*encodedMessage);
 }

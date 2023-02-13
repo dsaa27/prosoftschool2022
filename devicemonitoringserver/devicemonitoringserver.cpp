@@ -37,6 +37,21 @@ void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& dev
     m_commandCenter.addDevice(deviceWorkSchedule);
 }
 
+bool DeviceMonitoringServer::chooseEncodingAlgorithm(const std::string &name)
+{
+    return m_encoder.chooseAlgorithm(name);
+}
+
+bool DeviceMonitoringServer::registerEncodingAlgorithm(BaseEncoderExecutor *algorithm)
+{
+    return m_encoder.addAlgorithm(algorithm);
+}
+
+double DeviceMonitoringServer::getStandardDeviation(uint64_t deviceId) {
+    return m_commandCenter.getStandardDeviation(deviceId);
+}
+
+
 bool DeviceMonitoringServer::listen(uint64_t serverId)
 {
     return m_connectionServer->listen(serverId);
@@ -51,11 +66,7 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    MessageEncoder* messageEncoder = m_encoder->getDeviceEncoder(deviceId);
-    if (!messageEncoder)
-        return;
-
-    std::optional<std::string> decodedMessage = messageEncoder->decode(message);
+    std::optional<std::string> decodedMessage = m_encoder.decode(message);
     if (!decodedMessage)
         return;
     MessageSerializator::MessageStruct result = m_serializator.deserialize(*decodedMessage);
@@ -77,14 +88,13 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
         newMessage.errorCode = checkResult.errorCode;
         serializedMessage = m_serializator.serialize(newMessage);
     }
-    std::optional<std::string> newEncodeMessage = messageEncoder->encode(serializedMessage);
+    std::optional<std::string> newEncodeMessage = m_encoder.encode(serializedMessage);
     if (newEncodeMessage)
         sendMessage(deviceId, *newEncodeMessage);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    m_encoder->deleteDevice(clientId);
     m_commandCenter.deleteDevice(clientId);
 }
 
@@ -134,8 +144,4 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     };
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
-}
-
-double DeviceMonitoringServer::getStandardDeviation(uint64_t deviceId) {
-    return m_commandCenter.getStandardDeviation(deviceId);
 }

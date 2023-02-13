@@ -14,7 +14,7 @@ bool MessageEncoder::addAlgorithm(BaseEncoderExecutor *algorithm)
     return true;
 }
 
-bool MessageEncoder::chooseAlgorithm(std::string algorithm)
+bool MessageEncoder::chooseAlgorithm(const std::string& algorithm)
 {
     if (m_allAlgorithms.find(algorithm) != m_allAlgorithms.end())
     {

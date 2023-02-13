@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "encoding/MessageEncoder.h"
-#include "encoding/SingletonEncoder.h"
 #include "serialization/MessageSerializator.h"
 
 
@@ -47,7 +46,22 @@ public:
      * \brief Начать отправку измерений.
      */
     void startMeterageSending();
-
+    /*!
+     * \brief Выбор алгоритма кодирования сообщений
+     * \param name - название алгоритма
+     * \return результат попытки назначить алгоритм
+     */
+    bool chooseEncodingAlgorithm(const std::string& name);
+    /*!
+     * \brief Регистрация нового алгоритма шифрования
+     * \param algorithm - объект класса, унаследованный от BaseEncoderExecutor
+     * \return результат попытки добавления алгоритма
+     */
+    bool registerEncodingAlgorithm(BaseEncoderExecutor* algorithm);
+    /*!
+     * \brief Получить список сообщений от сервера
+     * \return вектор, содержащий ответы от сервера
+     */
     std::vector<std::string> getResponses();
 
 private:
@@ -74,7 +88,7 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
-    SingletonEncoder* m_encoder = SingletonEncoder::getInstance();
+    MessageEncoder m_encoder;
     MessageSerializator m_serializator;
     std::vector<std::string> m_responses;
     std::vector<uint64_t> m_receivedCommands;

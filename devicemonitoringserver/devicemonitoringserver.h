@@ -4,7 +4,6 @@
 #include "common.h"
 #include "CommandCenter.h"
 #include "encoding/MessageEncoder.h"
-#include "encoding/SingletonEncoder.h"
 #include "serialization/MessageSerializator.h"
 #include <cstdint>
 #include <string>
@@ -27,7 +26,6 @@ public:
      */
     DeviceMonitoringServer(AbstractConnectionServer* connectionServer);
     ~DeviceMonitoringServer();
-
     /*!
      * \brief Установить план работы устройств.
      */
@@ -36,11 +34,22 @@ public:
      * \brief Начать прием подключений по идентификатору \a serverId
      */
     bool listen(uint64_t serverId);
-
     /*!
- * \brief возвращает СКО ошибки выполения плана для текущей фазы
- */
+    * \brief возвращает СКО ошибки выполения плана для текущей фазы
+    */
     double getStandardDeviation(uint64_t deviceId);
+    /*!
+     * \brief Выбор алгоритма кодирования сообщений
+     * \param name - название алгоритма
+     * \return результат попытки назначить алгоритм кодировщику
+     */
+    bool chooseEncodingAlgorithm(const std::string& name);
+    /*!
+     * \brief Регистрация нового алгоритма шифрования
+     * \param algorithm - объект класса, унаследованный от BaseEncoderExecutor
+     * \return результат попытки добавления алгоритма
+     */
+    bool registerEncodingAlgorithm(BaseEncoderExecutor* algorithm);
 
 private:
     /*!
@@ -66,15 +75,13 @@ private:
      */
     void onDisconnected(uint64_t clientId);
 
-
-
 private:
     void addMessageHandler(AbstractConnection* conn);
     void addDisconnectedHandler(AbstractConnection* conn);
 
 private:
     MessageSerializator m_serializator;
-    SingletonEncoder* m_encoder = SingletonEncoder::getInstance();
+    MessageEncoder m_encoder;
     CommandCenter m_commandCenter;
     AbstractConnectionServer* m_connectionServer = nullptr;
 };

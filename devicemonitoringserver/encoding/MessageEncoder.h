@@ -37,7 +37,7 @@ public:
     *  \param algorithm - имя алгоритма
     * \return наличие в числе зарегистрированных алгоритмов
    */
-    bool chooseAlgorithm(std::string algorithm);
+    bool chooseAlgorithm(const std::string& algorithm);
     /*!
     * \brief добавить алгоритм шифрования
     * \param algorithm - владеющий указатель на алгоритм
