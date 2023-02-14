@@ -1,15 +1,26 @@
 #include "../base_encoder.hxx"
 
-class mul41: public base_encoder {
-    private:
-        static const std::string _name;
+namespace dms {
+namespace encoder {
+class mul41;
+}
+} // namespace dms
 
+class dms::encoder::mul41 : public dms::encoder::base_encoder {
   public:
-    std::string encode(const std::string& message) const;
-    std::string decode(const std::string& message) const;
-    std::string name(void) const;
+    std::string
+    encode(const std::string& message) const;
+
+    std::string
+    decode(const std::string& message) const;
+
+    dms::encoder::ENC_TYPE
+    name(void) const;
 
   private:
-    char encode(const char c) const;
-    char decode(const char c) const;
+    char
+    encode(const char) const;
+
+    char
+    decode(const char) const;
 };
