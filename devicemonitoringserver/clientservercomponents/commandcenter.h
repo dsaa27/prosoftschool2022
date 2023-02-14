@@ -39,13 +39,13 @@ private:
 
     AbstractMessage* makeMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
 
-    AbstractMessage* makeNoScheduleMessage(uint64_t deviceId);
-
-    AbstractMessage* makeNoTimeStampMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
-
-    AbstractMessage* makeObsoleteMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
-
     AbstractMessage* makeCommandMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
+
+    bool checkNoScheduleError(uint64_t deviceId);
+
+    bool checkNoTimeStampError(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
+
+    bool checkObsolteError(uint64_t deviceId, MeterageMessage* handledAbstractMessage);
 
 private:
     std::unordered_map<uint64_t, DeviceWorkSchedule*> m_schedules;
