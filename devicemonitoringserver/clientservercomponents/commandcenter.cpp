@@ -23,7 +23,10 @@ CommandCenter::~CommandCenter()
 
 void CommandCenter::unsetDeviceWorkSchedule (uint64_t deviceId)
 {
+    //no leak, cause schedule must delete now the creator of it
     m_schedules.erase(deviceId);
+    //created here and delete here aswell
+    delete m_calculators[deviceId];
     m_calculators.erase(deviceId);
 }
 

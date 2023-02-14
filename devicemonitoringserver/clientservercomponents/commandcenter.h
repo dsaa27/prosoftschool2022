@@ -22,8 +22,10 @@ public:
     CommandCenter() = default;
     ~CommandCenter();
 
+    //deviceWorkShcedule is now possessing pointer
     void setDeviceWorkSchedule (DeviceWorkSchedule *deviceWorkSchedule);
 
+    //no more posses the pointer of DeviceWorkSchedule
     void unsetDeviceWorkSchedule (uint64_t deviceId);
 
     DeviceWorkSchedule* getDeviceWorkSchedule (uint64_t deviceId);
