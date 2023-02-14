@@ -21,6 +21,8 @@ CppApplication {
         files: [
             "*.h",
             "*.cpp",
+            "../commandcenter.cpp",
+            "../commandcenter.h",
             "../encoder/baseencoderexecutor.h",
             "../encoder/messageencoder.cpp",
             "../encoder/messageencoder.h",
@@ -31,7 +33,7 @@ CppApplication {
             "../Mirror.cpp",
             "../Mirror.h",
             "../Multiply41.cpp",
-            "../Multiply41.h"
+            "../Multiply41.h",
         ]
     }
 }

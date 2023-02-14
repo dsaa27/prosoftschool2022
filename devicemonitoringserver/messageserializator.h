@@ -1,7 +1,6 @@
 #ifndef MESSAGESERIALIZATOR_H
 #define MESSAGESERIALIZATOR_H
 #include <message.h>
-//#include <string>
 
 class MessageSerializator
 {
@@ -13,8 +12,5 @@ public:
     Message * DeSerialize(std::string inputMessage);
 
 };
-
-
-
 
 #endif // MESSAGESERIALIZATOR_H

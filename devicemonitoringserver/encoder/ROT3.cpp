@@ -8,7 +8,7 @@ string ROT3::encode(string input){
 
         if ((int)input[i] >= 256) {
 
-            output += input[i] - 253;
+            output += input[i] - 253; //  + 3 - 256
 
         } else output += input[i] + 3;
     }

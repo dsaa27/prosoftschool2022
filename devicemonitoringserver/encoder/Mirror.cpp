@@ -8,9 +8,7 @@ string Mirror::encode(string input){
         output = output.append(1, input[i]);
 
     }
-
     return output;
-
 }
 
 string Mirror::decode(string input){
@@ -21,9 +19,7 @@ string Mirror::decode(string input){
         output = output.append(1, input[i]);
 
     }
-
     return output;
-
 }
 
 string Mirror::getname() {

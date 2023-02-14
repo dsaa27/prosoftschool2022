@@ -1,5 +1,4 @@
 #include "messageserializator.h"
-
 #include <sstream>
 
 
@@ -21,7 +20,9 @@ std::string MessageSerializator::Serialize(Message * inputMessage)
 
     } else if (Errors * ErrorInput = dynamic_cast<Errors*>(inputMessage)) {
 
-        output = output;
+        std::ostringstream ErrorOutput;
+        ErrorOutput << ErrorInput->type << " " << ErrorInput->errorType<< " ";
+        output = ErrorOutput.str();
 
     }
 
@@ -29,32 +30,44 @@ std::string MessageSerializator::Serialize(Message * inputMessage)
 }
 
 Message * MessageSerializator::DeSerialize(std::string inputMessage) {
+
     std::istringstream output;
     short int type;
-
+    Message * poutput;
     output.str(inputMessage);
 
     output >> type;
 
     if (type == 0) {
+
         uint64_t buf1;
         uint8_t buf2;
         output >> buf1;
         output >> buf2;
-        Message * pMet = new Meterages(buf1, buf2);
-
-        return pMet;
+        poutput = new Meterages(buf1, buf2);
 
     } else if (type == 1) {
+
         int buf3;
         output >> buf3;
-        Message * pMet = new Commands(buf3);
+        poutput = new Commands(buf3);
 
-        return pMet;
+    } else if (type == 2) {
+
+        TypeOfError buf4;
+        int buf5;
+        output >> buf5;
+
+        if (buf5 == 0) {
+            buf4 = TypeOfError::NoShedule;
+        } else if (buf5 == 1) {
+            buf4 = TypeOfError::NoTimeStamp;
+        } else buf4 = TypeOfError::Obsolete;
+
+        poutput = new Errors(buf4);
+
     }
-
-
-
+    return poutput;
 }
 
 

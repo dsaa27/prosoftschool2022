@@ -79,6 +79,25 @@ int main()
 
     std::cout << "comand is " << Command1->correction << std::endl;
 
+    Message * message3;
+    Errors err1(NoTimeStamp);
+    Errors *pErr1 = &err1;
+
+    message3 = pErr1;
+
+    string err = MET1.Serialize(message3);
+
+    std::cout << "serialized 3 message - " << err << std::endl;
+
+    Message * pError = MET1.DeSerialize(err);
+
+    Errors * pError1 = dynamic_cast<Errors*>(pError);
+
+    std::cout << "Type of message is " << pError1->type << "Type of Error is " << pError1->errorType << std::endl;
+
+
+
+
 
 
 

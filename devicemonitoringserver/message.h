@@ -36,8 +36,6 @@ struct Meterages : public Message {
     uint64_t timeStamp = 0; // Метка времени
     uint8_t value = 0; // измерение
     TypeOfMessage type = Meterage;
-
-
 };
 
 struct Commands : public Message {
@@ -45,24 +43,22 @@ struct Commands : public Message {
     Commands(int correctionInput){
         correction = correctionInput;
     }
-
+    ~Commands(){};
 
     int correction;
     TypeOfMessage type = Command;
-
 };
 
 
 struct Errors : public Message {
 
-//	Errors(TypeOfError inputError){
-//		m_error = inputError;
-//	}
-
-
+    Errors(TypeOfError inputError){
+        errorType = inputError;
+    }
+    ~Errors(){};
 
     TypeOfMessage type = Error;
-    TypeOfError m_error;
+    TypeOfError errorType;
 };
 
 

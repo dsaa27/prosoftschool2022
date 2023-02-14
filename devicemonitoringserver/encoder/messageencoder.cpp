@@ -5,7 +5,6 @@
 
 void MessageEncoder::SetEncodeAlgorithm (string NameOfAlgorithm)
 {
-
     SelectedAlgorithm = NameOfAlgorithm;
 }
 
