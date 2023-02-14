@@ -1,4 +1,7 @@
 #include "messageserializer.h"
+#include "message/meteragemessage.h"
+#include "message/errormessage.h"
+#include "message/commandmessage.h"
 
 #include <vector>
 

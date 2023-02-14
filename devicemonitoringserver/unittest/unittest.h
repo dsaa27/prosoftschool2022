@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "../clientservercomponents/abstractmessage.h"
+#include "../clientservercomponents/message/abstractmessage.h"
 #include "../clientservercomponents/commandcenter.h"
 
 namespace unitTest

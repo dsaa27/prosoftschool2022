@@ -53,7 +53,13 @@ add_executable(server_monitoring_device_prosoft
   clientservercomponents/messageencoder.h
   clientservercomponents/messageencoder.cpp
   clientservercomponents/baseencoderexecutor.h
-  clientservercomponents/abstractmessage.h
+  clientservercomponents/message/abstractmessage.h
+  clientservercomponents/message/meteragemessage.h
+  clientservercomponents/message/meteragemessage.cpp
+  clientservercomponents/message/commandmessage.h
+  clientservercomponents/message/commandmessage.cpp
+  clientservercomponents/message/errormessage.h
+  clientservercomponents/message/errormessage.cpp
   deviceworkschedule.cpp
   unittest/unittest.h
   unittest/unittest.cpp

@@ -52,7 +52,7 @@ double makeExpectedStandardDeviation (CommandCenter &commandCenter, uint64_t dev
 
 void monitoringServerTest1()
 {
-    const size_t meterageDataSize = 10;
+    const size_t meterageDataSize = 25;
     DeviceWorkSchedule *deviceWorkSchedule =
             randomGenerate::createRandomDeviceWorkSchedule(meterageDataSize, 3);
     std::vector<uint8_t> meterages =

@@ -2,7 +2,7 @@
 #define COMMANDCENTER_H
 
 #include "../deviceworkschedule.h"
-#include "abstractmessage.h"
+#include "message/meteragemessage.h"
 
 #include <unordered_map>
 

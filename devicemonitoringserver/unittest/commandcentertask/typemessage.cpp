@@ -1,5 +1,8 @@
 #include "../unittest.h"
 #include "../../test_runner.h"
+#include "../../clientservercomponents/message/meteragemessage.h"
+#include "../../clientservercomponents/message/errormessage.h"
+#include "../../clientservercomponents/message/commandmessage.h"
 
 void unitTest::commandCenterTask::typeMessage::command()
 {
