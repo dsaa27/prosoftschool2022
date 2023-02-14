@@ -11,15 +11,14 @@ class CommandCenter
     struct StandardDeviationCalculator
     {
         StandardDeviationCalculator();
-        void calculateStandartDeviation ();
+        void calculateStandardDeviation ();
 
         uint64_t lastTimeStamp = 0;
         std::vector<double> inaccuracys;
-        double currentSD;
+        double currentStandardDeviation;
     };
 
 public:
-    CommandCenter() = default;
     ~CommandCenter();
 
     //deviceWorkShcedule is now possessing pointer

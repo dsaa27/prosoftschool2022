@@ -101,7 +101,7 @@ AbstractMessage* CommandCenter::makeCommandMessage(uint64_t deviceId, MeterageMe
     int inaccuracy = handledAbstractMessage->measureValue - expectedValue;
     double correction = ((inaccuracy == 0) ? 0 : (1.0 / inaccuracy));
     deviceCalculator->inaccuracys.push_back(inaccuracy);
-    deviceCalculator->calculateStandartDeviation();
+    deviceCalculator->calculateStandardDeviation();
     deviceCalculator->lastTimeStamp = handledAbstractMessage->timeStamp;
     return new CommandMessage(correction);
 }
@@ -110,25 +110,25 @@ CommandCenter::StandardDeviationCalculator::StandardDeviationCalculator()
 {
     lastTimeStamp = 0;
     inaccuracys = std::vector<double>();
-    currentSD = 0;
+    currentStandardDeviation = 0;
 }
 
-void CommandCenter::StandardDeviationCalculator::calculateStandartDeviation()
+void CommandCenter::StandardDeviationCalculator::calculateStandardDeviation()
 {
     double average = 0;
-    for (auto now : inaccuracys)
+    for (const auto now : inaccuracys)
         average += now;
     average /= inaccuracys.size();
 
     double sumOfSquares = 0;
-    for (auto now : inaccuracys)
+    for (const auto now : inaccuracys)
         sumOfSquares += ((average - now) * (average - now));
 
-    currentSD = sqrt(sumOfSquares / inaccuracys.size());
+    currentStandardDeviation = sqrt(sumOfSquares / inaccuracys.size());
 }
 
 double CommandCenter::getCurrentStandardDeviation(uint64_t deviceId)
 {
-    return m_calculators[deviceId]->currentSD;
+    return m_calculators[deviceId]->currentStandardDeviation;
 }
 
