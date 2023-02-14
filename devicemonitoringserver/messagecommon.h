@@ -16,11 +16,17 @@ enum errorType
     OBSOLETE
 };
 
+typedef int adjustment_t;
+
 struct MessageStruct
 {
+    MessageStruct() = default;
+    MessageStruct(errorType error) : messageType(ERROR), errorType(error) {}
+    MessageStruct(Phase meterage) : messageType(METERAGE), measurements(meterage){}
+    MessageStruct(adjustment_t adj) : messageType(COMMAND), adjustment(adj){}
     short messageType = 0;
     Phase measurements;
-    int adjustment = 0;
+    adjustment_t adjustment = 0;
     uint8_t errorType = 0;
 };
 

@@ -1,8 +1,7 @@
 #include "messageencoder.h"
 #include <iostream>
 
-//MessageEncoder
-void MessageEncoder::setEncodeAlgorithm (std::string algoName)
+void MessageEncoder::setEncodeAlgorithm (const std::string& algoName)
 {
     if (m_algoNameMap.find(algoName) == m_algoNameMap.end())
     {
@@ -12,16 +11,14 @@ void MessageEncoder::setEncodeAlgorithm (std::string algoName)
     m_algoName = algoName;
 }
 
-std::string MessageEncoder::encode(std::string message)
+std::string MessageEncoder::encode(const std::string& message)
 {
-    return m_algoNameMap[m_algoName] -> encode(message);
+    return m_algoNameMap[m_algoName]->encode(message);
 }
 
-std::string MessageEncoder::decode(std::string message)
+std::string MessageEncoder::decode(const std::string& message)
 {
-    std::string decodedMessage;
-
-    return m_algoNameMap[m_algoName] -> decode(message);;
+    return m_algoNameMap[m_algoName]->decode(message);;
 }
 
 std::string MessageEncoder::name()

@@ -46,7 +46,7 @@ public:
      */
     void startMeterageSending();
     /*!
-     * \brief Получить истроию принятых команд
+     * \brief Получить историю принятых команд
      */
     std::vector<int> responces() const;
 

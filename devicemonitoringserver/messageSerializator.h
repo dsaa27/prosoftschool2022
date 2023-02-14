@@ -16,6 +16,7 @@ public:
     /*!
      * \brief Конвертировать строку в структуру сообщения.
      */
-    MessageStruct deSerializate(std::string serialMessage);
+    MessageStruct deserializate(const std::string &serialMessage);
 };
+
 #endif // MESSAGESERIALIZATOR_H

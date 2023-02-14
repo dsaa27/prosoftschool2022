@@ -6,9 +6,9 @@
 
 struct DeviceInfo
 {
-    uint64_t m_lastTimestamp = 0;
-    float m_mse = 0;
-    uint64_t m_countCommand = 0;
+    uint64_t lastTimestamp = 0;
+    float mse = 0;
+    uint64_t countCommand = 0;
 };
 
 class CommandCenter
@@ -23,7 +23,7 @@ public:
      * \param deviceId - идентификатор устройства.
      * \param message - сообщение от устройтсва.
      */
-    MessageStruct generateCommand(uint64_t deviceId, MessageStruct message);
+    MessageStruct createCommand(uint64_t deviceId, MessageStruct message);
     /*!
      * \brief Получить СКО ошибки управления устройством.
      */

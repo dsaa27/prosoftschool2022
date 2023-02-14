@@ -3,11 +3,12 @@
 std::string MessageSerializer::serializate(const MessageStruct& message)
 {
     std::ostringstream serialMessage;
+    const char timeValueSeparator = ':';
     serialMessage << message.messageType;
     if (message.messageType == METERAGE)
     {
         serialMessage << std::to_string(message.measurements.timeStamp);
-        serialMessage << ":"; // ':' - разделитель времени и значения измерения
+        serialMessage << timeValueSeparator;
         serialMessage << std::to_string(message.measurements.value);
     }
 
@@ -24,29 +25,27 @@ std::string MessageSerializer::serializate(const MessageStruct& message)
     return serialMessage.str();
 };
 
-MessageStruct MessageSerializer::deSerializate(std::string serialMessage)
+MessageStruct MessageSerializer::deserializate(const std::string& serialMessage)
 {
     MessageStruct message;
     message.messageType = std::stoi(serialMessage.substr(0, 1));
 
-    if (message.messageType == METERAGE)
-    {
+    switch (message.messageType) {
+    case METERAGE:
+        {
         short separatorIndex = serialMessage.find(":");
         std::string strTime = serialMessage.substr(1, separatorIndex - 1);
         std::string strValue = serialMessage.substr(separatorIndex + 1);
         message.measurements.timeStamp = std::stoll(strTime);
         message.measurements.value = std::stoi(strValue);
-    }
-
-    if (message.messageType == COMMAND)
-    {
+        break;
+        }
+    case COMMAND:
         message.adjustment = std::stoi(serialMessage.substr(1));
-    }
-
-    if (message.messageType == ERROR)
-    {
+        break;
+    case ERROR:
         message.errorType = std::stoi(serialMessage.substr(1));
+        break;
     }
-
     return message;
 };

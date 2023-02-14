@@ -2,12 +2,12 @@
 #define MULTIPLY41_H
 #include "baseencoderexecutor.h"
 
-class Multiply41 : public BaseEncoderExecutor
+class Multiply41 final : public BaseEncoderExecutor
 {
 public:
-    std::string encode (std::string message) final;
-    std::string decode (std::string message) final;
-    std::string name () final;
+    std::string encode (const std::string& message) final;
+    std::string decode (const std::string& message) final;
+    std::string name() final;
 private:
     std::string m_name = "Multiply41";
 };

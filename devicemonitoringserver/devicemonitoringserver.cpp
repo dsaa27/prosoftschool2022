@@ -48,11 +48,11 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    std::string decodedMessage = m_encoder.decode(message);
-    MessageStruct parsedMessage = m_serializer.deSerializate(decodedMessage);
-    MessageStruct answer = m_commandCenter.generateCommand(deviceId, parsedMessage);
-    std::string serialAnswer = m_serializer.serializate(answer);
-    std::string encodedAnswer = m_encoder.encode(serialAnswer);
+    const std::string decodedMessage = m_encoder.decode(message);
+    const MessageStruct parsedMessage = m_serializer.deserializate(decodedMessage);
+    const MessageStruct answer = m_commandCenter.createCommand(deviceId, parsedMessage);
+    const std::string serialAnswer = m_serializer.serializate(answer);
+    const std::string encodedAnswer = m_encoder.encode(serialAnswer);
     sendMessage(deviceId, encodedAnswer);
 }
 

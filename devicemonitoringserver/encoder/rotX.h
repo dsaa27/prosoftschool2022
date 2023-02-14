@@ -1,16 +1,17 @@
-#ifndef MIRROR_H
-#define MIRROR_H
+#ifndef ROTX_H
+#define ROTX_H
 #include "baseencoderexecutor.h"
 
-class Mirror final : public BaseEncoderExecutor
+class RotX final: public BaseEncoderExecutor
 {
 public:
+    RotX(unsigned int offset);
     std::string encode (const std::string& message) final;
     std::string decode (const std::string& message) final;
     std::string name () final;
 private:
-    std::string m_name = "Mirror";
-
+    std::string m_name = "ROT";
+    const unsigned int m_offset;
 };
 
-#endif // MIRROR_H
+#endif // ROTX_H

@@ -21,4 +21,5 @@ struct DeviceWorkSchedule
     uint64_t deviceId = 0;       ///< Идентификатор устройства
     std::vector<Phase> schedule; ///< План работы устройства
 };
+
 #endif // DEVICEWORKSCHEDULE_H

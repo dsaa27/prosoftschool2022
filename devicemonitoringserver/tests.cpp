@@ -7,7 +7,7 @@
 #include <servermock/connectionservermock.h>
 #include <servermock/taskqueue.h>
 #include "messageSerializator.h"
-#include "encoder/rot4.h"
+#include "encoder/rotX.h"
 #include <cstdlib>
 
 /*!
@@ -23,9 +23,9 @@ int getRandomNumber(int min, int max)
  */
 std::vector<uint8_t> generateMeterages(uint64_t maxTime)
 {
-    std::srand(0);
+    std::srand(static_cast<unsigned int>(time(0)));
     std::vector<uint8_t> meterages;
-    for (uint64_t i = 0; i <= maxTime; i++)
+    for (uint64_t i = 0; i <= maxTime; ++i)
     {
         uint8_t x = getRandomNumber(0, 100);
         meterages.push_back(x);
@@ -41,9 +41,9 @@ std::vector<int> generateExpected(const std::vector<uint8_t>& meterages, std::ve
     uint64_t j = 0;
     uint64_t i = 0;
     int adj;
-    for (; i < schedule.size(); i++)
+    for (; i < schedule.size(); ++i)
     {
-        for (; j < schedule[i].timeStamp; j++)
+        for (; j < schedule[i].timeStamp; ++j)
         {
             adj = schedule[i - 1].value - meterages[j];
             expected.push_back(adj);
@@ -116,7 +116,7 @@ void serializatorTest()
         std::string serialMessage1 = stringsToTest.back();
         stringsToTest.pop_back();
         std::string serialMessage2 = "";
-        MessageStruct message = ser.deSerializate(serialMessage1);
+        MessageStruct message = ser.deserializate(serialMessage1);
         serialMessage2 = ser.serializate(message);
         ASSERT_EQUAL(serialMessage1, serialMessage2);
     }
@@ -179,7 +179,7 @@ void encoderTest()
     decodedMessage = en.decode(encodedMessage);
     ASSERT_EQUAL(message, decodedMessage);
 
-    Rot4 rot4;
+    RotX rot4{4};
     en.registerNewAlgorithm(rot4);
     en.setEncodeAlgorithm("ROT4");
     message = "Hello!123";
@@ -207,7 +207,7 @@ void comandCenterTest()
     message.messageType = METERAGE;
     message.measurements = {0, 15};
     MessageStruct answer;
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, ERROR);
     ASSERT_EQUAL(answer.errorType, NO_SCHEDULE);
 
@@ -218,32 +218,32 @@ void comandCenterTest()
     DeviceWorkSchedule schedule64 = {64, schedule};
     cc.setSchedule(schedule64);
     message.measurements = {0, 15};
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, COMMAND);
     ASSERT_EQUAL(answer.adjustment, -5);
     ASSERT_EQUAL(cc.getMse(64), 5);
 
     message.measurements = {105, 40};
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, COMMAND);
     ASSERT_EQUAL(answer.adjustment, 10);
     float expectedMse = std::sqrt((pow(5, 2)+pow(10, 2))/2.0);
     ASSERT_EQUAL(cc.getMse(64), expectedMse);
 
     message.measurements = {100, 40};
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, ERROR);
     ASSERT_EQUAL(answer.errorType, OBSOLETE);
 
     message.measurements = {200, 40};
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, COMMAND);
     ASSERT_EQUAL(answer.adjustment, 0);
     expectedMse = std::sqrt((pow(5, 2)+pow(10, 2))/3.0);
     ASSERT_EQUAL(cc.getMse(64), expectedMse);
 
     message.measurements = {201, 40};
-    answer = cc.generateCommand(64, message);
+    answer = cc.createCommand(64, message);
     ASSERT_EQUAL(answer.messageType, ERROR);
     ASSERT_EQUAL(answer.errorType, NO_TIMESTAMP);
 }

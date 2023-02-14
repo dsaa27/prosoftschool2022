@@ -21,5 +21,4 @@ void encoderTest();
  */
 void comandCenterTest();
 
-
 #endif // TESTS_H

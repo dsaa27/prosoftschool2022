@@ -11,11 +11,11 @@ public:
     /*!
      * \brief Зашифровать строку.
      */
-    virtual std::string encode(std::string message) = 0;
+    virtual std::string encode(const std::string& message) = 0;
     /*!
      * \brief Расшифровать строку.
      */
-    virtual std::string decode(std::string message) = 0;
+    virtual std::string decode(const std::string& message) = 0;
     /*!
      * \brief Получить название алгоритма шифрования.
      */
