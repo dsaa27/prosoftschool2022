@@ -9,7 +9,7 @@ class BaseEncoderExecutor {
 
         virtual std::string encode(std::string message) = 0;
         virtual std::string decode(std::string message) = 0;
-        virtual std::string name() = 0;
+        virtual std::string getname() = 0;
 
 };
 

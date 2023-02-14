@@ -4,7 +4,7 @@
 #include <message.h>
 
 #include <messageserializator.h>
-
+#include <encoder/messageencoder.h>
 
 
 
@@ -34,13 +34,27 @@ int main()
     message2 = pCom1;
 
     MessageSerializator MET1;
+    string mes1 = MET1.Serialize(message1);
 
-    std:: cout << MET1.Serialize(message1) << std::endl;
+    std:: cout <<"serialized 1 message - " << mes1 << std::endl;
+
+    MessageEncoder Encoder1;
+
+    Encoder1.SetEncodeAlgorithm("Multiply41");
+    string encodemes1 = Encoder1.encode(mes1);
+    std::cout << "encoded 1 message - " << encodemes1 << std::endl;
+    string decodemes1 = Encoder1.decode(encodemes1);
+    std::cout << "decoded 1 message - " << decodemes1 << std::endl;
+
+
+
 
     std::string HUI = MET1.Serialize(message1);
     std::string HUI2 = MET1.Serialize(message2);
 
-    std::cout << MET1.Serialize(message2) << std::endl;
+    std::cout << "serialized 2 message - " << MET1.Serialize(message2) << std::endl;
+
+
 
     //Meterages Meterage2;
     //Message * message3;
@@ -64,6 +78,7 @@ int main()
     Commands * Command1 = dynamic_cast<Commands*>(pmessage2);
 
     std::cout << "comand is " << Command1->correction << std::endl;
+
 
 
 

@@ -29,3 +29,9 @@ string Multiply41::decode(string input) {
     }
     return output;
 }
+
+string Multiply41::getname() {
+
+    return AlgorithmName;
+
+}

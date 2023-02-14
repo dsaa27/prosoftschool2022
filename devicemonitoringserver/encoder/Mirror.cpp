@@ -25,3 +25,9 @@ string Mirror::decode(string input){
     return output;
 
 }
+
+string Mirror::getname() {
+
+    return AlgorithmName;
+
+}

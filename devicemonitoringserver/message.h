@@ -5,17 +5,21 @@
 #include <string>
 #include <iostream>
 
+enum TypeOfMessage {
+    Meterage,
+    Command,
+    Error,
+};
 
+enum TypeOfError {
+    NoShedule,
+    NoTimeStamp,
+    Obsolete,
+};
 
 struct Message {
 
     virtual ~Message(){};
-
-    enum TypeOfMessage {
-        Meterage,
-        Command,
-        Error,
-    };
 
 };
 
@@ -55,11 +59,7 @@ struct Errors : public Message {
 //		m_error = inputError;
 //	}
 
-    enum TypeOfError {
-        NoShedule,
-        NoTimeStamp,
-        Obsolete,
-    };
+
 
     TypeOfMessage type = Error;
     TypeOfError m_error;

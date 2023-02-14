@@ -21,10 +21,9 @@ CppApplication {
         files: [
             "*.h",
             "*.cpp",
-            "../baseencoderexecutor.h",
-            "../messageencoder.cpp",
-            "../messageencoder.h",
-            "../baseencoderexecutor.h",
+            "../encoder/baseencoderexecutor.h",
+            "../encoder/messageencoder.cpp",
+            "../encoder/messageencoder.h",
             "../messageserializator.h",
             "../messageserializator.cpp",
             "../encoder/ROT3.cpp",

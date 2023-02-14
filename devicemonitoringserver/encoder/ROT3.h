@@ -9,8 +9,9 @@ class ROT3 : public BaseEncoderExecutor {
 
         string encode(string);
         string decode(string);
-        string name();
-
+        string getname();
+    private:
+        string AlgorithmName = "ROT3";
 };
 
 #endif // ROT3_H

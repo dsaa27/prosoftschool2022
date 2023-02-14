@@ -31,3 +31,10 @@ string ROT3::decode(string input) {
 
     return output;
 }
+
+
+string ROT3::getname() {
+
+    return AlgorithmName;
+
+}

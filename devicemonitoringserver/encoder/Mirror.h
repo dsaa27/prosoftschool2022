@@ -8,7 +8,10 @@ class Mirror: public BaseEncoderExecutor {
 
         string encode(string);
         string decode(string);
-        string name();
+        string getname();
+    private:
+        string AlgorithmName = "Mirror";
+
 
 };
 #endif // MIRROR_H

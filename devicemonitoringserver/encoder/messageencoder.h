@@ -10,17 +10,17 @@ class MessageEncoder : public BaseEncoderExecutor {
     public:
         string encode (string message);
         string decode (string message);
-        string name();
+        string getname();
 
         void SetEncodeAlgorithm (string NameOfAlgorithm);
-
         void NewAlgorithm (BaseEncoderExecutor & newAlgorithm);
+
     private:
         ROT3 rot3;
         Mirror mirror;
         Multiply41 multiply41;
-        string NameOfAlgorithm_m = "ROT3";
-        std::map <string, BaseEncoderExecutor*> NameOfAlgorithmMap = {{"ROT3", &rot3}, /*{"Mirror", &mirror},*/ {"Multiply41", &multiply41}};
+        string SelectedAlgorithm;
+        std::map <string, BaseEncoderExecutor*> AlgorithmMap = {{"ROT3", &rot3}, {"Mirror", &mirror}, {"Multiply41", &multiply41}};
 
 };
 

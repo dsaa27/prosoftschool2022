@@ -8,8 +8,9 @@ class Multiply41 : public BaseEncoderExecutor {
 
         string encode(string);
         string decode(string);
-        string name();
-
+        string getname();
+    private:
+        string AlgorithmName = "Multiply41";
 };
 
 
