@@ -15,8 +15,8 @@ void unitTest::deserialization::meterageMessage()
                                    {0, 0}};
        std::vector<std::pair<uint64_t, int>> phaseVector;
        MessageSerializer messageSerializer;
-       AbstractMessage *currentDeserializedAbstractMessage;
-       MeterageMessage *currentDeserializedMeterageMessage;
+       AbstractMessage *currentDeserializedAbstractMessage = nullptr;
+       MeterageMessage *currentDeserializedMeterageMessage = nullptr;
 
        currentDeserializedAbstractMessage = messageSerializer.deserializeMessage("1 1 5");
        currentDeserializedMeterageMessage = dynamic_cast<MeterageMessage*>(currentDeserializedAbstractMessage);
