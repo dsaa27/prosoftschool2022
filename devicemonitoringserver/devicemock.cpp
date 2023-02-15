@@ -3,8 +3,6 @@
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
 
-static std::string respond;
-
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -54,11 +52,9 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     };
     m_clientConnection->setMessageHandler(new MessageHandler(this));
 
-    auto* messageSerialiser = new MessageSerialiser;
-    m_serial = messageSerialiser;
+    m_serial = new MessageSerialiser;
 
-    auto* messageEncoder = new MessageEncoder;
-    m_encoder = messageEncoder;
+    m_encoder = new MessageEncoder;
 }
 
 DeviceMock::~DeviceMock()
@@ -81,25 +77,15 @@ bool DeviceMock::connectToServer(uint64_t serverId)
 
 void DeviceMock::sendMessage(const std::string& message) const
 {
-    std::cout << "DeviceMock::sendMessage" << "Send Message = " << message << std::endl;
     m_clientConnection->sendMessage(message);
-
 }
 
 void DeviceMock::onMessageReceived(const std::string& message)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
-
     std::string BufferMessage = message;
 
     std::string Message = m_encoder->decode(BufferMessage);
     std::string TypeOfMessage = m_serial->GetTypeMessage(Message);
-
-    if (TypeOfMessage == "Error")
-    {
-        std::cout << "This is Error: " << m_serial->GetTypeError(Message);
-    }
 
     if (TypeOfMessage == "Command")
     {
@@ -113,10 +99,10 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
         m_cout_of_meterages++;
     }
-
-    respond = Message;
-
-    std::cout << "DeviceMock::onMessageReceived: " << "DecodeMessagefromServer = " << respond << std::endl;
+    else
+    {
+        std::cout << "This is Error: " << m_serial->GetTypeError(Message);
+    }
 
     sendNextMeterage(); // Отправляем следующее измерение
 
@@ -124,12 +110,12 @@ void DeviceMock::onMessageReceived(const std::string& message)
 
 void DeviceMock::onConnected()
 {
-    // TODO, если нужно
+
 }
 
 void DeviceMock::onDisconnected()
 {
-    // TODO, если нужно
+
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
@@ -148,24 +134,23 @@ void DeviceMock::sendNextMeterage()
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
-    auto timeStamp = m_timeStamp;
-    ++m_timeStamp;
-    // TODO: Сформировать std::string и передать в sendMessage
 
-    std::string Message = m_serial->serialize_Message(meterage,timeStamp);
-
-    std::cout << "DeviceMock::sendNextMeterage: " << "Message = " << Message << std::endl;
-
+    std::string Message = m_serial->serialize_Message(meterage,m_timeStamp);
 
     Message = m_encoder->encode(Message);
-    std::cout << "DeviceMock::sendNextMeterage: " << "Send EncodeMessage = " << Message << std::endl;
+
     sendMessage(Message);
 
-
+    ++m_timeStamp;
 }
 
 void DeviceMock::setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm)
 {
     m_encoder->registration_algorithm(EncodeAlgoritm);
+}
+
+std::vector <double> DeviceMock::responce() const
+{
+    return m_CommandFromServer;
 }
 
