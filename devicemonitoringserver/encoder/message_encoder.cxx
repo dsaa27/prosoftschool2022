@@ -46,7 +46,6 @@ message_encoder::decode(const std::string& data) const {
     return _curr->decode(data);
 }
 
-// временно
 dms::encoder::ENC_TYPE
 message_encoder::curr_encoder(void) const {
     return _curr->name();

@@ -3,9 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
-#include <iostream>
 #include <memory>
-#include <utility>
 
 void
 dms::commandcenter::command_center::add(const DeviceWorkSchedule& schedule) {
@@ -18,15 +16,17 @@ dms::commandcenter::command_center::rem(const std::uint64_t idev) {
     _devstamp.erase(idev);
 }
 
-auto
+std::pair<bool, std::vector<Phase>::const_iterator>
 dms::commandcenter::command_center::find_phase(const std::uint64_t idev,
                                                const std::uint64_t stamp) {
 
     const std::vector<Phase>& schedule{_devsch[idev]};
 
-    return std::find_if(
-        schedule.cbegin(), schedule.cend(),
-        [stamp](const Phase p) { return p.timeStamp == stamp; });
+    const std::vector<Phase>::const_iterator found{
+        std::find_if(schedule.cbegin(), schedule.cend(),
+                     [stamp](const Phase& p) { return p.timeStamp == stamp; })};
+
+    return make_pair(found != schedule.end(), found);
 }
 
 bool
@@ -37,6 +37,7 @@ dms::commandcenter::command_center::has_schedule(const std::uint64_t idev) {
 void
 dms::commandcenter::command_center::update_last_stamp(
     const std::uint64_t idev, const std::uint64_t stamp) {
+
     _devstamp[idev] = stamp;
 }
 
@@ -58,10 +59,13 @@ dms::commandcenter::command_center::check(
             dms::message::ERR_TYPE::NOSCHEDULE);
     }
 
-    const auto phase = find_phase(idev, meterage.timestamp());
+    bool found{false};
+    std::vector<Phase>::const_iterator phase{nullptr};
 
-    if (phase == std::end(_devsch[idev])) {
-        return std::make_unique<dms::message::error>(
+    std::tie(found, phase) = find_phase(idev, meterage.timestamp());
+
+    if (!found) {
+        return std::make_unique<const dms::message::error>(
             dms::message::ERR_TYPE::NOTIMESTAMP);
     }
 
@@ -74,9 +78,8 @@ dms::commandcenter::command_center::check(
     return std::make_unique<const dms::message::command>(correction);
 }
 
-// средняя ошибка управления
 double
-dms::commandcenter::command_center::avg(const std::uint64_t idev) {
+dms::commandcenter::command_center::marith(const std::uint64_t idev) {
     double sum{.0};
 
     for (const auto x : _devdiff[idev]) {
@@ -86,18 +89,17 @@ dms::commandcenter::command_center::avg(const std::uint64_t idev) {
     return sum / _devdiff[idev].size();
 }
 
-// среднее квадратичное ошибки управления
 double
-dms::commandcenter::command_center::_asd(const std::uint64_t idev,
-                                         const std::uint64_t stamp,
-                                         const std::uint64_t corr) {
+dms::commandcenter::command_center::eval_asd(const std::uint64_t idev,
+                                             const std::uint64_t stamp,
+                                             const std::uint64_t corr) {
     _devdiff[idev][stamp] = corr;
 
     double ret{.0};
-    const double avg{command_center::avg(idev)};
+    const double marith{command_center::marith(idev)};
 
-    for (const auto x : _devdiff[idev]) {
-        ret += std::pow(x.second - avg, 2);
+    for (const auto diff : _devdiff[idev]) {
+        ret += std::pow(diff.second - marith, 2);
     }
 
     return std::sqrt(ret / _devdiff[idev].size());
@@ -108,15 +110,12 @@ dms::commandcenter::command_center::put_asd_to_hist(const std::uint64_t idev,
                                                     const std::uint64_t stamp,
                                                     const std::uint64_t corr) {
 
-    if (_devasd.find(idev) == _devasd.end()) {
-        _devasd[idev] = {};
-    }
-
-    _devasd[idev][stamp] = _asd(idev, stamp, corr);
+    _devasd[idev][stamp] = eval_asd(idev, stamp, corr);
 }
 
 double
-dms::commandcenter::command_center::asd(std::uint64_t idev,
-                                        std::uint64_t stamp) {
+dms::commandcenter::command_center::msqdev(std::uint64_t idev,
+                                           std::uint64_t stamp) {
+
     return _devasd[idev][stamp];
 }

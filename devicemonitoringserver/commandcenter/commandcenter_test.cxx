@@ -146,7 +146,7 @@ main(void) {
     }
 
     {
-        cout << "Среднее квадратичное отклонение" << endl;
+        cout << "Mean Square Deviation" << endl;
 
         const std::uint64_t idev{1000u};
         const DeviceWorkSchedule schedule{
@@ -170,7 +170,7 @@ main(void) {
             // sum: (23 - 23)^2
             // sqrt(0 / 1) = 0
 
-            assert(std::abs(0.0 - cc.asd(idev, 0u)) < prec);
+            assert(std::abs(0.0 - cc.msqdev(idev, 0u)) < prec);
         }
 
         {
@@ -185,7 +185,7 @@ main(void) {
             // sum: (23 - 13)^2 + (3 - 13)^2 = 200
             // sqrt(200 / 2) = 10
 
-            assert(std::abs(10.0 - cc.asd(idev, 1u)) < prec);
+            assert(std::abs(10.0 - cc.msqdev(idev, 1u)) < prec);
         }
 
         {
@@ -200,7 +200,7 @@ main(void) {
             // sum: (23 - 9.33333)^2 + (3 - 9.33333)^2 + (2 - 9.33333)^2 =
             // sqrt(280.6666667 / 3) ≈ 9.672412086
 
-            assert(std::abs(9.672412 - cc.asd(idev, 2u)) < prec);
+            assert(std::abs(9.672412 - cc.msqdev(idev, 2u)) < prec);
         }
 
         {
@@ -224,7 +224,7 @@ main(void) {
             // sum: (23 - 7)^2 + (3 - 7)^2 + (2 - 7)^2 + (0 - 7)^2 = 346
             // sqrt(346 / 4) = 9.300537
 
-            assert(std::abs(9.300537 - cc.asd(idev, 3u)) < prec);
+            assert(std::abs(9.300537 - cc.msqdev(idev, 3u)) < prec);
         }
 
         {

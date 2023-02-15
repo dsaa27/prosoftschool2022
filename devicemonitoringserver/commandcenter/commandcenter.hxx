@@ -14,19 +14,20 @@ class command_center;
 
 class dms::commandcenter::command_center {
   private:
-    // (idev, schedule)
-    std::map<std::uint64_t, std::vector<Phase>> _devsch{};
+    std::map<std::uint64_t /* idev */, std::vector<Phase> /* schedule */>
+        _devsch{};
 
-    // (idev, last meterage stamp)
-    std::map<std::uint64_t, std::uint64_t> _devstamp{};
+    std::map<std::uint64_t, /* idev */ std::uint64_t /* last meterage stamp */>
+        _devstamp{};
 
-    // (idev, {(метка времени, asd)})
-    std::map<std::uint64_t, std::map<uint64_t, double>> _devasd{};
+    std::map<std::uint64_t /* idev */,
+             std::map<uint64_t /* tstamp */, double /* СКО ОУ */>>
+        _devasd{};
 
     // история корректировок
     std::map<std::uint64_t, std::map<std::uint64_t, std::int8_t>> _devdiff{};
 
-    auto
+    std::pair<bool /* found */, std::vector<Phase>::const_iterator>
     find_phase(const std::uint64_t idev, const std::uint64_t tstamp);
 
     bool
@@ -43,25 +44,29 @@ class dms::commandcenter::command_center {
     put_asd_to_hist(const std::uint64_t idev, const std::uint64_t stamp,
                     const uint64_t);
 
-    // ско
     double
-    _asd(const uint64_t idev, const uint64_t, const uint64_t);
+    eval_asd(const uint64_t idev, const uint64_t, const uint64_t);
 
   public:
-    // ср.арифм.
     double
-    avg(const std::uint64_t idev);
+    marith(const std::uint64_t idev);
 
   public:
+    // Проверка измерения устройства с плановым значением
     std::unique_ptr<const dms::message::message>
     check(const std::uint64_t idev, const dms::message::meterage&);
 
+    // Добавить устройство
     void
     add(const DeviceWorkSchedule&);
 
+    // Удалить устройство
     void
     rem(const std::uint64_t idev);
 
+    // Узнать СКО ошибки управления
+    // для указанного устройства в указанное время
+    // (m)ean (sq)uare (dev)iation
     double
-    asd(std::uint64_t idev, std::uint64_t stamp);
+    msqdev(std::uint64_t idev, std::uint64_t stamp);
 };
