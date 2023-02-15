@@ -3,6 +3,9 @@
 
 #include "common.h"
 
+#include "MessageSerializer.h"
+#include "messageencoder.h"
+
 #include <string>
 #include <vector>
 
@@ -36,13 +39,18 @@ public:
     bool connectToServer(uint64_t serverId);
     /*!
      * \brief Установить тестовый список измерений устройства.
-     * \param measurements - список измерений
+     * \param meterages - список измерений
      */
     void setMeterages(std::vector<uint8_t> meterages);
     /*!
      * \brief Начать отправку измерений.
      */
     void startMeterageSending();
+
+    void setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm);
+
+    //для тестов
+    std::vector <double> responce() const;
 
 private:
     /*!
@@ -67,10 +75,19 @@ private:
      */
     void onMessageReceived(const std::string& message);
 
+
+
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
+
+    int m_cout_of_meterages = 0;
+
+    MessageSerialiser* m_serial = nullptr;
+    MessageEncoder* m_encoder = nullptr;
+
+    std::vector <double> m_CommandFromServer;
 };
 
 #endif // DEVICE_H

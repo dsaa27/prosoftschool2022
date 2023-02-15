@@ -2,6 +2,8 @@
 #include "tests.h"
 #include <servermock/servertests.h>
 
+
+using namespace std;
 int main()
 {
     TestRunner tr;
@@ -9,8 +11,12 @@ int main()
     RUN_TEST(tr, safeObjectPointerTest);
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
-
-    // TODO: собственные тесты
     RUN_TEST(tr, monitoringServerTest1);
+
+    RUN_TEST(tr,serialiserTest);
+    RUN_TEST(tr,encodeTestRO3);
+    RUN_TEST(tr,encodeTestMultiply);
+    RUN_TEST(tr,encodeTestMirror);
+
     return 0;
 }

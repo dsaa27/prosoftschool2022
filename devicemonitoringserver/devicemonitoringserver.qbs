@@ -1,6 +1,7 @@
 import qbs
 
 CppApplication {
+
     consoleApplication: true
     cpp.cxxLanguageVersion: "c++17"
     cpp.includePaths: product.sourceDirectory

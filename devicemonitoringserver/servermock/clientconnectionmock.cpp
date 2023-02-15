@@ -6,6 +6,8 @@
 
 #include <unordered_map>
 
+#include <iostream>
+
 namespace
 {
 
@@ -115,8 +117,12 @@ bool ClientConnectionMock::connected() const
 
 void ClientConnectionMock::sendMessage(const std::string& message)
 {
+
     if (m_channel)
+    {
         m_channel->sendMessage(message);
+    }
+
 }
 
 void ClientConnectionMock::setDisconnectedHandler(AbstractAction* handler)
