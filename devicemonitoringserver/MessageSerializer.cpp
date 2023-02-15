@@ -11,20 +11,7 @@
 #include <sstream>
 #include <iostream>
 
-//MessageSerialiser::MessageSerialiser(AbstractMessageHandler* Message) :
-//    m_Message(Message)
-/*
-MessageSerialiser::MessageSerialiser()
-{
 
-}
-
-MessageSerialiser::~MessageSerialiser()
-{
-    //delete m_Message;
-}
-*/
-//std::string MessageSerialiser::do_serialize_Meterage_Message(const uint8_t &meterages, const uint64_t &timeStamp)
 std::string MessageSerialiser::serialize_Message(const uint8_t &meterages, const uint64_t &timeStamp)
 {
     std::string Type = {"Meterage"};
@@ -130,21 +117,18 @@ void MessageSerialiser:: deserialize_Message(const std::string &message)
         uint64_t Time;
         uint8_t Meterage;
         strm_out1 >> Type_Message >> Meterage >> Time;
-
         std::cout << "This is " << Type_Message << " " << Meterage << " " << Time << std::endl;
     }
     if (Type_Message == "Command")
     {
         double Command;
         strm_out1 >> Type_Message >> Command;
-
         std::cout << "This is Command" << std::endl;
     }
     if (Type_Message == "Error")
     {
         std::string Type_error;
         strm_out1 >> Type_Message >> Type_error;
-
         std::cout << "This is Error" << std::endl;
     }
 
