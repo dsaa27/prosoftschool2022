@@ -40,12 +40,12 @@ struct Meterages : public Message {
 
 struct Commands : public Message {
 
-    Commands(int correctionInput){
+    Commands(uint8_t correctionInput){
         correction = correctionInput;
     }
     ~Commands(){};
 
-    int correction;
+    uint8_t correction;
     TypeOfMessage type = Command;
 };
 

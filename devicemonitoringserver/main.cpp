@@ -18,82 +18,82 @@ int main()
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
 
-    std::cout << "Hello ept" << std::endl;
+//    std::cout << "Hello" << std::endl;
 
-    Message * message1;
-    Message * message2;
+//    Message * message1;
+//    Message * message2;
 
-    Meterages meterage1(250,7);
-    Meterages * pMet1 = &meterage1;
+//    Meterages meterage1(250,7);
+//    Meterages * pMet1 = &meterage1;
 
-    Commands comand1(5);
-    Commands *pCom1 = &comand1;
+//    Commands comand1(5);
+//    Commands *pCom1 = &comand1;
 
-    message1 = pMet1;
+//    message1 = pMet1;
 
-    message2 = pCom1;
+//    message2 = pCom1;
 
-    MessageSerializator MET1;
-    string mes1 = MET1.Serialize(message1);
+//    MessageSerializator MET1;
+//    string mes1 = MET1.Serialize(message1);
 
-    std:: cout <<"serialized 1 message - " << mes1 << std::endl;
+//    std:: cout <<"serialized 1 message - " << mes1 << std::endl;
 
-    MessageEncoder Encoder1;
+//    MessageEncoder Encoder1;
 
-    Encoder1.SetEncodeAlgorithm("Multiply41");
-    string encodemes1 = Encoder1.encode(mes1);
-    std::cout << "encoded 1 message - " << encodemes1 << std::endl;
-    string decodemes1 = Encoder1.decode(encodemes1);
-    std::cout << "decoded 1 message - " << decodemes1 << std::endl;
-
-
-
-
-    std::string HUI = MET1.Serialize(message1);
-    std::string HUI2 = MET1.Serialize(message2);
-
-    std::cout << "serialized 2 message - " << MET1.Serialize(message2) << std::endl;
+//    Encoder1.SetEncodeAlgorithm("Multiply41");
+//    string encodemes1 = Encoder1.encode(mes1);
+//    std::cout << "encoded 1 message - " << encodemes1 << std::endl;
+//    string decodemes1 = Encoder1.decode(encodemes1);
+//    std::cout << "decoded 1 message - " << decodemes1 << std::endl;
 
 
 
-    //Meterages Meterage2;
-    //Message * message3;
 
-   // Meterages * Meterage2 = dynamic_cast<Meterages*>(MET1.DeSerialize(HUI));
+//    std::string H = MET1.Serialize(message1);
+//    std::string H2 = MET1.Serialize(message2);
 
-   // std::cout <<"value is " << Meterage2->value << std::endl;
+//    std::cout << "serialized 2 message - " << MET1.Serialize(message2) << std::endl;
 
-     //Meterage2 = MET1.DeSerialize(HUI);
 
-    //std::cout << pMet1->type << std::endl;
 
-    Message * pmessage = MET1.DeSerialize(HUI);
+//    Meterages Meterage2;
+//    Message * message3;
 
-    Meterages * Meterage1 = dynamic_cast<Meterages*>(pmessage);
+//    Meterages * Meterage2 = dynamic_cast<Meterages*>(MET1.DeSerialize(HUI));
 
-    std::cout << "timeStamp is " << Meterage1->timeStamp << "value is " << Meterage1->value << std::endl;
+//    std::cout <<"value is " << Meterage2->value << std::endl;
 
-    Message * pmessage2 = MET1.DeSerialize(HUI2);
+//     Meterage2 = MET1.DeSerialize(HUI);
 
-    Commands * Command1 = dynamic_cast<Commands*>(pmessage2);
+//    std::cout << pMet1->type << std::endl;
 
-    std::cout << "comand is " << Command1->correction << std::endl;
+//    Message * pmessage = MET1.DeSerialize(H);
 
-    Message * message3;
-    Errors err1(NoTimeStamp);
-    Errors *pErr1 = &err1;
+//    Meterages * Meterage1 = dynamic_cast<Meterages*>(pmessage);
 
-    message3 = pErr1;
+//    std::cout << "timeStamp is " << Meterage1->timeStamp << "value is " << Meterage1->value << std::endl;
 
-    string err = MET1.Serialize(message3);
+//    Message * pmessage2 = MET1.DeSerialize(H2);
 
-    std::cout << "serialized 3 message - " << err << std::endl;
+//    Commands * Command1 = dynamic_cast<Commands*>(pmessage2);
 
-    Message * pError = MET1.DeSerialize(err);
+//    std::cout << "comand is " << Command1->correction << std::endl;
 
-    Errors * pError1 = dynamic_cast<Errors*>(pError);
+//    Message * message3;
+//    Errors err1(NoTimeStamp);
+//    Errors *pErr1 = &err1;
 
-    std::cout << "Type of message is " << pError1->type << "Type of Error is " << pError1->errorType << std::endl;
+//    message3 = pErr1;
+
+//    string err = MET1.Serialize(message3);
+
+//    std::cout << "serialized 3 message - " << err << std::endl;
+
+//    Message * pError = MET1.DeSerialize(err);
+
+//    Errors * pError1 = dynamic_cast<Errors*>(pError);
+
+//    std::cout << "Type of message is " << pError1->type << "Type of Error is " << pError1->errorType << std::endl;
 
 
 

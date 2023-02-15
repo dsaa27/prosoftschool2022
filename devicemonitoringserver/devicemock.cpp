@@ -73,11 +73,15 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
+    std::string DecodedInputMessage = Encoder2.decode(message);
+    Message * DeserializedMessage = Serializator2.DeSerialize(DecodedInputMessage);
 
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
+    if (Commands * CommandInput = dynamic_cast<Commands*>(DeserializedMessage)){
+        historyOfCommand.push_back(CommandInput->correction);
+    }
+
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -108,8 +112,9 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
     (void)meterage;
     ++m_timeStamp;
-   // Meterage* met1;
-    //Message * Message1 = met1;
-    // и тогда здесь передадим в метод сериализатора указатель на объект базового класса мессаге, который равен указателю на тип метераге
-    // TODO: Сформировать std::string и передать в sendMessage
+    Message * dataFromDevice = new Meterages(m_timeStamp, meterage);
+    std::string serializedDataFromDevice = Serializator2.Serialize(dataFromDevice);
+    std::string EncodedDataFromDevice = Encoder2.encode(serializedDataFromDevice);
+    sendMessage(EncodedDataFromDevice);
+
 }

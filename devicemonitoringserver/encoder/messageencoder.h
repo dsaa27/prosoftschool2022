@@ -1,3 +1,6 @@
+#ifndef MESSAGEENCODER_H
+#define MESSAGEENCODER_H
+
 #include <encoder/baseencoderexecutor.h>
 #include <string>
 #include <map>
@@ -24,6 +27,6 @@ class MessageEncoder : public BaseEncoderExecutor {
 
 };
 
-
+#endif // MESSAGEENCODER_H
 
 

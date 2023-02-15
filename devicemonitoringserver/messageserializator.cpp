@@ -48,7 +48,7 @@ Message * MessageSerializator::DeSerialize(std::string inputMessage) {
 
     } else if (type == 1) {
 
-        int buf3;
+        uint8_t buf3;
         output >> buf3;
         poutput = new Commands(buf3);
 

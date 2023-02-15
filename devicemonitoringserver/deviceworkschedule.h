@@ -23,3 +23,6 @@ struct DeviceWorkSchedule
 };
 
 #endif // DEVICEWORKSCHEDULE_H
+
+
+
