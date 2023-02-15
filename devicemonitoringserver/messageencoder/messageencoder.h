@@ -17,9 +17,9 @@ public:
 
     bool encode(const std::string& originalMessage, std::string& encodedMessage) const;
     bool decode(const std::string& encodedMessage, std::string& decodedMessage) const;
-    bool setAlgorithm(const std::string& nameAlg);
+    bool setAlgorithm(const std::string& algName);
     bool addAlgorithm(BaseEncoderExecutor* encoderExecutor);
-    std::string getAlgName() const;
+    bool getAlgName(std::string& algName) const;
     std::vector<std::string> getAllAlgNames() const;
 private:
     BaseEncoderExecutor* m_currentExecutor;

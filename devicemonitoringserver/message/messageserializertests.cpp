@@ -11,7 +11,7 @@ void assertEquelMessage(const MessageDto& messageActual, const MessageDto& messa
     ASSERT_EQUAL(messageActual.meterage.value, messageExpected.meterage.value);
 }
 
-void runTestCase(const MessageSerializer& serializer, const MessageDto& messageDto, const std::string strMesssage)
+void runTestCase(const MessageSerializer& serializer, const MessageDto& messageDto, const std::string& strMesssage)
 {
     std::string result = serializer.serialize(messageDto);
     ASSERT_EQUAL(result, strMesssage)
@@ -19,7 +19,6 @@ void runTestCase(const MessageSerializer& serializer, const MessageDto& messageD
     MessageDto messageActual = serializer.deserialize(result);
     assertEquelMessage(messageActual, messageDto);
 }
-
 
 void messageSerializerTest()
 {

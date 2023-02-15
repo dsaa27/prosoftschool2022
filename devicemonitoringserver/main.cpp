@@ -2,6 +2,7 @@
 #include "tests.h"
 #include <message/messageserializertests.h>
 #include <messageencoder/encoderexecutorstests.h>
+#include <messageencoder/messageencodertests.h>
 #include <servermock/servertests.h>
 
 int main()
@@ -18,6 +19,7 @@ int main()
     RUN_TEST(tr, mirrorEncoderExecutorTest);
     RUN_TEST(tr, multiply41EncoderExecutorTest);
     RUN_TEST(tr, ROT3EncoderExecutorTest);
+    RUN_TEST(tr, messageEncoderTest);
 
 
     RUN_TEST(tr, monitoringServerTest1);

@@ -4,7 +4,6 @@
 #include "multiply41.h"
 #include "rot3.h"
 #include "test_runner.h"
-
 #include <limits.h>
 
 void runTestCase(const BaseEncoderExecutor* executor, const std::string& original, const std::string& encoded)
@@ -23,7 +22,6 @@ void mirrorEncoderExecutorTest()
     runTestCase(&mirrorExec, "", "");
     runTestCase(&mirrorExec, "1 2 3", "3 2 1");
     runTestCase(&mirrorExec, "a12 3b", "b3 21a");
-
 }
 
 void multiply41EncoderExecutorTest()
@@ -38,7 +36,6 @@ void multiply41EncoderExecutorTest()
     msg = std::string({-65, 57});
     encoded = std::string({-20, -105, 18, 33});            // -65 * 41 = -20 * 128 + -105
     runTestCase(&multiply41Exec, msg, encoded);            //  57 * 41 =  18 * 128 + 33
-
 }
 
 void ROT3EncoderExecutorTest()
@@ -52,5 +49,4 @@ void ROT3EncoderExecutorTest()
     std::string msg = std::string({CHAR_MAX, CHAR_MIN});
     std::string encoded = std::string({CHAR_MIN + 2, CHAR_MIN + 3});
     runTestCase(&rot3Exec, msg, encoded);
-
 }

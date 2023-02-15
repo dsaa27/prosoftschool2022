@@ -1,0 +1,6 @@
+#ifndef MESSAGEENCODERTESTS_H
+#define MESSAGEENCODERTESTS_H
+
+void messageEncoderTest();
+
+#endif // MESSAGEENCODERTESTS_H
