@@ -23,14 +23,11 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
 
-    auto* messageEncoder = new MessageEncoder;
-    m_encoder = messageEncoder;
+    m_encoder = new MessageEncoder;
 
-    auto* messageSerialiser = new MessageSerialiser;
-    m_serial = messageSerialiser;
+    m_serial = new MessageSerialiser;
 
-    auto* commandcenter = new CommandCenter;
-    m_commandcenter = commandcenter;
+    m_commandcenter = new CommandCenter;
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
@@ -44,9 +41,7 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& Schedule)
 {
-    //TO DO
     DeviceWorkSchedule Schedule1 = Schedule;
-    //m_commandcenter->RegisterDevice(m_this_deviceId);
     m_commandcenter->SetSchedule(Schedule1);
 }
 
@@ -64,24 +59,17 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    //TO DO
-
-    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send Message = " << message << std::endl;
     std::string Message = message;
 
     m_this_deviceId = deviceId;
 
     Message = m_encoder->decode(Message);
 
-    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessageDecode = " << Message << std::endl;
-
     std::string Messagefromserver = Message;
 
     std::string Message_from_ComCent = m_commandcenter->GetMessage(deviceId, Messagefromserver);
 
     Message_from_ComCent = m_encoder->encode(Message_from_ComCent);
-
-    std::cout << "DeviceMonitoringServer::onMessageReceived: " << "Send MessagefromComCent = " << Message_from_ComCent << std::endl;
 
     sendMessage(deviceId, Message_from_ComCent);
 }
@@ -93,7 +81,7 @@ void DeviceMonitoringServer::setEncodingAlgoritm(BaseEncoderExecutor *EncodeAlgo
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
 {
-    // TODO, если нужен
+
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
