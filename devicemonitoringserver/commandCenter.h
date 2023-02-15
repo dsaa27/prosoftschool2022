@@ -3,6 +3,7 @@
 #include "messagecommon.h"
 #include <map>
 #include <cmath>
+#include <optional>
 
 struct DeviceInfo
 {
@@ -27,7 +28,7 @@ public:
     /*!
      * \brief Получить СКО ошибки управления устройством.
      */
-    float getMse(uint64_t deviceId);
+    std::optional<float> getMse(uint64_t deviceId);
 private:
     void updateMse(uint64_t deviceId, int dx);
 private:

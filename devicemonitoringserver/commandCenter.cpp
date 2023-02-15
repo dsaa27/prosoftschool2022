@@ -50,10 +50,10 @@ MessageStruct CommandCenter::createCommand(uint64_t deviceId, MessageStruct mess
     return answer;
 }
 
-float CommandCenter::getMse(uint64_t deviceId)
+std::optional<float> CommandCenter::getMse(uint64_t deviceId)
 {
     if (deviceInfoMap.find(deviceId) == deviceInfoMap.end())
-        return 0;
+        return std::nullopt;
     return deviceInfoMap[deviceId].mse;
 }
 
