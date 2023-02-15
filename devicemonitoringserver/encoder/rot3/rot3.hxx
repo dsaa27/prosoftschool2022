@@ -1,14 +1,17 @@
 #pragma once
 #include "../base_encoder.hxx"
 
-class rot3 : public base_encoder {
-  private:
-    static const std::string _name;
+namespace dms {
+    namespace encoder {
+        class rot3;
+    }
+}
 
+class dms::encoder::rot3 : public dms::encoder::base_encoder {
   public:
     std::string encode(const std::string& message) const;
     std::string decode(const std::string& message) const;
-    std::string name(void) const;
+    dms::encoder::ENC_TYPE name(void) const;
 
   private:
     char encode(const char c) const;
