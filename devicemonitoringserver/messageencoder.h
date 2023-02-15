@@ -44,7 +44,6 @@ public:
 
 
 private:
-    //uint32_t v_typeofalgorithm = 0;
     BaseEncoderExecutor* v_NewEncodeAlgoritm = nullptr;
 
 };
