@@ -49,6 +49,9 @@ public:
 
     void setEncodingAlgoritm(BaseEncoderExecutor* EncodeAlgoritm);
 
+    //для тестов
+    std::vector <double> responce() const;
+
 private:
     /*!
      * \brief Отправить следующее измерение.
