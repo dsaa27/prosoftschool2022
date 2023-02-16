@@ -23,8 +23,8 @@ main(void) {
         const string plain_text{};
         const string cipher_text{mirr.encode(plain_text)};
 
-        assert("" == cipher_text);
-        assert(plain_text == mirr.decode(cipher_text));
+        assert(cipher_text.empty());
+        assert(mirr.decode(cipher_text).empty());
     }
 
     {

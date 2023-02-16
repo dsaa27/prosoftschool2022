@@ -1,8 +1,6 @@
 #include "mirr.hxx"
 #include <string>
 
-const std::string dms::encoder::mirr::_name{"mirror"};
-
 dms::encoder::ENC_TYPE
 dms::encoder::mirr::name(void) const {
     return dms::encoder::ENC_TYPE::MIRR;

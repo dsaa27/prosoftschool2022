@@ -1,10 +1,10 @@
-#include "../message/message.hxx"
-#include "ser.hxx"
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <memory>
 
 #include "../encoder/message_encoder.hxx"
+#include "../message/message.hxx"
+#include "ser.hxx"
 
 using namespace std;
 
@@ -132,7 +132,7 @@ main(void) {
         cout << "Command, mirror, value[-100; 100]" << endl;
 
         const serializator ser{};
-        const message_encoder menc{ENC_TYPE::MIRR};
+        const message_encoder menc{dms::encoder::ENC_TYPE::MIRR};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 
@@ -166,7 +166,7 @@ main(void) {
         cout << "Command, mul41, value[-100; 100]" << endl;
 
         const serializator ser{};
-        const message_encoder menc{ENC_TYPE::MUL41};
+        const message_encoder menc{dms::encoder::ENC_TYPE::MUL41};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 
@@ -196,12 +196,11 @@ main(void) {
         }
     }
 
-    // команда под шифром rot3
     {
         cout << "Command, rot3, value[-100, 100]" << endl;
 
         const serializator ser{};
-        const message_encoder menc{ENC_TYPE::ROT3};
+        const message_encoder menc{dms::encoder::ENC_TYPE::ROT3};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 

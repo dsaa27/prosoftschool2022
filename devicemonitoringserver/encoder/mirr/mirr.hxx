@@ -9,7 +9,8 @@ namespace dms {
 
 class dms::encoder::mirr : public dms::encoder::base_encoder {
   private:
-    static const std::string _name;
+    char encode(const char) const;
+    char decode(const char) const;
 
   public:
     std::string
@@ -20,8 +21,4 @@ class dms::encoder::mirr : public dms::encoder::base_encoder {
 
     dms::encoder::ENC_TYPE
     name(void) const;
-
-  private:
-    char encode(const char) const;
-    char decode(const char) const;
 };
