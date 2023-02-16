@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "common.h"
 
-void AssertStrVectors(std::vector<std::string> fstVector, std::vector<std::string> sndVector)
+void assertStrVectors(std::vector<std::string> fstVector, std::vector<std::string> sndVector)
 {
     int fstVectorLen = fstVector.size();
     ASSERT_EQUAL(fstVectorLen, sndVector.size());
@@ -44,15 +44,17 @@ void messageEncoderTest()
     ASSERT(!encoder.encode("abc", str_out));
     ASSERT(!encoder.decode("abc", str_out));
     ASSERT(!encoder.getAlgName(str_out));
-    AssertStrVectors(encoder.getAllAlgNames(), executorsName);
+    assertStrVectors(encoder.getAllAlgNames(), executorsName);
 
     ASSERT(encoder.addAlgorithm(new TestExecutor()));
-    ASSERT(!encoder.addAlgorithm(new TestExecutor()));
+    TestExecutor* testExec = new TestExecutor();
+    ASSERT(!encoder.addAlgorithm(testExec));
+    delete testExec;
     ASSERT(!encoder.encode("abc", str_out));
     ASSERT(!encoder.decode("abc", str_out));
     ASSERT(!encoder.getAlgName(str_out));
     executorsName.push_back("test");
-    AssertStrVectors(encoder.getAllAlgNames(), executorsName);
+    assertStrVectors(encoder.getAllAlgNames(), executorsName);
 
     ASSERT(encoder.setAlgorithm("test"));
     ASSERT(encoder.getAlgName(str_out));
@@ -61,5 +63,5 @@ void messageEncoderTest()
     ASSERT_EQUAL(str_out, "encode");
     ASSERT(encoder.decode("abc", str_out));
     ASSERT_EQUAL(str_out, "decode");
-    AssertStrVectors(encoder.getAllAlgNames(),executorsName);
+    assertStrVectors(encoder.getAllAlgNames(),executorsName);
 }

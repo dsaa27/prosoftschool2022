@@ -3,6 +3,7 @@
 #include <message/messageserializertests.h>
 #include <messageencoder/encoderexecutorstests.h>
 #include <messageencoder/messageencodertests.h>
+#include <commandcenter/devicestatisticstests.h>
 #include <servermock/servertests.h>
 
 int main()
@@ -20,6 +21,8 @@ int main()
     RUN_TEST(tr, multiply41EncoderExecutorTest);
     RUN_TEST(tr, ROT3EncoderExecutorTest);
     RUN_TEST(tr, messageEncoderTest);
+
+    RUN_TEST(tr, deviceStatisticsTest);
 
 
     RUN_TEST(tr, monitoringServerTest1);
