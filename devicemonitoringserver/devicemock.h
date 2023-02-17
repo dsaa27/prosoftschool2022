@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+#include "serialization/ser.hxx"
+#include "encoder/message_encoder.hxx"
+
 class AbstractClientConnection;
 
 /*!
@@ -67,10 +70,19 @@ private:
      */
     void onMessageReceived(const std::string& message);
 
+public:
+    std::vector<std::int8_t> responces(void) {
+        return _commands;
+    }
+
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
+
+    message_encoder _menc{};
+    serializator _ser{};
+    std::vector<std::int8_t> _commands{};
 };
 
 #endif // DEVICE_H

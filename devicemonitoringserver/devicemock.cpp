@@ -1,7 +1,13 @@
 #include "devicemock.h"
 #include "handlers/abstractaction.h"
 #include "handlers/abstractmessagehandler.h"
+#include "message/message.hxx"
 #include "server/abstractclientconnection.h"
+#include <memory>
+
+#include <iostream>
+using std::cout;
+using std::endl;
 
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
@@ -73,10 +79,23 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
-    // TODO: Разобрать std::string, прочитать команду,
+    // TODO: Разобрать std::string, прочитать КОМАНДУ,
     // записать ее в список полученных команд
+
+    const auto decoded_msg = _menc.decode(message);
+    const auto deser_msg = _ser.deserialize(decoded_msg);
+
+    if (deser_msg->type() == dms::message::MSG_TYPE::COMMAND) {
+        const auto command =
+            dynamic_cast<const dms::message::command*>(deser_msg.get());
+
+        if (nullptr != command) {
+            _commands.push_back(command->value());
+        }
+    }
+
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -107,7 +126,19 @@ void DeviceMock::sendNextMeterage()
     }
 
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
-    ++m_timeStamp;
+
     // TODO: Сформировать std::string и передать в sendMessage
+    cout << m_timeStamp << ' ' << int(meterage) << endl;
+
+    const std::unique_ptr<const dms::message::message> msg{
+        new const dms::message::meterage(m_timeStamp, meterage)};
+
+    ++m_timeStamp;
+
+    // врм
+    const auto ser_msg =
+        _ser.serialize(msg.get());
+
+    const auto enc_msg = _menc.encode(ser_msg);
+    sendMessage(enc_msg);
 }

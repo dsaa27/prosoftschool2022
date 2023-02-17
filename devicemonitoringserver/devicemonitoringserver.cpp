@@ -30,9 +30,10 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& schedule)
 {
-    // TODO
+    // cout << schedule.deviceId << ' ' << schedule.schedule.size() << endl;
+    _comcen.add(schedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -47,14 +48,29 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    const auto decoded_msg = _menc.decode(message);
+    const auto deser_msg = _ser.deserialize(decoded_msg);
+
+    if (deser_msg->type() == dms::message::MSG_TYPE::METERAGE) {
+        const auto meterage = dynamic_cast<const dms::message::meterage*>(deser_msg.get());
+
+        if (nullptr == meterage) {
+            return;
+        }
+
+        const auto ret_msg = _comcen.check(deviceId, *meterage);
+        const auto s1 = _ser.serialize(ret_msg.get());
+        const auto s2 = _menc.decode(s1);
+
+        sendMessage(deviceId, s2);
+    }
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
+void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    // TODO, если нужен
+    _comcen.rem(clientId);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)

@@ -6,6 +6,10 @@
 #include <cstdint>
 #include <string>
 
+#include "commandcenter/commandcenter.hxx"
+#include "serialization/ser.hxx"
+#include "encoder/message_encoder.hxx"
+
 struct DeviceWorkSchedule;
 class AbstractConnectionServer;
 class AbstractConnection;
@@ -63,6 +67,10 @@ private:
 
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;
+
+    message_encoder _menc{};
+    serializator _ser{};
+    dms::commandcenter::command_center _comcen{};
 };
 
 #endif // DEVICEMONITORINGSERVER_H
