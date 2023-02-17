@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "../dev_servermonitoring/MessageSerializerDev.h"
+#include "MessageSerializerDev.h"
 
 
 
