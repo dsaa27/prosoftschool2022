@@ -6,9 +6,9 @@
 #include <map>
 #include <cstdint>
 #include <vector>
-#include "../dev_servermonitoring/deviceworkschedule.h"
-#include "../dev_servermonitoring/MessageEncoder.h"
-#include "../dev_servermonitoring/MessageSerializerServ.h"
+#include "deviceworkschedule.h"
+#include "MessageEncoder.h"
+#include "MessageSerializerServ.h"
 class ComandCenter
 {
 public:
