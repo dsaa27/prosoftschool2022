@@ -68,8 +68,8 @@ private:
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;
 
-    message_encoder _menc{};
-    serializator _ser{};
+    dms::encoding::message_encoder _menc{};
+    dms::serialization::serializator _ser{};
     dms::commandcenter::command_center _comcen{};
 };
 

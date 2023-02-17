@@ -11,6 +11,6 @@ int main()
     RUN_TEST(tr, clientServerTest);
 
     // TODO: собственные тесты
-    RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, monitoringServerTest);
     return 0;
 }

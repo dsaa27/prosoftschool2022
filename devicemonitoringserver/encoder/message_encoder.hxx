@@ -4,13 +4,19 @@
 #include <memory>
 #include <string>
 
-class message_encoder {
+namespace dms {
+    namespace encoding {
+        class message_encoder;
+    }
+}
+
+class dms::encoding::message_encoder {
   private:
     std::map<dms::encoder::ENC_TYPE,
              std::shared_ptr<const dms::encoder::base_encoder>>
-        _encoder_table;
+        _encoder_table{};
 
-    std::shared_ptr<const dms::encoder::base_encoder> _curr;
+    std::shared_ptr<const dms::encoder::base_encoder> _curr{};
 
   public:
     void

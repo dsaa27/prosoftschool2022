@@ -2,6 +2,7 @@
 #include "handlers/abstractaction.h"
 #include "handlers/abstractmessagehandler.h"
 #include "handlers/abstractnewconnectionhandler.h"
+#include "message/message.hxx"
 #include "server/abstractconnection.h"
 #include "servermock/connectionservermock.h"
 #include "servermock/connectionservermock.h"
@@ -50,8 +51,9 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
 
 void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    const auto decoded_msg = _menc.decode(message);
-    const auto deser_msg = _ser.deserialize(decoded_msg);
+    const std::string decoded_msg{_menc.decode(message)};
+    const std::unique_ptr<const dms::message::message> deser_msg{
+        _ser.deserialize(decoded_msg)};
 
     if (deser_msg->type() == dms::message::MSG_TYPE::METERAGE) {
         const auto meterage = dynamic_cast<const dms::message::meterage*>(deser_msg.get());
@@ -60,11 +62,13 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
             return;
         }
 
-        const auto ret_msg = _comcen.check(deviceId, *meterage);
-        const auto s1 = _ser.serialize(ret_msg.get());
-        const auto s2 = _menc.decode(s1);
+        const std::unique_ptr<const dms::message::message> ret_msg{
+            _comcen.check(deviceId, *meterage)};
 
-        sendMessage(deviceId, s2);
+        const std::string ser_msg{_ser.serialize(ret_msg)};
+        const std::string encoded_msg{_menc.decode(ser_msg)};
+
+        sendMessage(deviceId, encoded_msg);
     }
 }
 

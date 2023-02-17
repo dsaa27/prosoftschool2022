@@ -5,7 +5,7 @@
 #include "rot3/rot3.hxx"
 #include <memory>
 
-message_encoder::message_encoder(void)
+dms::encoding::message_encoder::message_encoder(void)
     : _encoder_table{{dms::encoder::ENC_TYPE::MIRR,
                       std::make_shared<const dms::encoder::mirr>()},
 
@@ -18,7 +18,7 @@ message_encoder::message_encoder(void)
       _curr{_encoder_table[dms::encoder::ENC_TYPE::MIRR]} {
 }
 
-message_encoder::message_encoder(dms::encoder::ENC_TYPE et)
+dms::encoding::message_encoder::message_encoder(dms::encoder::ENC_TYPE et)
     : _encoder_table{{dms::encoder::ENC_TYPE::MIRR,
                       std::make_shared<const dms::encoder::mirr>()},
 
@@ -32,21 +32,21 @@ message_encoder::message_encoder(dms::encoder::ENC_TYPE et)
 }
 
 void
-message_encoder::set_encoder(const dms::encoder::ENC_TYPE et) {
+dms::encoding::message_encoder::set_encoder(const dms::encoder::ENC_TYPE et) {
     _curr = _encoder_table[et];
 }
 
 std::string
-message_encoder::encode(const std::string& data) const {
+dms::encoding::message_encoder::encode(const std::string& data) const {
     return _curr->encode(data);
 }
 
 std::string
-message_encoder::decode(const std::string& data) const {
+dms::encoding::message_encoder::decode(const std::string& data) const {
     return _curr->decode(data);
 }
 
 dms::encoder::ENC_TYPE
-message_encoder::curr_encoder(void) const {
+dms::encoding::message_encoder::curr_encoder(void) const {
     return _curr->name();
 }

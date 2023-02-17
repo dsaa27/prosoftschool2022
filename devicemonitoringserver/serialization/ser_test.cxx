@@ -1,10 +1,11 @@
-#include <cassert>
-#include <iostream>
-#include <memory>
-
 #include "../encoder/message_encoder.hxx"
 #include "../message/message.hxx"
 #include "ser.hxx"
+
+#include <cassert>
+#include <iostream>
+#include <limits>
+#include <memory>
 
 using namespace std;
 
@@ -14,16 +15,17 @@ main(void) {
 
     {
         cout << "Command, value[-100; 100]" << endl;
-        const serializator ser{};
+        const dms::serialization::serializator ser{};
 
         for (std::int8_t value{-100}; value <= 100; value++) {
             const unique_ptr<const dms::message::message> msg{
                 new const dms::message::command(value)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
-            const auto deser_msg = ser.deserialize(ser_msg);
+            const string ser_msg{ser.serialize(msg)};
+            const unique_ptr<const dms::message::message> deser_msg{
+                ser.deserialize(ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::COMMAND == deser_msg->type());
 
             assert(value == dynamic_cast<const dms::message::command* const>(
@@ -34,21 +36,20 @@ main(void) {
 
     {
         cout << "Meterage, timestamp[0; 10000], value[0; 100]" << endl;
-        const serializator ser{};
+        const dms::serialization::serializator ser{};
 
         for (std::int8_t value{0u}; value <= 100; value++) {
-            for (std::uint64_t timestamp{0u}; timestamp <= 10000u;
+            for (std::uint16_t timestamp{0u}; timestamp <= 10000u;
                  timestamp++) {
 
                 const unique_ptr<const dms::message::message> msg{
                     new const dms::message::meterage(timestamp, value)};
 
-                const std::string ser_msg{ser.serialize(msg.get())};
-
+                const std::string ser_msg{ser.serialize(msg)};
                 const std::unique_ptr<const dms::message::message> deser_msg{
                     ser.deserialize(ser_msg)};
 
-                assert(deser_msg);
+                assert(nullptr != deser_msg);
                 assert(dms::message::MSG_TYPE::METERAGE ==
                        deser_msg.get()->type());
 
@@ -71,18 +72,16 @@ main(void) {
         {
             const dms::message::ERR_TYPE err{
                 dms::message::ERR_TYPE::NOSCHEDULE};
-
-            const serializator ser{};
+            const dms::serialization::serializator ser{};
 
             const unique_ptr<const dms::message::message> msg{
                 new const dms::message::error(err)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
-
+            const std::string ser_msg{ser.serialize(msg)};
             const std::unique_ptr<const dms::message::message> deser_msg{
                 ser.deserialize(ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::ERROR == deser_msg->type());
             assert(err == dynamic_cast<const dms::message::error* const>(
                               deser_msg.get())
@@ -93,16 +92,16 @@ main(void) {
             const dms::message::ERR_TYPE err{
                 dms::message::ERR_TYPE::NOTIMESTAMP};
 
-            const serializator ser{};
+            const dms::serialization::serializator ser{};
             const unique_ptr<const dms::message::message> msg{
                 new const dms::message::error(err)};
 
-            const string ser_msg{ser.serialize(msg.get())};
+            const string ser_msg{ser.serialize(msg)};
 
             const unique_ptr<const dms::message::message> deser_msg{
                 ser.deserialize(ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::ERROR == deser_msg->type());
             assert(err == dynamic_cast<const dms::message::error* const>(
                               deser_msg.get())
@@ -111,15 +110,16 @@ main(void) {
 
         {
             const dms::message::ERR_TYPE err{dms::message::ERR_TYPE::OBSOLETE};
+            const dms::serialization::serializator ser{};
 
-            const serializator ser{};
             const unique_ptr<const dms::message::message> msg{
                 new const dms::message::error(err)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
-            const auto deser_msg = ser.deserialize(ser_msg);
+            const string ser_msg{ser.serialize(msg)};
+            const unique_ptr<const dms::message::message> deser_msg{
+                ser.deserialize(ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::ERROR == deser_msg->type());
 
             assert(err == dynamic_cast<const dms::message::error* const>(
@@ -131,7 +131,7 @@ main(void) {
     {
         cout << "Command, mirror, value[-100; 100]" << endl;
 
-        const serializator ser{};
+        const dms::serialization::serializator ser{};
         const message_encoder menc{dms::encoder::ENC_TYPE::MIRR};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
@@ -139,7 +139,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> msg{
                 new const dms::message::command(corr_val)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
+            const std::string ser_msg{ser.serialize(msg)};
 
             // сообщение шифруется
             const std::string enc_ser_msg{menc.encode(ser_msg)};
@@ -153,7 +153,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> deser_msg{
                 ser.deserialize(denc_ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::COMMAND == deser_msg->type());
 
             assert(corr_val ==
@@ -165,7 +165,7 @@ main(void) {
     {
         cout << "Command, mul41, value[-100; 100]" << endl;
 
-        const serializator ser{};
+        const dms::serialization::serializator ser{};
         const message_encoder menc{dms::encoder::ENC_TYPE::MUL41};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
@@ -173,7 +173,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> msg{
                 new const dms::message::command(corr_val)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
+            const std::string ser_msg{ser.serialize(msg)};
 
             // сообщение шифруется
             const std::string enc_ser_msg{menc.encode(ser_msg)};
@@ -187,7 +187,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> deser_msg{
                 ser.deserialize(denc_ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::COMMAND == deser_msg->type());
 
             assert(corr_val ==
@@ -199,7 +199,7 @@ main(void) {
     {
         cout << "Command, rot3, value[-100, 100]" << endl;
 
-        const serializator ser{};
+        const dms::serialization::serializator ser{};
         const message_encoder menc{dms::encoder::ENC_TYPE::ROT3};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
@@ -207,7 +207,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> msg{
                 new const dms::message::command(corr_val)};
 
-            const std::string ser_msg{ser.serialize(msg.get())};
+            const std::string ser_msg{ser.serialize(msg)};
 
             // сообщение шифруется
             const std::string enc_ser_msg{menc.encode(ser_msg)};
@@ -221,7 +221,7 @@ main(void) {
             const std::unique_ptr<const dms::message::message> deser_msg{
                 ser.deserialize(denc_ser_msg)};
 
-            assert(deser_msg);
+            assert(nullptr != deser_msg);
             assert(dms::message::MSG_TYPE::COMMAND == deser_msg->type());
 
             assert(corr_val ==

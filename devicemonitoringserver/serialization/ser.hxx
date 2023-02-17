@@ -3,10 +3,16 @@
 #include <memory>
 #include <string>
 
-class serializator {
+namespace dms {
+    namespace serialization {
+        class serializator;
+    }
+}
+
+class dms::serialization::serializator {
   public:
     std::string
-    serialize(const dms::message::message* const) const;
+    serialize(const std::unique_ptr<const dms::message::message>&) const;
 
     std::unique_ptr<const dms::message::message>
     deserialize(const std::string& msg) const;

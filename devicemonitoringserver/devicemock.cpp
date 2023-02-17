@@ -84,12 +84,13 @@ void DeviceMock::onMessageReceived(const std::string& message)
     // TODO: Разобрать std::string, прочитать КОМАНДУ,
     // записать ее в список полученных команд
 
-    const auto decoded_msg = _menc.decode(message);
-    const auto deser_msg = _ser.deserialize(decoded_msg);
+    const std::string decoded_msg{_menc.decode(message)};
+    const std::unique_ptr<const dms::message::message> deser_msg{
+        _ser.deserialize(decoded_msg)};
 
     if (deser_msg->type() == dms::message::MSG_TYPE::COMMAND) {
-        const auto command =
-            dynamic_cast<const dms::message::command*>(deser_msg.get());
+        const dms::message::command* const command{
+            dynamic_cast<const dms::message::command*>(deser_msg.get())};
 
         if (nullptr != command) {
             _commands.push_back(command->value());
@@ -135,10 +136,8 @@ void DeviceMock::sendNextMeterage()
 
     ++m_timeStamp;
 
-    // врм
-    const auto ser_msg =
-        _ser.serialize(msg.get());
+    const std::string ser_msg{_ser.serialize(msg)};
+    const std::string enc_msg{_menc.encode(ser_msg)};
 
-    const auto enc_msg = _menc.encode(ser_msg);
     sendMessage(enc_msg);
 }

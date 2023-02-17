@@ -80,8 +80,9 @@ private:
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
 
-    message_encoder _menc{};
-    serializator _ser{};
+    dms::encoding::message_encoder _menc{};
+    dms::serialization::serializator _ser{};
+
     std::vector<std::int8_t> _commands{};
 };
 

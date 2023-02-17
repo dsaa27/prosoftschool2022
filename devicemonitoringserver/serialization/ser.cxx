@@ -4,64 +4,68 @@
 #include <string>
 
 std::string
-serializator::serialize(const dms::message::message* const msg) const {
-    if (!msg) {
-        return "";
+dms::serialization::serializator::serialize(
+    const std::unique_ptr<const dms::message::message>& msg) const {
+
+    if (nullptr == msg) {
+        return {};
     }
 
     std::string ret{};
 
     switch (msg->type()) {
     case dms::message::MSG_TYPE::COMMAND: {
-        auto const cmd = dynamic_cast<const dms::message::command* const>(msg);
+        const dms::message::command* const command{
+            dynamic_cast<const dms::message::command*>(msg.get())};
 
-        if (!cmd) {
-            return "";
+        if (nullptr == command) {
+            return {};
         }
 
         ret += static_cast<char>(msg->type());
-        ret += std::to_string(cmd->value());
+        ret += std::to_string(command->value());
 
         return ret;
     }
 
     case dms::message::MSG_TYPE::METERAGE: {
-        auto const met = dynamic_cast<const dms::message::meterage* const>(msg);
+        const dms::message::meterage* const meterage{
+            dynamic_cast<const dms::message::meterage* const>(msg.get())};
 
-        if (nullptr == met) {
-            return "";
+        if (nullptr == meterage) {
+            return {};
         }
 
         ret += static_cast<char>(msg->type());
-        ret += std::to_string(met->timestamp());
+        ret += std::to_string(meterage->timestamp());
         ret += ' ';
-        ret += std::to_string(met->value());
+        ret += std::to_string(meterage->value());
 
         return ret;
     }
 
     case dms::message::MSG_TYPE::ERROR: {
-        auto const err = dynamic_cast<const dms::message::error* const>(msg);
+        auto const err =
+            dynamic_cast<const dms::message::error* const>(msg.get());
 
-        if (!err) {
-            return "";
+        if (nullptr == err) {
+            return {};
         }
 
         ret += static_cast<char>(err->type());
         ret += static_cast<char>(err->err());
+
         return ret;
     }
-
-    default:
-        return "";
     }
 
-    return "";
+    return {};
 }
 
 std::unique_ptr<const dms::message::message>
-serializator::deserialize(const std::string& msg) const {
-    const auto msg_type = static_cast<dms::message::MSG_TYPE>(msg[0]);
+dms::serialization::serializator::deserialize(const std::string& msg) const {
+    const dms::message::MSG_TYPE msg_type{
+        static_cast<dms::message::MSG_TYPE>(msg[0])};
 
     switch (msg_type) {
 
