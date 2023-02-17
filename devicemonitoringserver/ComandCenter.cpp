@@ -4,10 +4,10 @@
 #include <map>
 #include <cstdint>
 #include <vector>
-#include "../dev_servermonitoring/deviceworkschedule.h"
-#include "../dev_servermonitoring/MessageEncoder.h"
-#include "../dev_servermonitoring/MessageSerializerServ.h"
-#include "../dev_servermonitoring/ComandCenter.h"
+#include "deviceworkschedule.h"
+#include "MessageEncoder.h"
+#include "MessageSerializerServ.h"
+#include "ComandCenter.h"
 
 	std::string ComandCenter::comparisonWPlan(uint64_t deviceId, uint64_t m_timeStamp, uint8_t metrages)
 	{
