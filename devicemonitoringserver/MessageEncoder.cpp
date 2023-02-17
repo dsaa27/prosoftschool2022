@@ -4,7 +4,7 @@
 #include <map>
 #include <cstdint>
 #include <vector>
-#include "../dev_servermonitoring/MessageEncoder.h"
+#include "MessageEncoder.h"
 
 	std::string ROT3::encode(const std::string& message) const
 	{
