@@ -4,6 +4,7 @@
 #include <messageencoder/encoderexecutorstests.h>
 #include <messageencoder/messageencodertests.h>
 #include <commandcenter/devicestatisticstests.h>
+#include <commandcenter/commandcentertests.h>
 #include <servermock/servertests.h>
 
 int main()
@@ -23,6 +24,7 @@ int main()
     RUN_TEST(tr, messageEncoderTest);
 
     RUN_TEST(tr, deviceStatisticsTest);
+    RUN_TEST(tr, commandCenterTest);
 
 
     RUN_TEST(tr, monitoringServerTest1);

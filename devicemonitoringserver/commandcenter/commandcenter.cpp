@@ -12,20 +12,27 @@ CommandCenter::~CommandCenter()
 Control CommandCenter::checkDeviceWorkShedule(uint64_t deviceId, const struct Meterage& meterage)
 {
     if(!deviceExist(deviceId))
-        return Control{0, NoSchedule};
+        return NOSCHEDULE;
     DeviceData deviceData = m_devicesData.at(deviceId);
     auto iter_end = deviceData.workShedule->schedule.end();
     if(deviceData.iter_schedule == iter_end)
-        return Control{0, NoTimestamp};
+        return NOTIMESTMAPS;
     if(meterage.timeStamp < deviceData.iter_schedule->timeStamp)
-        return Control{0, Obsolete};
+        return NOTIMESTMAPS;
+    if(meterage.timeStamp < deviceData.lastTimeStamp)
+        return OBSOLETE;
     std::vector<Phase>::iterator iter_actual = deviceData.iter_schedule;
     while(iter_actual + 1 != iter_end && meterage.timeStamp >= (iter_actual + 1)->timeStamp)
         ++iter_actual;
     int8_t diff = iter_actual->value - meterage.value;
     m_devicesData.at(deviceId).iter_schedule = iter_actual;
-    m_devicesData.at(deviceId).statistics->addValue(iter_actual->timeStamp, diff);
-    return Control{diff, Unknown};
+    if(m_devicesData.at(deviceId).statistics->addValue(iter_actual->timeStamp, diff))
+    {
+        m_devicesData.at(deviceId).lastTimeStamp = meterage.timeStamp;
+        return Control{diff, Unknown};
+    }
+    else
+        return OBSOLETE;
 }
 
 bool CommandCenter::addDeviceWorkShedule(DeviceWorkSchedule* schedule)
@@ -35,6 +42,7 @@ bool CommandCenter::addDeviceWorkShedule(DeviceWorkSchedule* schedule)
     DeviceData newDevice =
     {
         schedule->schedule.begin(),
+        0,
         schedule,
         new DeviceStatistics(schedule->deviceId)
     };

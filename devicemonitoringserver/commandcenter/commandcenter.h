@@ -16,6 +16,7 @@ struct Control
 struct DeviceData
 {
     std::vector<Phase>::iterator iter_schedule;
+    uint64_t lastTimeStamp;
     const DeviceWorkSchedule* workShedule;
     DeviceStatistics* statistics;
 };
@@ -37,6 +38,10 @@ public:
     ~CommandCenter();
 
 private:
+    constexpr static const Control NOSCHEDULE = Control{0, ErrorType::NoSchedule};
+    constexpr static const Control NOTIMESTMAPS = Control{0, ErrorType::NoTimestamp};
+    constexpr static const Control OBSOLETE = Control{0, ErrorType::Obsolete};
+
     bool deviceExist(const uint64_t &deviceId) const;
 
     std::map<uint64_t, DeviceData> m_devicesData;
