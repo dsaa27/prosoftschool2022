@@ -15,9 +15,8 @@ Control CommandCenter::checkDeviceWorkShedule(uint64_t deviceId, const struct Me
         return NOSCHEDULE;
     DeviceData deviceData = m_devicesData.at(deviceId);
     auto iter_end = deviceData.workShedule->schedule.end();
-    if(deviceData.iter_schedule == iter_end)
-        return NOTIMESTMAPS;
-    if(meterage.timeStamp < deviceData.iter_schedule->timeStamp)
+    if(deviceData.iter_schedule == iter_end
+            || (meterage.timeStamp < deviceData.iter_schedule->timeStamp && deviceData.lastTimeStamp == 0))
         return NOTIMESTMAPS;
     if(meterage.timeStamp < deviceData.lastTimeStamp)
         return OBSOLETE;
