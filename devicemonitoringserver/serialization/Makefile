@@ -35,29 +35,29 @@ message.o: ../message/message.cxx
 	-o message.o
 
 message_encoder.o: \
-	../encoder/message_encoder.cxx \
+	../encoding/message_encoder.cxx \
 	mul41.o \
 	rot3.o \
 	mirr.o
 	$(CXX) \
-	-c ../encoder/message_encoder.cxx \
+	-c ../encoding/message_encoder.cxx \
 	\
 	-o message_encoder.o
 
-mul41.o: ../encoder/mul41/mul41.cxx
+mul41.o: ../encoding/mul41/mul41.cxx
 	$(CXX) \
-	-c ../encoder/mul41/mul41.cxx \
+	-c ../encoding/mul41/mul41.cxx \
 	\
 	-o mul41.o
 
-rot3.o: ../encoder/rot3/rot3.cxx
+rot3.o: ../encoding/rot3/rot3.cxx
 	$(CXX) \
-	-c ../encoder/rot3/rot3.cxx \
+	-c ../encoding/rot3/rot3.cxx \
 	\
 	-o rot3.o
 
-mirr.o: ../encoder/mirr/mirr.cxx
+mirr.o: ../encoding/mirr/mirr.cxx
 	$(CXX) \
-	-c ../encoder/mirr/mirr.cxx \
+	-c ../encoding/mirr/mirr.cxx \
 	\
 	-o mirr.o

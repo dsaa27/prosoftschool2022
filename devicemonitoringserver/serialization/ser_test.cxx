@@ -1,4 +1,4 @@
-#include "../encoder/message_encoder.hxx"
+#include "../encoding/message_encoder.hxx"
 #include "../message/message.hxx"
 #include "ser.hxx"
 
@@ -132,7 +132,7 @@ main(void) {
         cout << "Command, mirror, value[-100; 100]" << endl;
 
         const dms::serialization::serializator ser{};
-        const message_encoder menc{dms::encoder::ENC_TYPE::MIRR};
+        const dms::encoding::message_encoder menc{dms::encoder::ENC_TYPE::MIRR};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 
@@ -166,7 +166,7 @@ main(void) {
         cout << "Command, mul41, value[-100; 100]" << endl;
 
         const dms::serialization::serializator ser{};
-        const message_encoder menc{dms::encoder::ENC_TYPE::MUL41};
+        const dms::encoding::message_encoder menc{dms::encoder::ENC_TYPE::MUL41};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 
@@ -200,7 +200,7 @@ main(void) {
         cout << "Command, rot3, value[-100, 100]" << endl;
 
         const dms::serialization::serializator ser{};
-        const message_encoder menc{dms::encoder::ENC_TYPE::ROT3};
+        const dms::encoding::message_encoder menc{dms::encoder::ENC_TYPE::ROT3};
 
         for (std::int8_t corr_val{-100}; corr_val <= 100; corr_val++) {
 

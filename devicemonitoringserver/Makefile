@@ -14,8 +14,8 @@ test: \
 	commandcenter.o \
 	serializator.o \
 	message.o \
-	servertests.o \
 	encoder.o \
+	servertests.o \
 	rot3.o \
 	mul41.o \
 	mirr.o
@@ -29,8 +29,8 @@ test: \
 	connectionmock.o \
 	connectionservermock.o \
 	taskqueue.o \
-	servertests.o \
 	object.o \
+	servertests.o \
 	commandcenter.o \
 	serializator.o \
 	message.o \
@@ -46,6 +46,9 @@ main.o: main.cpp
 
 tests.o: tests.cpp
 	$(CXX) -c tests.cpp -o tests.o
+
+servertests.o: servermock/servertests.cpp
+	$(CXX) -c servermock/servertests.cpp -o servertests.o
 
 devicemock.o: devicemock.cpp
 	$(CXX) -c devicemock.cpp -o devicemock.o
@@ -80,14 +83,14 @@ serializator.o: serialization/ser.cxx
 message.o: message/message.cxx
 	$(CXX) -c message/message.cxx -o message.o
 
-encoder.o: encoder/message_encoder.cxx
-	$(CXX) -c encoder/message_encoder.cxx -o encoder.o
+encoder.o: encoding/message_encoder.cxx
+	$(CXX) -c encoding/message_encoder.cxx -o encoder.o
 
-mul41.o: encoder/mul41/mul41.cxx
-	$(CXX) -c encoder/mul41/mul41.cxx -o mul41.o
+mul41.o: encoding/mul41/mul41.cxx
+	$(CXX) -c encoding/mul41/mul41.cxx -o mul41.o
 
-mirr.o: encoder/mirr/mirr.cxx
-	$(CXX) -c encoder/mirr/mirr.cxx -o mirr.o
+mirr.o: encoding/mirr/mirr.cxx
+	$(CXX) -c encoding/mirr/mirr.cxx -o mirr.o
 
-rot3.o: encoder/rot3/rot3.cxx
-	$(CXX) -c encoder/rot3/rot3.cxx -o rot3.o
+rot3.o: encoding/rot3/rot3.cxx
+	$(CXX) -c encoding/rot3/rot3.cxx -o rot3.o

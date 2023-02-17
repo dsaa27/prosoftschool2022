@@ -7,8 +7,8 @@
 #include <string>
 
 #include "commandcenter/commandcenter.hxx"
+#include "encoding/message_encoder.hxx"
 #include "serialization/ser.hxx"
-#include "encoder/message_encoder.hxx"
 
 struct DeviceWorkSchedule;
 class AbstractConnectionServer;

@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "serialization/ser.hxx"
-#include "encoder/message_encoder.hxx"
+#include "encoding/message_encoder.hxx"
 
 class AbstractClientConnection;
 

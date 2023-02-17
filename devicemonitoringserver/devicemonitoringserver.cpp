@@ -33,7 +33,6 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& schedule)
 {
-    // cout << schedule.deviceId << ' ' << schedule.schedule.size() << endl;
     _comcen.add(schedule);
 }
 

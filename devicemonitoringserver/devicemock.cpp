@@ -5,10 +5,6 @@
 #include "server/abstractclientconnection.h"
 #include <memory>
 
-#include <iostream>
-using std::cout;
-using std::endl;
-
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
 {
@@ -129,7 +125,6 @@ void DeviceMock::sendNextMeterage()
     const auto meterage = m_meterages.at(m_timeStamp);
 
     // TODO: Сформировать std::string и передать в sendMessage
-    cout << m_timeStamp << ' ' << int(meterage) << endl;
 
     const std::unique_ptr<const dms::message::message> msg{
         new const dms::message::meterage(m_timeStamp, meterage)};
