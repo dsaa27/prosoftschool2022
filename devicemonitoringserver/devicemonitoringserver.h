@@ -2,9 +2,11 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
-
 #include <cstdint>
 #include <string>
+#include <commandcenter.h>
+#include <encoder/messageencoder.h>
+#include <messageserializator.h>
 
 struct DeviceWorkSchedule;
 class AbstractConnectionServer;
@@ -63,6 +65,10 @@ private:
 
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;
+    CommandCenter CommandCenter1;
+    MessageEncoder Encoder1;
+    MessageSerializator Serializator1;
+
 };
 
 #endif // DEVICEMONITORINGSERVER_H

@@ -5,6 +5,7 @@
 #include <server/abstractconnection.h>
 #include <servermock/connectionservermock.h>
 
+
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
 {
@@ -29,9 +30,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
-{
-    // TODO
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& inputSchedule)
+{  
+    CommandCenter1.setScheduleMap(inputSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,9 +47,15 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    std::string decodeMessage = Encoder1.decode(message);
+    Message * deserializedMessage = Serializator1.DeSerialize(decodeMessage);
+    Meterages * meterageFromDevice = dynamic_cast<Meterages*>(deserializedMessage);
+    Message * commandOnDevice = CommandCenter1.createCommand(deviceId, meterageFromDevice);
+    std::string serializedCommandOnDevice = Serializator1.Serialize(commandOnDevice);
+    std::string encodedCommandOnDevice = Encoder1.encode(serializedCommandOnDevice);
+    sendMessage(deviceId, encodedCommandOnDevice);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)

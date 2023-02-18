@@ -15,7 +15,8 @@ CppApplication {
         name: "C++"
         prefix: "**/"
         files: [
-            "*.h","*.cpp"
+            "*.h",
+            "*.cpp",
         ]
     }
 }

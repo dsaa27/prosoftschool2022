@@ -2,9 +2,11 @@
 #define DEVICE_H
 
 #include "common.h"
-
 #include <string>
 #include <vector>
+#include <message.h>
+#include <messageserializator.h>
+#include <encoder/messageencoder.h>
 
 class AbstractClientConnection;
 
@@ -19,7 +21,7 @@ public:
      * \brief Конструктор.
      * \param clientConnection - владеющий указатель на объект класса клиента
      */
-    DeviceMock(AbstractClientConnection* clientConnection);
+        DeviceMock(AbstractClientConnection* clientConnection);
     ~DeviceMock();
 
     /*!
@@ -71,6 +73,10 @@ private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
+    MessageSerializator Serializator2;
+    MessageEncoder Encoder2;
+    std::vector<uint8_t> historyOfCommand;
+
 };
 
 #endif // DEVICE_H
