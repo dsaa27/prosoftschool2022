@@ -8,12 +8,12 @@
 #include <encoder/Mirror.h>
 #include <encoder/Multiply41.h>
 
-class MessageEncoder : public BaseEncoderExecutor {
+class MessageEncoder final: public BaseEncoderExecutor {
 
     public:
-        string encode (string message);
-        string decode (string message);
-        string getname();
+        string encode (const string& message) final;
+        string decode (const string& message) final;
+        string getname() final;
 
         void SetEncodeAlgorithm (string NameOfAlgorithm);
         void NewAlgorithm (BaseEncoderExecutor & newAlgorithm);

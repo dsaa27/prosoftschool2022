@@ -2,12 +2,12 @@
 #define MIRROR_H
 #include <encoder/baseencoderexecutor.h>
 
-class Mirror: public BaseEncoderExecutor {
+class Mirror final: public BaseEncoderExecutor{
 
     public:
 
-        string encode(string);
-        string decode(string);
+        string encode(const string& input) final;
+        string decode(const string& input) final;
         string getname();
     private:
         string AlgorithmName = "Mirror";

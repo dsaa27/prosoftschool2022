@@ -8,12 +8,12 @@ void MessageEncoder::SetEncodeAlgorithm (string NameOfAlgorithm)
     SelectedAlgorithm = NameOfAlgorithm;
 }
 
-string MessageEncoder::encode(string message)
+string MessageEncoder::encode(const string& message)
 {
     return AlgorithmMap[SelectedAlgorithm] -> encode(message);
 }
 
-string MessageEncoder::decode(string message)
+string MessageEncoder::decode(const string& message)
 {
     return AlgorithmMap[SelectedAlgorithm] -> decode(message);
 }
@@ -25,7 +25,7 @@ string MessageEncoder::getname()
 
 void MessageEncoder::NewAlgorithm (BaseEncoderExecutor & newAlgorithm){
 
-    AlgorithmMap.map::emplace(newAlgorithm.getname(), &newAlgorithm);
+    AlgorithmMap.map::insert(std::map<string, BaseEncoderExecutor*>::value_type(newAlgorithm.getname(),&newAlgorithm ));
 
 }
 

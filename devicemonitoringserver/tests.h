@@ -6,5 +6,7 @@
  * \brief Тест сервера.
  */
 void monitoringServerTest1();
+void serializatorTest();
+void encoderTest();
 
 #endif // TESTS_H

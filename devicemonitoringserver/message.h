@@ -19,7 +19,7 @@ enum TypeOfError {
 
 struct Message {
 
-    virtual ~Message(){};
+    virtual ~Message() = default;
 
 };
 
@@ -31,7 +31,7 @@ struct Meterages : public Message {
         value = valueInput;
 
     }
-    ~Meterages(){};
+    ~Meterages() = default;
 
     uint64_t timeStamp = 0; // Метка времени
     uint8_t value = 0; // измерение
@@ -43,7 +43,7 @@ struct Commands : public Message {
     Commands(uint8_t correctionInput){
         correction = correctionInput;
     }
-    ~Commands(){};
+    ~Commands() = default;
 
     uint8_t correction;
     TypeOfMessage type = Command;
@@ -55,7 +55,7 @@ struct Errors : public Message {
     Errors(TypeOfError inputError){
         errorType = inputError;
     }
-    ~Errors(){};
+    ~Errors() = default;
 
     TypeOfMessage type = Error;
     TypeOfError errorType;

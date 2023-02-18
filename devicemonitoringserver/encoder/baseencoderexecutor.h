@@ -7,8 +7,8 @@ using std::string;
 class BaseEncoderExecutor {
     public:
 
-        virtual std::string encode(std::string message) = 0;
-        virtual std::string decode(std::string message) = 0;
+        virtual std::string encode(const string & message) = 0;
+        virtual std::string decode(const string & message) = 0;
         virtual std::string getname() = 0;
 
 };

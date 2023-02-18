@@ -1,25 +1,19 @@
 #include <encoder/Mirror.h>
 
-string Mirror::encode(string input){
+string Mirror::encode(const string& input){
 
     string output;
 
-    for (int i = input.size(); i >= 0; i--) {
+    for (int i = input.size(); i >= 0; --i) {
         output = output.append(1, input[i]);
 
     }
     return output;
 }
 
-string Mirror::decode(string input){
+string Mirror::decode(const string& input){
 
-    string output;
-
-    for (int i = input.size(); i >= 0; i--) {
-        output = output.append(1, input[i]);
-
-    }
-    return output;
+    return encode(input);
 }
 
 string Mirror::getname() {

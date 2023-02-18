@@ -54,17 +54,19 @@ Message * MessageSerializator::DeSerialize(std::string inputMessage) {
 
     } else if (type == 2) {
 
-        TypeOfError buf4;
-        int buf5;
-        output >> buf5;
+        TypeOfError errortype;
+        int inputError;
+        output >> inputError;
 
-        if (buf5 == 0) {
-            buf4 = TypeOfError::NoShedule;
-        } else if (buf5 == 1) {
-            buf4 = TypeOfError::NoTimeStamp;
-        } else buf4 = TypeOfError::Obsolete;
-
-        poutput = new Errors(buf4);
+        switch (inputError){
+            case 0:
+                errortype = TypeOfError::NoShedule;
+            case 1:
+                errortype = TypeOfError::NoTimeStamp;
+            case 2:
+                errortype = TypeOfError::Obsolete;
+        }
+        poutput = new Errors(errortype);
 
     }
     return poutput;
