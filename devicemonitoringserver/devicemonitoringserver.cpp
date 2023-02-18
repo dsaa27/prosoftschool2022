@@ -1,4 +1,5 @@
 #include "devicemonitoringserver.h"
+#include "devicemonitoringservererrors.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <handlers/abstractnewconnectionhandler.h>
@@ -23,7 +24,10 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
 
-    m_encoder.setAlgorithm("Mirror");
+    if(!m_encoder.setAlgorithm("Mirror"))
+    {
+        std::cerr << DeviceMonitoringServerErrors::SET_ALGORITHM_ERROR.formatString("Mirror") << std::endl;
+    }
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
@@ -33,9 +37,11 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
 
 void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& deviceWorkSchedule)
 {
-    if(m_commandCenter.addDeviceWorkShedule(new DeviceWorkSchedule(deviceWorkSchedule)))
+    if(!m_commandCenter.addDeviceWorkShedule(new DeviceWorkSchedule(deviceWorkSchedule)))
     {
-        m_connectedDevices.insert(std::make_pair(deviceWorkSchedule.deviceId, true));
+        std::cerr << DeviceMonitoringServerErrors::SET_SCHEDULE_ERROR.formatString(
+                         std::to_string(deviceWorkSchedule.deviceId))
+                  << std::endl;
     }
 }
 
@@ -55,10 +61,7 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 {
     MessageDto messageDto;
     if(!convertToMessageDto(message, messageDto))
-    {
-        std::cerr << "[Server] Error converting to MessageDto: " << message << std::endl;
         return;
-    }
     Control control = m_commandCenter.checkDeviceWorkShedule(deviceId, messageDto.meterage);
     MessageDto messageResult;
     switch (control.errorType)
@@ -74,19 +77,20 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
             messageResult.errorType = control.errorType;
             break;
         default:
-            std::cerr << "[Server] Unexpected ErrorType: " << control.errorType << std::endl;
+            std::cerr << DeviceMonitoringServerErrors::CONTROL_ERROR.formatString(
+                             std::to_string(control.errorType))
+                      << std::endl;
             return;
     }
     std::string encodedMessage;
     if(!convertToEncodedMessage(messageResult, encodedMessage))
-        std::cerr << "[Server] Error converting to string: " << encodedMessage << std::endl;
+        return;
     sendMessage(deviceId, encodedMessage);
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
+void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
 {
-    if(m_connectedDevices.find(clientId) != m_connectedDevices.end())
-        m_connectedDevices.at(clientId) = false;
+
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -146,14 +150,30 @@ bool DeviceMonitoringServer::convertToMessageDto(const std::string& encodedMessa
 {
     std::string decodedMessage;
     if(!m_encoder.decode(encodedMessage, decodedMessage))
+    {
+        std::cerr << DeviceMonitoringServerErrors::DECODE_ERROR.formatString(encodedMessage) << std::endl;
         return false;
-    return m_serializer.deserialize(decodedMessage, messageDto);
+    }
+    if(!m_serializer.deserialize(decodedMessage, messageDto))
+    {
+        std::cerr << DeviceMonitoringServerErrors::DESERIALIZE_ERROR.formatString(decodedMessage) << std::endl;
+        return false;
+    }
+    return true;
 }
 
 bool DeviceMonitoringServer::convertToEncodedMessage(const MessageDto& messageDto, std::string& encodedMessage) const
 {
     std::string strMessage;
     if(!m_serializer.serialize(messageDto, strMessage))
+    {
+        std::cerr << DeviceMonitoringServerErrors::SERIALIZE_ERROR.formatString("") << std::endl;
         return false;
-    return m_encoder.encode(strMessage, encodedMessage);
+    }
+    if(!m_encoder.encode(strMessage, encodedMessage))
+    {
+        std::cerr << DeviceMonitoringServerErrors::ENCODE_ERROR.formatString(strMessage) << std::endl;
+        return false;
+    }
+    return true;
 }

@@ -2,7 +2,7 @@
 #define MESSAGESERIALIZERTESTS_H
 
 /*!
- * \brief Тест сериализации.
+ * \brief Тест сериализатора: сериализация и десериализация MessageDto.
  */
 void messageSerializerTest();
 

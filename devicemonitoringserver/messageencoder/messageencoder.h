@@ -2,18 +2,17 @@
 #define MESSAGEENCODER_H
 
 #include "baseencoderexecutor.h"
+#include "common.h"
+
 #include <map>
 #include <vector>
 
 class MessageEncoder
 {
+    NON_COPYABLE(MessageEncoder);
 public:
     MessageEncoder();
     ~MessageEncoder();
-    MessageEncoder(const MessageEncoder&) = delete;
-    MessageEncoder(MessageEncoder&&) = delete;
-    MessageEncoder& operator=(const MessageEncoder&) = delete;
-    MessageEncoder& operator=(const MessageEncoder&&) = delete;
 
     bool encode(const std::string& originalMessage, std::string& encodedMessage) const;
     bool decode(const std::string& encodedMessage, std::string& decodedMessage) const;

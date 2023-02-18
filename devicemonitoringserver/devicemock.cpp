@@ -1,4 +1,5 @@
 #include "devicemock.h"
+#include "devicemockerrors.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
@@ -52,7 +53,10 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     };
     m_clientConnection->setMessageHandler(new MessageHandler(this));
 
-    m_encoder.setAlgorithm("Mirror");
+    if(!m_encoder.setAlgorithm("Mirror"))
+    {
+        DeviceMockErrors::SET_ALGORITHM_ERROR.throwRunTimeError("Mirror");
+    }
 }
 
 DeviceMock::~DeviceMock()
@@ -80,14 +84,12 @@ void DeviceMock::onMessageReceived(const std::string& message)
     std::string decodedMessage;
     if(!m_encoder.decode(message, decodedMessage))
     {
-        std::cerr << "(Device) Decoded error: " << message << std::endl;
-        return;
+        DeviceMockErrors::DECODE_ERROR.throwRunTimeError(message);
     }
     MessageDto messageDto;
     if(!m_serializer.deserialize(decodedMessage, messageDto))
     {
-        std::cerr << "(Device) Deserialize error: " << message << std::endl;
-        return;
+        DeviceMockErrors::DESERIALIZE_ERROR.throwRunTimeError(decodedMessage);
     }
     switch(messageDto.messageType)
     {
@@ -99,8 +101,8 @@ void DeviceMock::onMessageReceived(const std::string& message)
             m_messageTypes.push_back(messageDto.messageType);
             break;
         default:
-            std::cerr << "(Device) Unexpected message type: " << messageDto.messageType << std::endl;
-            return;
+            DeviceMockErrors::MESSAGE_TYPE_ERROR.throwRunTimeError(
+                        std::to_string(messageDto.messageType));
     }
     sendNextMeterage();
 }
@@ -135,14 +137,12 @@ void DeviceMock::sendNextMeterage()
     std::string message;
     if(!m_serializer.serialize(messageDto, message))
     {
-        std::cerr << "(Device) Serialize error: " << message << std::endl;
-        return;
+        DeviceMockErrors::SERIALIZE_ERROR.throwRunTimeError("");
     }
     std::string encodedMessage;
     if(!m_encoder.encode(message, encodedMessage))
     {
-        std::cerr << "(Device) Encoded error: " << message << std::endl;
-        return;
+        DeviceMockErrors::ENCODE_ERROR.throwRunTimeError(message);
     }
     ++m_timeStamp;
     sendMessage(encodedMessage);

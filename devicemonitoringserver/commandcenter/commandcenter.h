@@ -1,11 +1,13 @@
 #ifndef COMMANDCENTER_H
 #define COMMANDCENTER_H
 
+#include "deviceworkschedule.h"
+#include "devicestatistics.h"
+#include "common.h"
+
 #include <message/message.h>
 #include <map>
 #include <cstdint>
-#include "deviceworkschedule.h"
-#include "devicestatistics.h"
 
 struct Control
 {
@@ -24,12 +26,9 @@ struct DeviceData
 
 class CommandCenter
 {
+    NON_COPYABLE(CommandCenter);
 public:
     CommandCenter() = default;
-    CommandCenter(const CommandCenter&) = delete;
-    CommandCenter(CommandCenter&&) = delete;
-    CommandCenter& operator=(const CommandCenter&) = delete;
-    CommandCenter& operator=(const CommandCenter&&) = delete;
 
     Control checkDeviceWorkShedule(uint64_t deviceId, const Meterage& meterage);
     bool addDeviceWorkShedule(DeviceWorkSchedule* schedule);

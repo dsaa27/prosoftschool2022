@@ -10,6 +10,7 @@ class DeviceStatistics
 {
 public:
     DeviceStatistics(uint64_t deviceId);
+    ~DeviceStatistics() = default;
 
     bool addValue(uint64_t timeStamp, int8_t value);
     std::vector<PhaseStatistics> getStatistics() const;

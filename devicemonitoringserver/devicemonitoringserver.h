@@ -76,7 +76,6 @@ private:
     CommandCenter m_commandCenter;
     MessageEncoder m_encoder;
     MessageSerializer m_serializer;
-    std::map<uint64_t, bool> m_connectedDevices;
 };
 
 #endif // DEVICEMONITORINGSERVER_H

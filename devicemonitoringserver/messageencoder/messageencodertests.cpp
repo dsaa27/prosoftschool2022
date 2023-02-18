@@ -6,11 +6,11 @@
 
 void assertStrVectors(std::vector<std::string> fstVector, std::vector<std::string> sndVector)
 {
-    int fstVectorLen = fstVector.size();
+    uint fstVectorLen = fstVector.size();
     ASSERT_EQUAL(fstVectorLen, sndVector.size());
     sort(fstVector.begin(), fstVector.end());
     sort(sndVector.begin(), sndVector.end());
-    for(int i = 0; i < fstVectorLen; ++i)
+    for(uint i = 0; i < fstVectorLen; ++i)
         ASSERT_EQUAL(fstVector[i], sndVector[i]);
 }
 
