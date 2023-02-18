@@ -21,26 +21,26 @@ void commandCenterTest()
     uint64_t id = 111;
     DeviceWorkSchedule* workSchedule = new DeviceWorkSchedule{id, std::vector<Phase>{{3, 5}, {5, 4}, {9, 4}}};
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {3, 5}), Control{0, NoSchedule});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {3, 5}), Control{0, eNoSchedule});
     assertEqualPhaseStatVectors(center.getDeviceStatistics(id), std::vector<PhaseStatistics>());
 
     ASSERT(center.addDeviceWorkShedule(workSchedule));
     ASSERT(!center.addDeviceWorkShedule(workSchedule));
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {2, 3}), Control{0, NoTimestamp});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {2, 3}), Control{0, eNoTimestamp});
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {4, 4}), Control{1, Unknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {4, 4}), Control{1, eUnknown});
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {5, 1}), Control{3, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id, {6, 5}), Control{-1, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id, {6, 0}), Control{4, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id, {7, 4}), Control{0, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id, {8, 1}), Control{3, Unknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {5, 1}), Control{3, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {6, 5}), Control{-1, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {6, 0}), Control{4, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {7, 4}), Control{0, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {8, 1}), Control{3, eUnknown});
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {9, 6}), Control{-2, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id, {10, 3}), Control{1, Unknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {9, 6}), Control{-2, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {10, 3}), Control{1, eUnknown});
 
-    assertEqualControl(center.checkDeviceWorkShedule(id, {9, 4}), Control{0, Obsolete});
+    assertEqualControl(center.checkDeviceWorkShedule(id, {9, 4}), Control{0, eObsolete});
 
     /* DEVICE 111 */
 
@@ -49,15 +49,15 @@ void commandCenterTest()
 
     uint64_t id2 = 222;
     DeviceWorkSchedule* workSchedule2 = new DeviceWorkSchedule{id2, std::vector<Phase>{{4, 5}}};
-    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 4}), Control{0, NoSchedule});
+    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 4}), Control{0, eNoSchedule});
 
     ASSERT(center.addDeviceWorkShedule(workSchedule2));
     ASSERT(!center.addDeviceWorkShedule(workSchedule2));
 
-    assertEqualControl(center.checkDeviceWorkShedule(id2, {3, 3}), Control{0, NoTimestamp});
+    assertEqualControl(center.checkDeviceWorkShedule(id2, {3, 3}), Control{0, eNoTimestamp});
 
-    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 2}), Control{3, Unknown});
-    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 4}), Control{1, Unknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 2}), Control{3, eUnknown});
+    assertEqualControl(center.checkDeviceWorkShedule(id2, {4, 4}), Control{1, eUnknown});
 
     /* DEVICE 222 */
 

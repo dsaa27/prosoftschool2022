@@ -15,7 +15,7 @@ int main()
     RUN_TEST(tr, connectionChannelTest);
     RUN_TEST(tr, clientServerTest);
 
-    // TODO: собственные тесты
+
     RUN_TEST(tr, messageSerializerTest);
 
     RUN_TEST(tr, mirrorEncoderExecutorTest);
@@ -26,7 +26,6 @@ int main()
     RUN_TEST(tr, deviceStatisticsTest);
     RUN_TEST(tr, commandCenterTest);
 
-
-    RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, monitoringServerTest);
     return 0;
 }

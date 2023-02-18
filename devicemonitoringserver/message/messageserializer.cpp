@@ -5,35 +5,34 @@
 #include <cstring>
 #include <vector>
 
-std::string MessageSerializer::serialize(const MessageDto& messageDto) const
+bool MessageSerializer::serialize(const MessageDto& messageDto, std::string& message) const
 {
     std::ostringstream ostrstream;
     ostrstream << messageDto.messageType << " ";
     switch(messageDto.messageType)
     {
-        case MessageType::Command:
+        case MessageType::eCommand:
             ostrstream << messageDto.parameterTuning;
             break;
-        case MessageType::Error:
+        case MessageType::eError:
             ostrstream << messageDto.errorType;
             break;
-        case MessageType::Meterage:
+        case MessageType::eMeterage:
             ostrstream << messageDto.meterage.timeStamp << " ";
             ostrstream << static_cast<uint64_t>(messageDto.meterage.value);
             break;
         default:
-            std::cerr << "Unexpected message type: " << messageDto.messageType << std::endl;
-            break;
+            return false;
     }
-    return ostrstream.str();
+    message = ostrstream.str();
+    return true;
 }
 
-MessageDto MessageSerializer::deserialize(const std::string& message) const
+bool MessageSerializer::deserialize(const std::string& message, MessageDto& messageDto) const
 {
-    MessageDto messageDto;
+    messageDto = {};
     std::istringstream istrstream(message);
     std::string strinput;
-
 
     istrstream >> strinput;
     uint64_t messageType = std::stoull(strinput);
@@ -45,57 +44,20 @@ MessageDto MessageSerializer::deserialize(const std::string& message) const
 
     switch(messageDto.messageType)
     {
-        case MessageType::Command:
+        case MessageType::eCommand:
             messageDto.parameterTuning = std::stoll(strinput);
             break;
-        case MessageType::Error:
+        case MessageType::eError:
             errorType = std::stoull(strinput);
             messageDto.errorType = static_cast<ErrorType>(errorType);
             break;
-        case MessageType::Meterage:
+        case MessageType::eMeterage:
             messageDto.meterage.timeStamp = std::stoull(strinput);
             istrstream >> strinput;
             messageDto.meterage.value = std::stoul(strinput);
             break;
         default:
-            std::cerr << "Unexpected message type: " << messageDto.messageType << std::endl;
-            break;
+            return false;
     }
-
-    return messageDto;
-
-
-
-
-    /*
-    std::string input;
-    std::istringstream is(message);
-    is >> input;
-    uint64_t type = std::stoull(input);
-    MessageStruct result;
-    switch(type)
-    {
-        case messageType::Command:
-            result.type = messageType::Command;
-            is >> input;
-            result.valueToCorrect = std::stoll(input);
-            break;
-        case messageType::Meterage:
-            result.type = messageType::Meterage;
-            is >> input;
-            result.phase.value =  std::stoul(input);
-            is >> input;
-            result.phase.timeStamp = std::stoull(input);
-            break;
-        case messageType::Error:
-            result.type = messageType::Error;
-            is >> input;
-            result.errorCode = std::stoull(input);
-            break;
-        default:
-            break;
-    }
-    return result;
-      */
-
+    return true;
 }

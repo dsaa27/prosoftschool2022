@@ -2,6 +2,9 @@
 #define DEVICE_H
 
 #include "common.h"
+#include <message/message.h>
+#include <message/messageserializer.h>
+#include <messageencoder/messageencoder.h>
 
 #include <string>
 #include <vector>
@@ -36,13 +39,16 @@ public:
     bool connectToServer(uint64_t serverId);
     /*!
      * \brief Установить тестовый список измерений устройства.
-     * \param measurements - список измерений
+     * \param meterages - список измерений
      */
-    void setMeterages(std::vector<uint8_t> meterages);
+    void setMeterages(std::vector<Meterage> meterages);
     /*!
      * \brief Начать отправку измерений.
      */
     void startMeterageSending();
+
+    std::vector<MessageType> getReceivedMessageTypes() const;
+    std::vector<int64_t> getReceivedValues() const;
 
 private:
     /*!
@@ -69,8 +75,13 @@ private:
 
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
-    std::vector<uint8_t> m_meterages;
+    std::vector<Meterage> m_meterages;
     uint64_t m_timeStamp = 0;
+
+    MessageEncoder m_encoder;
+    MessageSerializer m_serializer;
+    std::vector<MessageType> m_messageTypes;
+    std::vector<int64_t> m_receivedValues;
 };
 
 #endif // DEVICE_H

@@ -7,8 +7,8 @@
 class MessageSerializer final
 {
 public:
-    std::string serialize(const MessageDto& messageDto) const;
-    MessageDto deserialize(const std::string& message) const;
+    bool serialize(const MessageDto& messageDto, std::string& message) const;
+    bool deserialize(const std::string& message, MessageDto& messageDto) const;
 };
 
 #endif // MESSAGESERIALIZER_H

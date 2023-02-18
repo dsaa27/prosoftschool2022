@@ -22,6 +22,8 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
         DeviceMonitoringServer* m_server = nullptr;
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
+
+    m_encoder.setAlgorithm("Mirror");
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
@@ -29,9 +31,12 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& deviceWorkSchedule)
 {
-    // TODO
+    if(m_commandCenter.addDeviceWorkShedule(new DeviceWorkSchedule(deviceWorkSchedule)))
+    {
+        m_connectedDevices.insert(std::make_pair(deviceWorkSchedule.deviceId, true));
+    }
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,14 +51,42 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    MessageDto messageDto;
+    if(!convertToMessageDto(message, messageDto))
+    {
+        std::cerr << "[Server] Error converting to MessageDto: " << message << std::endl;
+        return;
+    }
+    Control control = m_commandCenter.checkDeviceWorkShedule(deviceId, messageDto.meterage);
+    MessageDto messageResult;
+    switch (control.errorType)
+    {
+        case ErrorType::eUnknown:
+            messageResult.messageType = MessageType::eCommand;
+            messageResult.parameterTuning = control.parameterTuning;
+            break;
+        case ErrorType::eNoSchedule:
+        case ErrorType::eNoTimestamp:
+        case ErrorType::eObsolete:
+            messageResult.messageType = MessageType::eError;
+            messageResult.errorType = control.errorType;
+            break;
+        default:
+            std::cerr << "[Server] Unexpected ErrorType: " << control.errorType << std::endl;
+            return;
+    }
+    std::string encodedMessage;
+    if(!convertToEncodedMessage(messageResult, encodedMessage))
+        std::cerr << "[Server] Error converting to string: " << encodedMessage << std::endl;
+    sendMessage(deviceId, encodedMessage);
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
+void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    // TODO, если нужен
+    if(m_connectedDevices.find(clientId) != m_connectedDevices.end())
+        m_connectedDevices.at(clientId) = false;
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -102,4 +135,25 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     };
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
+}
+
+std::vector<PhaseStatistics> DeviceMonitoringServer::getDeviceStatistics(uint64_t deviceId) const
+{
+    return m_commandCenter.getDeviceStatistics(deviceId);
+}
+
+bool DeviceMonitoringServer::convertToMessageDto(const std::string& encodedMessage, MessageDto& messageDto) const
+{
+    std::string decodedMessage;
+    if(!m_encoder.decode(encodedMessage, decodedMessage))
+        return false;
+    return m_serializer.deserialize(decodedMessage, messageDto);
+}
+
+bool DeviceMonitoringServer::convertToEncodedMessage(const MessageDto& messageDto, std::string& encodedMessage) const
+{
+    std::string strMessage;
+    if(!m_serializer.serialize(messageDto, strMessage))
+        return false;
+    return m_encoder.encode(strMessage, encodedMessage);
 }

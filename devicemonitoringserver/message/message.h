@@ -5,17 +5,17 @@
 
 enum MessageType
 {
-    Meterage,
-    Command,
-    Error
+    eMeterage,
+    eCommand,
+    eError
 };
 
 enum ErrorType
 {
-    Unknown,
-    NoSchedule,
-    NoTimestamp,
-    Obsolete
+    eUnknown,
+    eNoSchedule,
+    eNoTimestamp,
+    eObsolete
 };
 
 struct Meterage
@@ -26,10 +26,10 @@ struct Meterage
 
 struct MessageDto
 {
-    MessageType messageType = MessageType::Error;
-    ErrorType errorType = ErrorType::Unknown;
+    MessageType messageType = MessageType::eError;
+    ErrorType errorType = ErrorType::eUnknown;
     int64_t parameterTuning = 0;
-    struct Meterage meterage;
+    Meterage meterage;
 };
 
 #endif // MESSAGE_H

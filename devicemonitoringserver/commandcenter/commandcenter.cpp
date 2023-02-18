@@ -5,30 +5,30 @@ CommandCenter::~CommandCenter()
     for (const std::pair<uint64_t, DeviceData>& value : m_devicesData)
     {
         delete value.second.statistics;
-        delete value.second.workShedule;
+        delete value.second.workSchedule;
     }
 }
 
-Control CommandCenter::checkDeviceWorkShedule(uint64_t deviceId, const struct Meterage& meterage)
+Control CommandCenter::checkDeviceWorkShedule(uint64_t deviceId, const Meterage& meterage)
 {
     if(!deviceExist(deviceId))
         return NOSCHEDULE;
     DeviceData deviceData = m_devicesData.at(deviceId);
-    auto iter_end = deviceData.workShedule->schedule.end();
-    if(deviceData.iter_schedule == iter_end
-            || (meterage.timeStamp < deviceData.iter_schedule->timeStamp && deviceData.lastTimeStamp == 0))
+    auto iter_end = deviceData.workSchedule->schedule.end();
+    if(deviceData.iterSchedule == iter_end
+            || (meterage.timeStamp < deviceData.iterSchedule->timeStamp && deviceData.lastTimeStamp == 0))
         return NOTIMESTMAPS;
     if(meterage.timeStamp < deviceData.lastTimeStamp)
         return OBSOLETE;
-    std::vector<Phase>::iterator iter_actual = deviceData.iter_schedule;
+    std::vector<Phase>::iterator iter_actual = deviceData.iterSchedule;
     while(iter_actual + 1 != iter_end && meterage.timeStamp >= (iter_actual + 1)->timeStamp)
         ++iter_actual;
     int8_t diff = iter_actual->value - meterage.value;
-    m_devicesData.at(deviceId).iter_schedule = iter_actual;
+    m_devicesData.at(deviceId).iterSchedule = iter_actual;
     if(m_devicesData.at(deviceId).statistics->addValue(iter_actual->timeStamp, diff))
     {
         m_devicesData.at(deviceId).lastTimeStamp = meterage.timeStamp;
-        return Control{diff, Unknown};
+        return Control{diff, ErrorType::eUnknown};
     }
     else
         return OBSOLETE;
