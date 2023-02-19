@@ -48,7 +48,7 @@ private:
 
 private:
     std::unordered_map<uint64_t, DeviceWorkSchedule*> m_schedules;
-    std::unordered_map<uint64_t, StandardDeviationCalculator*> m_calculators;
+    std::unordered_map<uint64_t, StandardDeviationCalculator> m_calculators;
 };
 
 #endif // COMMANDCENTER_H
