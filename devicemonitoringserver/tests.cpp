@@ -36,8 +36,10 @@ std::vector<std::string> makeExpectedResponseStrings(
 std::vector<std::string> makeResponseStrings
     (const std::vector<AbstractMessage*> responses)
 {
-    std::vector<std::string> responsesStrings(responses.size());
-    for (int i = 0; i < responses.size(); i++)
+    size_t responsesSize = responses.size();
+
+    std::vector<std::string> responsesStrings(responsesSize);
+    for (int i = 0; i < responsesSize; ++i)
         responsesStrings[i] = responses[i]->convert2string();
 
     return responsesStrings;

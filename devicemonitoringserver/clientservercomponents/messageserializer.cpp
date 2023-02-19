@@ -23,7 +23,7 @@ AbstractMessage* MessageSerializer::deserializeMessage (const std::string& messa
     if (messageType == MessageType::command) {
         double correction;
         istream >> correction;
-        return dynamic_cast<AbstractMessage*>(new CommandMessage(correction));
+        return reinterpret_cast<AbstractMessage*>(new CommandMessage(correction));
     } else if (messageType == MessageType::error) {
         ErrorType errorType;
         istream >> currentInt;
