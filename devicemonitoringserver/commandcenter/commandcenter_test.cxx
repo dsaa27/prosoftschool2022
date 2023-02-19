@@ -35,7 +35,7 @@ main(void) {
             const auto response = cc.check(idev, {0u, 17u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(43u - 17u ==
+            assert(43 - 17 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
         }
@@ -44,7 +44,7 @@ main(void) {
             const auto response = cc.check(idev, {1u, 41u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(23u - 41u ==
+            assert(23 - 41 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
         }
@@ -90,7 +90,7 @@ main(void) {
             const auto response = cc.check(idev, {1u, 81u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(23u - 81u ==
+            assert(23 - 81 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
         }
@@ -119,7 +119,7 @@ main(void) {
             const auto response = cc.check(idev, {1u, 43u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(23u - 43u ==
+            assert(23 - 43 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
         }
@@ -162,7 +162,7 @@ main(void) {
             const auto response = cc.check(idev, {0u, 20u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(43u - 20u ==
+            assert(43 - 20 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
 
@@ -177,7 +177,7 @@ main(void) {
             const auto response = cc.check(idev, {1u, 20u});
 
             assert(dms::message::MSG_TYPE::COMMAND == response->type());
-            assert(23u - 20u ==
+            assert(23 - 20 ==
                    dynamic_cast<const dms::message::command*>(response.get())
                        ->value());
 

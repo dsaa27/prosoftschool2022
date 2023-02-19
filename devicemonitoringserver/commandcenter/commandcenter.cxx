@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdint>
 #include <memory>
+#include <numeric>
 
 void
 dms::commandcenter::command_center::add(const DeviceWorkSchedule& schedule) {
@@ -22,9 +23,10 @@ dms::commandcenter::command_center::find_phase(const std::uint64_t idev,
 
     const std::vector<Phase>& schedule{_devsch[idev]};
 
-    const std::vector<Phase>::const_iterator found{
-        std::find_if(schedule.cbegin(), schedule.cend(),
-                     [stamp](const Phase& p) { return p.timeStamp == stamp; })};
+    const std::vector<Phase>::const_iterator found{std::find_if(
+        schedule.cbegin(), schedule.cend(), [stamp](const Phase& p) {
+            return p.timeStamp == stamp;
+        })};
 
     return make_pair(found != schedule.end(), found);
 }
@@ -69,8 +71,10 @@ dms::commandcenter::command_center::check(
             dms::message::ERR_TYPE::NOTIMESTAMP);
     }
 
-    const auto correction = phase->value - meterage.value();
-    const auto stamp = meterage.timestamp();
+    const std::int8_t correction{
+        static_cast<std::int8_t>(phase->value - meterage.value())};
+
+    const std::uint64_t stamp{meterage.timestamp()};
 
     put_asd_to_hist(idev, stamp, correction);
     update_last_stamp(idev, stamp);
@@ -80,13 +84,14 @@ dms::commandcenter::command_center::check(
 
 double
 dms::commandcenter::command_center::marith(const std::uint64_t idev) {
-    double sum{.0};
-
-    for (const auto x : _devdiff[idev]) {
-        sum += x.second;
-    }
-
-    return sum / _devdiff[idev].size();
+    return std::accumulate(
+               _devdiff.at(idev).cbegin(), _devdiff.at(idev).cend(), .0,
+               [](const double sum,
+                  const std::pair<const std::uint64_t /* tstamp */,
+                                  const std::int8_t /* diff */>& p) -> double {
+                   return sum + p.second;
+               }) /
+           _devdiff[idev].size();
 }
 
 double
@@ -95,14 +100,15 @@ dms::commandcenter::command_center::eval_asd(const std::uint64_t idev,
                                              const std::uint64_t corr) {
     _devdiff[idev][stamp] = corr;
 
-    double ret{.0};
-    const double marith{command_center::marith(idev)};
+    const double sum{std::accumulate(
+        _devdiff[idev].cbegin(), _devdiff[idev].cend(), .0,
+        [marith{command_center::marith(idev)}](
+            const double sum,
+            const std::pair<std::uint64_t, std::int8_t>& el) -> double {
+            return sum + std::pow(el.second - marith, 2.);
+        })};
 
-    for (const auto diff : _devdiff[idev]) {
-        ret += std::pow(diff.second - marith, 2);
-    }
-
-    return std::sqrt(ret / _devdiff[idev].size());
+    return std::sqrt(sum / _devdiff[idev].size());
 }
 
 void
@@ -117,5 +123,5 @@ double
 dms::commandcenter::command_center::msqdev(std::uint64_t idev,
                                            std::uint64_t stamp) {
 
-    return _devasd[idev][stamp];
+    return _devasd.at(idev).at(stamp);
 }

@@ -52,7 +52,7 @@ class dms::message::command : public dms::message::message {
     command(const std::int8_t value);
 };
 
-struct dms::message::error : dms::message::message {
+class dms::message::error : public dms::message::message {
   private:
     dms::message::ERR_TYPE _err;
 

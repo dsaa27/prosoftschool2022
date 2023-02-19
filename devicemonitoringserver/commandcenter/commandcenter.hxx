@@ -25,7 +25,9 @@ class dms::commandcenter::command_center {
         _devasd{};
 
     // история корректировок
-    std::map<std::uint64_t, std::map<std::uint64_t, std::int8_t>> _devdiff{};
+    std::map<std::uint64_t /* idev */,
+             std::map<std::uint64_t /* tstamp */, std::int8_t /* diff */>>
+        _devdiff{};
 
     std::pair<bool /* found */, std::vector<Phase>::const_iterator>
     find_phase(const std::uint64_t idev, const std::uint64_t tstamp);
