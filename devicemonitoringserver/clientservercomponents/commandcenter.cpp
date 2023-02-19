@@ -10,14 +10,12 @@
 void CommandCenter::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
 {
     m_schedules[deviceWorkSchedule->deviceId] = deviceWorkSchedule;
-    m_calculators[deviceWorkSchedule->deviceId] = new StandardDeviationCalculator();
+    m_calculators[deviceWorkSchedule->deviceId] = StandardDeviationCalculator();
 }
 
 CommandCenter::~CommandCenter()
 {
     for (auto it = m_schedules.cbegin(); it != m_schedules.cend(); ++it)
-        delete it->second;
-    for (auto it = m_calculators.cbegin(); it != m_calculators.cend(); ++it)
         delete it->second;
 }
 
@@ -25,8 +23,6 @@ void CommandCenter::unsetDeviceWorkSchedule (uint64_t deviceId)
 {
     //no leak, cause schedule must delete now the creator of it
     m_schedules.erase(deviceId);
-    //created here and delete here aswell
-    delete m_calculators[deviceId];
     m_calculators.erase(deviceId);
 }
 
@@ -85,8 +81,8 @@ bool CommandCenter::checkNoTimeStampError(uint64_t deviceId, MeterageMessage* ha
 
 bool CommandCenter::checkObsolteError(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
 {
-    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
-    if ((handledAbstractMessage->timeStamp > deviceCalculator->lastTimeStamp) || (deviceCalculator->inaccuracys.size() == 0)) {
+    StandardDeviationCalculator deviceCalculator = m_calculators[deviceId];
+    if ((handledAbstractMessage->timeStamp > deviceCalculator.lastTimeStamp) || (deviceCalculator.inaccuracys.size() == 0)) {
         return false;
     } else {
         return true;
@@ -96,13 +92,13 @@ bool CommandCenter::checkObsolteError(uint64_t deviceId, MeterageMessage* handle
 AbstractMessage* CommandCenter::makeCommandMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
 {
     DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
-    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
+    StandardDeviationCalculator &deviceCalculator = m_calculators[deviceId];
     uint8_t expectedValue = deviceWorkSchedule->findScheduleValue(handledAbstractMessage->timeStamp);
     int inaccuracy = handledAbstractMessage->measureValue - expectedValue;
     double correction = ((inaccuracy == 0) ? 0 : (1.0 / inaccuracy));
-    deviceCalculator->inaccuracys.push_back(inaccuracy);
-    deviceCalculator->calculateStandardDeviation();
-    deviceCalculator->lastTimeStamp = handledAbstractMessage->timeStamp;
+    deviceCalculator.inaccuracys.push_back(inaccuracy);
+    deviceCalculator.calculateStandardDeviation();
+    deviceCalculator.lastTimeStamp = handledAbstractMessage->timeStamp;
     return new CommandMessage(correction);
 }
 
@@ -129,6 +125,6 @@ void CommandCenter::StandardDeviationCalculator::calculateStandardDeviation()
 
 double CommandCenter::getCurrentStandardDeviation(uint64_t deviceId)
 {
-    return m_calculators[deviceId]->currentStandardDeviation;
+    return m_calculators[deviceId].currentStandardDeviation;
 }
 
