@@ -5,7 +5,7 @@
 #include <sstream>
 #include <cstdint>
 
-#include "abstractmessage.h"
+#include "message/abstractmessage.h"
 #include "../unittest/unittest.h"
 
 

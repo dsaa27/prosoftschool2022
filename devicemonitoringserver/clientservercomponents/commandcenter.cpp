@@ -1,5 +1,8 @@
 #include "commandcenter.h"
 #include "../deviceworkschedule.h"
+#include "message/meteragemessage.h"
+#include "message/errormessage.h"
+#include "message/commandmessage.h"
 
 #include <cmath>
 #include <iostream>
@@ -20,7 +23,10 @@ CommandCenter::~CommandCenter()
 
 void CommandCenter::unsetDeviceWorkSchedule (uint64_t deviceId)
 {
+    //no leak, cause schedule must delete now the creator of it
     m_schedules.erase(deviceId);
+    //created here and delete here aswell
+    delete m_calculators[deviceId];
     m_calculators.erase(deviceId);
 }
 
@@ -52,54 +58,38 @@ MeterageMessage* CommandCenter::handleMessage(AbstractMessage *receivedAbstractM
 
 AbstractMessage* CommandCenter::makeMessage(uint64_t deviceId, MeterageMessage* meterageMessage)
 {
-    AbstractMessage* madeMessage;
+    if(checkNoScheduleError(deviceId))
+        return new ErrorMessage(Enumerations::ErrorType::noSchedule);
 
-    madeMessage = makeNoScheduleMessage(deviceId);
-    if(madeMessage)
-        return madeMessage;
+    if(checkNoTimeStampError(deviceId, meterageMessage))
+        return new ErrorMessage(Enumerations::ErrorType::noTimestamp);
 
-    madeMessage = makeObsoleteMessage(deviceId, meterageMessage);
-    if(madeMessage)
-        return madeMessage;
+    if(checkObsolteError(deviceId, meterageMessage))
+        return new ErrorMessage (Enumerations::ErrorType::obsolete);
 
-    madeMessage = makeNoTimeStampMessage(deviceId, meterageMessage);
-    if(madeMessage)
-        return madeMessage;
-
-    madeMessage = makeCommandMessage(deviceId, meterageMessage);
-    return madeMessage;
+    return makeCommandMessage(deviceId, meterageMessage);
 }
 
-AbstractMessage* CommandCenter::makeNoScheduleMessage(uint64_t deviceId)
+bool CommandCenter::checkNoScheduleError(uint64_t deviceId)
 {
     DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
-    if(deviceWorkSchedule) {
-        return nullptr;
-    } else {
-        return new ErrorMessage(Enumerations::ErrorType::noSchedule);
-    }
+    return ((deviceWorkSchedule) ? false : true);
 }
 
-AbstractMessage* CommandCenter::makeObsoleteMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
-{
-    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
-    if ((handledAbstractMessage->timeStamp > deviceCalculator->lastTimeStamp)
-        ||
-        (deviceCalculator->inaccuracys.size() == 0)) {
-        return nullptr;
-    } else {
-        return new ErrorMessage (Enumerations::ErrorType::obsolete);
-    }
-}
-
-AbstractMessage* CommandCenter::makeNoTimeStampMessage(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
+bool CommandCenter::checkNoTimeStampError(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
 {
     DeviceWorkSchedule *deviceWorkSchedule = getDeviceWorkSchedule(deviceId);
     uint8_t expectedValue = deviceWorkSchedule->findScheduleValue(handledAbstractMessage->timeStamp);
-    if (expectedValue == DeviceWorkSchedule::unfoundValue) {
-        return new ErrorMessage(Enumerations::ErrorType::noTimestamp);
+    return ((expectedValue == DeviceWorkSchedule::unfoundValue) ? true : false);
+}
+
+bool CommandCenter::checkObsolteError(uint64_t deviceId, MeterageMessage* handledAbstractMessage)
+{
+    StandardDeviationCalculator *deviceCalculator = m_calculators[deviceId];
+    if ((handledAbstractMessage->timeStamp > deviceCalculator->lastTimeStamp) || (deviceCalculator->inaccuracys.size() == 0)) {
+        return false;
     } else {
-        return nullptr;
+        return true;
     }
 }
 
@@ -111,7 +101,7 @@ AbstractMessage* CommandCenter::makeCommandMessage(uint64_t deviceId, MeterageMe
     int inaccuracy = handledAbstractMessage->measureValue - expectedValue;
     double correction = ((inaccuracy == 0) ? 0 : (1.0 / inaccuracy));
     deviceCalculator->inaccuracys.push_back(inaccuracy);
-    deviceCalculator->calculateStandartDeviation();
+    deviceCalculator->calculateStandardDeviation();
     deviceCalculator->lastTimeStamp = handledAbstractMessage->timeStamp;
     return new CommandMessage(correction);
 }
@@ -120,25 +110,25 @@ CommandCenter::StandardDeviationCalculator::StandardDeviationCalculator()
 {
     lastTimeStamp = 0;
     inaccuracys = std::vector<double>();
-    currentSD = 0;
+    currentStandardDeviation = 0;
 }
 
-void CommandCenter::StandardDeviationCalculator::calculateStandartDeviation()
+void CommandCenter::StandardDeviationCalculator::calculateStandardDeviation()
 {
     double average = 0;
-    for (auto now : inaccuracys)
+    for (const auto now : inaccuracys)
         average += now;
     average /= inaccuracys.size();
 
     double sumOfSquares = 0;
-    for (auto now : inaccuracys)
+    for (const auto now : inaccuracys)
         sumOfSquares += ((average - now) * (average - now));
 
-    currentSD = sqrt(sumOfSquares / inaccuracys.size());
+    currentStandardDeviation = sqrt(sumOfSquares / inaccuracys.size());
 }
 
 double CommandCenter::getCurrentStandardDeviation(uint64_t deviceId)
 {
-    return m_calculators[deviceId]->currentSD;
+    return m_calculators[deviceId]->currentStandardDeviation;
 }
 

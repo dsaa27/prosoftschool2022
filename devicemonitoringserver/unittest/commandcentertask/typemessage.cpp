@@ -1,5 +1,8 @@
 #include "../unittest.h"
 #include "../../test_runner.h"
+#include "../../clientservercomponents/message/meteragemessage.h"
+#include "../../clientservercomponents/message/errormessage.h"
+#include "../../clientservercomponents/message/commandmessage.h"
 
 void unitTest::commandCenterTask::typeMessage::command()
 {
@@ -15,8 +18,8 @@ void unitTest::commandCenterTask::typeMessage::command()
 
     commandCenter.setDeviceWorkSchedule(deviceWorkSchedule);
 
-    MeterageMessage *currentMeterageMessage;
-    CommandMessage *currentReceivedMessage;
+    MeterageMessage *currentMeterageMessage = nullptr;
+    CommandMessage *currentReceivedMessage = nullptr;
 
 
     currentMeterageMessage = new MeterageMessage({0, 1});
@@ -99,7 +102,7 @@ void unitTest::commandCenterTask::typeMessage::incorrectFormat()
 
     commandCenter.setDeviceWorkSchedule(correctDeviceWorkSchedule);
 
-    AbstractMessage *currentIncorrectFormatMessage;
+    AbstractMessage *currentIncorrectFormatMessage = nullptr;
     std::string exceptionMessage;
 
     currentIncorrectFormatMessage = new CommandMessage(0.124);
@@ -129,8 +132,8 @@ void unitTest::commandCenterTask::typeMessage::noScheduleError()
     CommandCenter commandCenter;
 
     uint64_t deviceId = 41244;
-    MeterageMessage *currentMeterageMessage;
-    ErrorMessage *currentReceivedMessage;
+    MeterageMessage *currentMeterageMessage = nullptr;
+    ErrorMessage *currentReceivedMessage = nullptr;
     ErrorType errorType = ErrorType::noSchedule;
 
     currentMeterageMessage = new MeterageMessage({0, 1});
@@ -174,8 +177,8 @@ void unitTest::commandCenterTask::typeMessage::noTimeStampError()
     commandCenter.setDeviceWorkSchedule(correctDeviceWorkSchedule);
 
     ErrorType errorType = ErrorType::noTimestamp;
-    MeterageMessage *currentMeterageMessage;
-    ErrorMessage *currentReceivedMessage;
+    MeterageMessage *currentMeterageMessage = nullptr;
+    ErrorMessage *currentReceivedMessage = nullptr;
 
     currentMeterageMessage = new MeterageMessage({213, 1});
     currentReceivedMessage =
@@ -219,9 +222,9 @@ void unitTest::commandCenterTask::typeMessage::obsoleteError()
     DeviceWorkSchedule *correctDeviceWorkSchedule = new DeviceWorkSchedule(correctSchedule, deviceId);
 
     ErrorType errorType = ErrorType::obsolete;
-    MeterageMessage *currentMeterageMessage;
-    CommandMessage *currentReceivedCommandMessage;
-    ErrorMessage *currentReceivedErrorMessage;
+    MeterageMessage *currentMeterageMessage = nullptr;
+    CommandMessage *currentReceivedCommandMessage = nullptr;
+    ErrorMessage *currentReceivedErrorMessage = nullptr;
 
     commandCenter.setDeviceWorkSchedule(correctDeviceWorkSchedule);
 

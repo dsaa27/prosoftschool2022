@@ -1,4 +1,7 @@
 #include "messageserializer.h"
+#include "message/meteragemessage.h"
+#include "message/errormessage.h"
+#include "message/commandmessage.h"
 
 #include <vector>
 
@@ -20,7 +23,7 @@ AbstractMessage* MessageSerializer::deserializeMessage (const std::string& messa
     if (messageType == MessageType::command) {
         double correction;
         istream >> correction;
-        return dynamic_cast<AbstractMessage*>(new CommandMessage(correction));
+        return reinterpret_cast<AbstractMessage*>(new CommandMessage(correction));
     } else if (messageType == MessageType::error) {
         ErrorType errorType;
         istream >> currentInt;

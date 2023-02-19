@@ -9,8 +9,6 @@ namespace
 
 struct ROT3EncoderExecutor final : public BaseEncoderExecutor
 {
-    ~ROT3EncoderExecutor() final = default;
-
     std::string encode(const std::string& originString) final
     {
         std::stringstream ss;
@@ -41,11 +39,9 @@ struct ROT3EncoderExecutor final : public BaseEncoderExecutor
 
 struct MirrorEncoderExecutor final : public BaseEncoderExecutor
 {
-    ~MirrorEncoderExecutor() final = default;
-
     std::string encode(const std::string& originString) final
     {
-        std::string encodedString = "";
+        std::string encodedString;
         std::string currentCharAsIntString;
 
         for (uint8_t now : originString) {
@@ -88,8 +84,6 @@ private:
 
 struct Multiply41EncoderExecutor final : public BaseEncoderExecutor
 {
-    ~Multiply41EncoderExecutor() final = default;
-
     std::string encode(const std::string& originString) final
     {
         std::stringstream ss;

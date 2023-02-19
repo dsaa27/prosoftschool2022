@@ -65,8 +65,8 @@ void unitTest::commandCenterTask::standardDeviationCalculation()
 
      const double epsilon = 1e-6;
 
-     MeterageMessage *currentMeterageMessage;
-     AbstractMessage *currentReceivedMessage;
+     MeterageMessage *currentMeterageMessage = nullptr;
+     AbstractMessage *currentReceivedMessage = nullptr;
 
 
      currentMeterageMessage = new MeterageMessage({0, 1});
