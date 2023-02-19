@@ -31,28 +31,8 @@ monitoringServerTest() {
     taskQueue.processTask();
     device.startMeterageSending();
 
-    taskQueue.processTask();
-    device.startMeterageSending();
-
-    taskQueue.processTask();
-    device.startMeterageSending();
-
-    taskQueue.processTask();
-    device.startMeterageSending();
-
-    taskQueue.processTask();
-    device.startMeterageSending();
-
-    taskQueue.processTask();
-    device.startMeterageSending();
-
-    taskQueue.processTask();
-    taskQueue.processTask();
-    taskQueue.processTask();
-    taskQueue.processTask();
-    taskQueue.processTask();
-    taskQueue.processTask();
-    taskQueue.processTask();
+    while (taskQueue.processTask())
+        ;
 
     const std::vector<std::int8_t> responces{device.responces()};
     ASSERT_EQUAL(responces.size(), 6u);
