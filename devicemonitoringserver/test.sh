@@ -10,6 +10,12 @@ tests['encoding/mul41']=mul41_test
 tests['encoding/rot3']=rot3_test
 
 for tdir in "${!tests[@]}"; do
-    make -C $tdir && \
-    ./$tdir/${tests[$tdir]}
+    test=$tdir/${tests[$tdir]}
+
+    make -C $tdir && ./$test
+
+    if [[ 0 != $? ]]; then
+        >&2 printf 'Bad on «%s»\n' $test
+        break
+    fi
 done
