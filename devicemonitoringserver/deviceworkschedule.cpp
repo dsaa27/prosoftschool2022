@@ -9,10 +9,8 @@ DeviceWorkSchedule::DeviceWorkSchedule(const std::vector<Phase> &schedule, uint6
 
 uint8_t DeviceWorkSchedule::findScheduleValue(uint64_t timeStamp)
 {
-    for (auto now : schedule) {
-        if (now.timeStamp == timeStamp) {
-            return now.value;
-        }
-    }
-    return unfoundValue;
+    const auto it = std::find_if(schedule.cbegin(),
+                                 schedule.cend(),
+                                 [&timeStamp](const Phase& currentPhase){ return currentPhase.timeStamp == timeStamp;});
+    return (it == schedule.cend()) ? unfoundValue : (*it).value;
 }
