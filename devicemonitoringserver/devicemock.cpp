@@ -1,7 +1,9 @@
 #include "devicemock.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <server/abstractclientconnection.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "message/message.hxx"
+#include "server/abstractclientconnection.h"
+#include <memory>
 
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
@@ -73,10 +75,24 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
+    // TODO: Разобрать std::string, прочитать КОМАНДУ,
+    // записать ее в список полученных команд
+
+    const std::string decoded_msg{_menc.decode(message)};
+    const std::unique_ptr<const dms::message::message> deser_msg{
+        _ser.deserialize(decoded_msg)};
+
+    if (deser_msg->type() == dms::message::MSG_TYPE::COMMAND) {
+        const dms::message::command* const command{
+            dynamic_cast<const dms::message::command*>(deser_msg.get())};
+
+        if (nullptr != command) {
+            _commands.push_back(command->value());
+        }
+    }
+
     sendNextMeterage(); // Отправляем следующее измерение
 }
 
@@ -102,10 +118,21 @@ void DeviceMock::startMeterageSending()
 
 void DeviceMock::sendNextMeterage()
 {
-    if (m_timeStamp >= m_meterages.size())
+    if (m_timeStamp >= m_meterages.size()) {
         return;
+    }
+
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
-    ++m_timeStamp;
+
     // TODO: Сформировать std::string и передать в sendMessage
+
+    const std::unique_ptr<const dms::message::message> msg{
+        new const dms::message::meterage(m_timeStamp, meterage)};
+
+    ++m_timeStamp;
+
+    const std::string ser_msg{_ser.serialize(msg)};
+    const std::string enc_msg{_menc.encode(ser_msg)};
+
+    sendMessage(enc_msg);
 }

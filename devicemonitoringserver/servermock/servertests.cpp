@@ -1,13 +1,13 @@
 #include "servertests.h"
-#include "test_runner.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <servermock/clientconnectionmock.h>
-#include <servermock/connectionchannel.h>
-#include <servermock/connectionservermock.h>
-#include <servermock/object.h>
-#include <servermock/taskqueue.h>
+#include "../test_runner.h"
+#include "../handlers/abstractaction.h"
+#include "../handlers/abstractmessagehandler.h"
+#include "../handlers/abstractnewconnectionhandler.h"
+#include "../servermock/clientconnectionmock.h"
+#include "../servermock/connectionchannel.h"
+#include "../servermock/connectionservermock.h"
+#include "../servermock/object.h"
+#include "../servermock/taskqueue.h"
 
 namespace
 {

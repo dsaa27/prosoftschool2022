@@ -1,2 +1,5 @@
 build-devicemonitoringserver*
 devicemonitoringserver/*.user
+
+*.o
+*_test

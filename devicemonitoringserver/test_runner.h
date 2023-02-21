@@ -4,78 +4,81 @@
 #include <exception>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <set>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-template <class T>
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& s)
-{
-    os << "[";
-    bool first = true;
-    for (const auto& x : s)
-    {
-        if (!first)
-        {
-            os << ", ";
-        }
-        first = false;
-        os << x;
-    }
-    return os << "]";
+template <typename Type>
+std::ostream&
+commfold(std::ostream& os, const Type obj) {
+    return os << ',' << ' ' << obj;
 }
 
-template <class T>
-std::ostream& operator<<(std::ostream& os, const std::set<T>& s)
-{
-    os << "{";
-    bool first = true;
-    for (const auto& x : s)
-    {
-        if (!first)
-        {
-            os << ", ";
-        }
-        first = false;
-        os << x;
-    }
-    return os << "}";
+template <class KeyType, class ValueType>
+std::ostream&
+commfold(std::ostream& os, const std::pair<KeyType, ValueType> obj) {
+    return os << ',' << ' ' << obj.first << ':' << ' ' << obj.second;
 }
 
-template <class K, class V>
-std::ostream& operator<<(std::ostream& os, const std::map<K, V>& m)
-{
-    os << "{";
-    bool first = true;
-    for (const auto& kv : m)
-    {
-        if (!first)
-        {
-            os << ", ";
-        }
-        first = false;
-        os << kv.first << ": " << kv.second;
+template <class Type>
+std::ostream&
+operator<<(std::ostream& os, const std::vector<Type>& vec) {
+    os << '[';
+
+    if (!vec.empty()) {
+        std::accumulate(std::next(vec.begin()), vec.end(),
+                        std::ref(os << vec.front()), commfold<Type>);
     }
-    return os << "}";
+
+    return os << ']';
 }
 
-template <class K, class V>
-std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& m)
-{
-    os << "{";
-    bool first = true;
-    for (const auto& kv : m)
-    {
-        if (!first)
-        {
-            os << ", ";
-        }
-        first = false;
-        os << kv.first << ": " << kv.second;
+template <class Type>
+std::ostream&
+operator<<(std::ostream& os, const std::set<Type>& set) {
+    os << '{';
+
+    if (!set.empty()) {
+        std::accumulate(std::next(set.begin()), set.end(),
+                        std::ref(os << *set.begin()), commfold<Type>);
     }
-    return os << "}";
+
+    return os << '}';
+}
+
+template <class KeyType, class ValueType>
+std::ostream&
+operator<<(std::ostream& os, const std::map<KeyType, ValueType>& map) {
+    os << '{';
+
+    if (!map.empty()) {
+        std::accumulate(
+            next(map.begin()), map.end(),
+            ref(os << map.begin()->first << ':' << ' ' << map.begin()->second),
+            commfold<KeyType, ValueType>);
+    }
+
+    return os << '}';
+}
+
+template <class KeyType, class ValueType>
+std::ostream&
+operator<<(std::ostream& os,
+           const std::unordered_map<KeyType, ValueType>& umap) {
+
+    os << '{';
+
+    if (!umap.empty()) {
+        std::accumulate(next(umap.begin()), umap.end(),
+                        ref(os << umap.begin()->first << ':' << ' '
+                               << umap.begin()->second),
+                        commfold<KeyType, ValueType>);
+    }
+
+    return os << '}';
 }
 
 template <class T, class U>

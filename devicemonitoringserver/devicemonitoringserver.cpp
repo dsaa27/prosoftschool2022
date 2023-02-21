@@ -1,9 +1,11 @@
 #include "devicemonitoringserver.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <server/abstractconnection.h>
-#include <servermock/connectionservermock.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "handlers/abstractnewconnectionhandler.h"
+#include "message/message.hxx"
+#include "server/abstractconnection.h"
+#include "servermock/connectionservermock.h"
+#include "servermock/connectionservermock.h"
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
@@ -29,9 +31,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& schedule)
 {
-    // TODO
+    _comcen.add(schedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,14 +48,32 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
 {
-    // TODO
+    const std::string decoded_msg{_menc.decode(message)};
+    const std::unique_ptr<const dms::message::message> deser_msg{
+        _ser.deserialize(decoded_msg)};
+
+    if (deser_msg->type() == dms::message::MSG_TYPE::METERAGE) {
+        const auto meterage = dynamic_cast<const dms::message::meterage*>(deser_msg.get());
+
+        if (nullptr == meterage) {
+            return;
+        }
+
+        const std::unique_ptr<const dms::message::message> ret_msg{
+            _comcen.check(deviceId, *meterage)};
+
+        const std::string ser_msg{_ser.serialize(ret_msg)};
+        const std::string encoded_msg{_menc.decode(ser_msg)};
+
+        sendMessage(deviceId, encoded_msg);
+    }
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
+void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
-    // TODO, если нужен
+    _comcen.rem(clientId);
 }
 
 void DeviceMonitoringServer::onNewIncomingConnection(AbstractConnection* conn)
@@ -100,6 +120,7 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
         DeviceMonitoringServer* m_server = nullptr;
         uint64_t m_clientId = 0;
     };
+
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
 }

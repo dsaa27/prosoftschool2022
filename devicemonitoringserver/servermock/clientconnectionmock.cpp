@@ -2,7 +2,7 @@
 #include "connectionchannel.h"
 #include "connectionservermock.h"
 #include "taskqueue.h"
-#include <handlers/abstractmessagehandler.h>
+#include "../handlers/abstractmessagehandler.h"
 
 #include <unordered_map>
 

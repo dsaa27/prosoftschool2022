@@ -5,6 +5,6 @@
 /*!
  * \brief Тест сервера.
  */
-void monitoringServerTest1();
+void monitoringServerTest();
 
 #endif // TESTS_H

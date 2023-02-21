@@ -1,6 +1,6 @@
 #include "test_runner.h"
 #include "tests.h"
-#include <servermock/servertests.h>
+#include "servermock/servertests.h"
 
 int main()
 {
@@ -11,6 +11,6 @@ int main()
     RUN_TEST(tr, clientServerTest);
 
     // TODO: собственные тесты
-    RUN_TEST(tr, monitoringServerTest1);
+    RUN_TEST(tr, monitoringServerTest);
     return 0;
 }
