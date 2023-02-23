@@ -95,7 +95,7 @@ void DeviceMock::onMessageReceived(const std::string& message)
     {
         case MessageType::eCommand:
             m_receivedValues.push_back(messageDto.parameterTuning);
-            //NOTE: without break
+            [[fallthrough]];
         case MessageType::eError:
         case MessageType::eMeterage:
             m_messageTypes.push_back(messageDto.messageType);
