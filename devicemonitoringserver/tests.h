@@ -7,4 +7,10 @@
  */
 void monitoringServerTest1();
 
+void messageSerializerTest();
+
+void commandCenterTest();
+
+void messageEncoderTest();
+
 #endif // TESTS_H

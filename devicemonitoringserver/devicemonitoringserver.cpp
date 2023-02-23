@@ -1,9 +1,11 @@
 #include "devicemonitoringserver.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <server/abstractconnection.h>
-#include <servermock/connectionservermock.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "handlers/abstractnewconnectionhandler.h"
+#include "server/abstractconnection.h"
+#include "servermock/connectionservermock.h"
+
+#include <iostream>
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
@@ -22,6 +24,7 @@ DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connect
         DeviceMonitoringServer* m_server = nullptr;
     };
     m_connectionServer->setNewConnectionHandler(new NewConnectionHandler(this));
+    m_messageEncoder.chooseCodingAlgorithm("Mirror");
 }
 
 DeviceMonitoringServer::~DeviceMonitoringServer()
@@ -29,9 +32,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(DeviceWorkSchedule *deviceWorkSchedule)
 {
-    // TODO
+    m_commandCenter.setDeviceWorkSchedule(deviceWorkSchedule);
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -46,12 +49,16 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
         conn->sendMessage(message);
 }
 
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& messageString)
 {
-    // TODO
+    std::string transitiveString = m_messageEncoder.decode(messageString);
+    AbstractMessage *receivedMessage = m_messageSerializer.deserializeMessage(transitiveString);
+    AbstractMessage *sendingMessage = m_commandCenter.receiveAndSendMessage(deviceId, receivedMessage);
+    transitiveString = m_messageSerializer.serializeMessage(*sendingMessage);
+    sendMessage(deviceId, m_messageEncoder.encode(transitiveString));
 }
 
-void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)
+void DeviceMonitoringServer::onDisconnected(uint64_t clientId)
 {
     // TODO, если нужен
 }
@@ -102,4 +109,14 @@ void DeviceMonitoringServer::addDisconnectedHandler(AbstractConnection* conn)
     };
     const auto clientId = conn->peerId();
     conn->setDisconnectedHandler(new DisconnectedHandler(this, clientId));
+}
+
+double DeviceMonitoringServer::getCurrentStandardDeviation(uint64_t deviceId)
+{
+    return m_commandCenter.getCurrentStandardDeviation(deviceId);
+}
+
+void DeviceMonitoringServer::disconnect()
+{
+    m_connectionServer->disconnect();
 }

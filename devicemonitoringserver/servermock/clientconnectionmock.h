@@ -2,8 +2,8 @@
 #define CLIENTCONNECTIONMOCK_H
 
 #include "../common.h"
-#include <handlers/abstractaction.h>
-#include <server/abstractclientconnection.h>
+#include "../handlers/abstractaction.h"
+#include "../server/abstractclientconnection.h"
 
 class TaskQueue;
 class ConnectionChannel;

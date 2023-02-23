@@ -3,7 +3,7 @@
 
 #include "../common.h"
 #include "taskqueue.h"
-#include <server/abstractconnectionserver.h>
+#include "../server/abstractconnectionserver.h"
 
 #include <unordered_map>
 

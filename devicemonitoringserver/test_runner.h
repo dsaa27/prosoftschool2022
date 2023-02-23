@@ -10,6 +10,16 @@
 #include <unordered_map>
 #include <vector>
 
+
+template <class T, class U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T,U>& p)
+{
+    os << "{";
+    os << p.first << "," << p.second;
+    os << "}";
+    return os;
+}
+
 template <class T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& s)
 {
