@@ -1,0 +1,6 @@
+#ifndef COMMANDCENTERTESTS_H
+#define COMMANDCENTERTESTS_H
+
+void commandCenterTest();
+
+#endif // COMMANDCENTERTESTS_H

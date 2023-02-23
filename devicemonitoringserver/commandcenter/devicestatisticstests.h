@@ -1,0 +1,6 @@
+#ifndef DEVICESTATISTICSTESTS_H
+#define DEVICESTATISTICSTESTS_H
+
+void deviceStatisticsTest();
+
+#endif // DEVICESTATISTICSTESTS_H

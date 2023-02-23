@@ -2,9 +2,13 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
+#include <message/messageserializer.h>
+#include <messageencoder/messageencoder.h>
+#include <commandcenter/commandcenter.h>
 
 #include <cstdint>
 #include <string>
+#include <map>
 
 struct DeviceWorkSchedule;
 class AbstractConnectionServer;
@@ -33,6 +37,8 @@ public:
      */
     bool listen(uint64_t serverId);
 
+    std::vector<PhaseStatistics> getDeviceStatistics(uint64_t deviceId) const;
+
 private:
     /*!
      * \brief Отправить сообщение устройству.
@@ -60,9 +66,16 @@ private:
 private:
     void addMessageHandler(AbstractConnection* conn);
     void addDisconnectedHandler(AbstractConnection* conn);
+    bool convertToMessageDto(const std::string& encodedMessage, MessageDto& messageDto) const;
+    bool convertToEncodedMessage(const MessageDto& messageDto, std::string& encodedMessage) const;
+
 
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;
+
+    CommandCenter m_commandCenter;
+    MessageEncoder m_encoder;
+    MessageSerializer m_serializer;
 };
 
 #endif // DEVICEMONITORINGSERVER_H

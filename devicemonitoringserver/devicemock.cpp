@@ -1,4 +1,5 @@
 #include "devicemock.h"
+#include "devicemockerrors.h"
 #include <handlers/abstractaction.h>
 #include <handlers/abstractmessagehandler.h>
 #include <server/abstractclientconnection.h>
@@ -51,6 +52,11 @@ DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
         DeviceMock* m_client = nullptr;
     };
     m_clientConnection->setMessageHandler(new MessageHandler(this));
+
+    if(!m_encoder.setAlgorithm("Mirror"))
+    {
+        DeviceMockErrors::SET_ALGORITHM_ERROR.throwRunTimeError("Mirror");
+    }
 }
 
 DeviceMock::~DeviceMock()
@@ -73,11 +79,32 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
-    sendNextMeterage(); // Отправляем следующее измерение
+    std::string decodedMessage;
+    if(!m_encoder.decode(message, decodedMessage))
+    {
+        DeviceMockErrors::DECODE_ERROR.throwRunTimeError(message);
+    }
+    MessageDto messageDto;
+    if(!m_serializer.deserialize(decodedMessage, messageDto))
+    {
+        DeviceMockErrors::DESERIALIZE_ERROR.throwRunTimeError(decodedMessage);
+    }
+    switch(messageDto.messageType)
+    {
+        case MessageType::eCommand:
+            m_receivedValues.push_back(messageDto.parameterTuning);
+            [[fallthrough]];
+        case MessageType::eError:
+        case MessageType::eMeterage:
+            m_messageTypes.push_back(messageDto.messageType);
+            break;
+        default:
+            DeviceMockErrors::MESSAGE_TYPE_ERROR.throwRunTimeError(
+                        std::to_string(messageDto.messageType));
+    }
+    sendNextMeterage();
 }
 
 void DeviceMock::onConnected()
@@ -90,7 +117,7 @@ void DeviceMock::onDisconnected()
     // TODO, если нужно
 }
 
-void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
+void DeviceMock::setMeterages(std::vector<Meterage> meterages)
 {
     m_meterages = std::move(meterages);
 }
@@ -104,8 +131,29 @@ void DeviceMock::sendNextMeterage()
 {
     if (m_timeStamp >= m_meterages.size())
         return;
-    const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
+    MessageDto messageDto;
+    messageDto.messageType = MessageType::eMeterage;
+    messageDto.meterage = m_meterages.at(m_timeStamp);
+    std::string message;
+    if(!m_serializer.serialize(messageDto, message))
+    {
+        DeviceMockErrors::SERIALIZE_ERROR.throwRunTimeError("");
+    }
+    std::string encodedMessage;
+    if(!m_encoder.encode(message, encodedMessage))
+    {
+        DeviceMockErrors::ENCODE_ERROR.throwRunTimeError(message);
+    }
     ++m_timeStamp;
-    // TODO: Сформировать std::string и передать в sendMessage
+    sendMessage(encodedMessage);
+}
+
+std::vector<MessageType> DeviceMock::getReceivedMessageTypes() const
+{
+    return std::vector<MessageType>(m_messageTypes);
+}
+
+std::vector<int64_t> DeviceMock::getReceivedValues() const
+{
+    return std::vector<int64_t>(m_receivedValues);
 }
