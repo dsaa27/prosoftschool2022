@@ -11,8 +11,11 @@
 
 struct Control
 {
-    int64_t parameterTuning = 0;
-    ErrorType errorType = ErrorType::eUnknown;
+    int64_t parameterTuning;
+    ErrorType errorType;
+
+    Control(ErrorType errorType);
+    Control(int64_t parameterTuning);
 };
 
 struct DeviceData
@@ -37,9 +40,9 @@ public:
     ~CommandCenter();
 
 private:
-    constexpr static const Control NOSCHEDULE = Control{0, ErrorType::eNoSchedule};
-    constexpr static const Control NOTIMESTMAPS = Control{0, ErrorType::eNoTimestamp};
-    constexpr static const Control OBSOLETE = Control{0, ErrorType::eObsolete};
+    static const Control NOSCHEDULE;
+    static const Control NOTIMESTMAPS;
+    static const Control OBSOLETE;
 
     bool deviceExist(const uint64_t &deviceId) const;
 

@@ -1,5 +1,19 @@
 #include "commandcenter.h"
 
+
+Control::Control(ErrorType errorType) :
+    parameterTuning(0), errorType(errorType)
+{}
+
+Control::Control(int64_t parameterTuning) :
+    parameterTuning(parameterTuning), errorType(ErrorType::eUnknown)
+{}
+
+
+const Control CommandCenter::NOSCHEDULE{ErrorType::eNoSchedule};
+const Control CommandCenter::NOTIMESTMAPS{ErrorType::eNoTimestamp};
+const Control CommandCenter::OBSOLETE{ErrorType::eObsolete};
+
 CommandCenter::~CommandCenter()
 {
     for (const std::pair<uint64_t, DeviceData>& value : m_devicesData)
@@ -28,7 +42,7 @@ Control CommandCenter::checkDeviceWorkShedule(uint64_t deviceId, const Meterage&
     if(m_devicesData.at(deviceId).statistics->addValue(iter_actual->timeStamp, diff))
     {
         m_devicesData.at(deviceId).lastTimeStamp = meterage.timeStamp;
-        return Control{diff, ErrorType::eUnknown};
+        return Control{diff};
     }
     else
         return OBSOLETE;
