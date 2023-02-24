@@ -1,7 +1,7 @@
 #include "messageencoder.h"
 
 int BaseEncoderExecutor::toInt(const char& charToInt) {
-    return charToInt-'0';
+    return charToInt - '0';
 }
 
 
@@ -13,11 +13,11 @@ std::string EncoderROT3::encode(const std::string& input) {
             output += input[i];
         else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
-            output += std::to_string((val+3)%10);
+            output += std::to_string((val + 3) % 10);
         } else if (std::isupper(input[i])) {
-            output += (input[i]-62)%26+65;
+            output += (input[i] - 62) % 26 + 65;
         } else {
-            output += (input[i]-94)%26+97;
+            output += (input[i] - 94) % 26 + 97;
         }
     }
     return output;
@@ -30,11 +30,11 @@ std::string EncoderROT3::decode(const std::string& input) {
             output += input[i];
         else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
-            output += std::to_string((val+7)%10);
-        }  else if (std::isupper(input[i])) {
-            output += ((input[i]-42)%26+65);
+            output += std::to_string((val + 7) % 10);
+        } else if (std::isupper(input[i])) {
+            output += ((input[i] - 42) % 26 + 65);
         } else {
-            output += (input[i]-74)%26+97;
+            output += (input[i] - 74) % 26 + 97;
         }
     }
     return output;
@@ -48,11 +48,11 @@ std::string EncoderMirror::encode(const std::string& input) {
             output += input[i];
         else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
-            output += std::to_string(9-val);
+            output += std::to_string(9 - val);
         } else if (std::isupper(input[i])) {
-            output += 90-input[i]+65;
+            output += 90 - input[i] + 65;
         } else {
-            output += 122-input[i]+97;
+            output += 122 - input[i] + 97;
         }
     }
     return output;
@@ -65,11 +65,11 @@ std::string EncoderMirror::decode(const std::string& input) {
             output += input[i];
         else if (std::isdigit(input[i])) {
             int val = toInt(input[i]);
-            output += std::to_string(9-val);
+            output += std::to_string(9 - val);
         } else if (std::isupper(input[i])) {
-            output += 90-input[i]+65;
+            output += 90 - input[i] + 65;
         } else {
-            output += 122-input[i]+97;
+            output += 122 - input[i] + 97;
         }
     }
     return output;
@@ -80,9 +80,9 @@ std::string EncoderMultiply41::encode(const std::string& input) {
     std::string output;
     uint8_t inputSize = input.size();
     for (uint8_t i = 0; i < inputSize; ++i) {
-        int val = input[i]*41;
-        int first = val/100;
-        int second = val%100;
+        int val = input[i] * 41;
+        int first = val / 100;
+        int second = val % 100;
         output += first;
         output += second;
     }
@@ -94,7 +94,7 @@ std::string EncoderMultiply41::decode(const std::string& input) {
     for (uint8_t i = 0; i < inputSize; ++i) {
         int first = input[i++];
         int second = input[i];
-        int val = (first*100+second)/41;
+        int val = (first * 100 + second) / 41;
         output += val;
     }
     return output;
@@ -103,9 +103,9 @@ std::string EncoderMultiply41::decode(const std::string& input) {
 std::string EncoderCustom::encode (const std::string& input) {
     std::string output;
     uint8_t inputSize = input.size();
-    uint8_t j(0);
+    uint8_t j{};
     for (uint8_t i = 0; i < inputSize; ++i) {
-        output += key[j++]^input[i];
+        output += key[j++] ^ input[i];
         if (j == key.size()) {
             j = 0;
         }
@@ -115,9 +115,9 @@ std::string EncoderCustom::encode (const std::string& input) {
 std::string EncoderCustom::decode(const std::string& input) {
     std::string output;
     uint8_t inputSize = input.size();
-    uint8_t j(0);
+    uint8_t j{};
     for (uint8_t i = 0; i < inputSize; ++i) {
-        output += key[j++]^input[i];
+        output += key[j++] ^ input[i];
         if (j == key.size()) {
             j = 0;
         }

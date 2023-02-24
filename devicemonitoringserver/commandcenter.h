@@ -20,13 +20,13 @@ struct Device {
     //public:
         int* head = &buffer[0];
         std::array<int,maxBufferSize> buffer{};
-        int tail{0};
+        int tail{};
     private:
     //public:
-        uint8_t maxIndex{sizeof(buffer)/sizeof(int) - 1};
+        uint8_t maxIndex{sizeof(buffer) / sizeof(int) - 1};
     public:
         //добавить величину отклонения в кольцевой буфер
-        void push(const int&);
+        void push(const int);
 
     friend CommandCenter;
     };
@@ -34,9 +34,7 @@ struct Device {
     double m_MSE;
     MyBuffer m_errors;
     const DeviceWorkSchedule* m_deviceWorkSchedule = nullptr;
-    uint64_t m_expectedTimestamp = 0;
-
-friend CommandCenter;
+    uint64_t m_expectedTimestamp{};
 };
 
 class CommandCenter {

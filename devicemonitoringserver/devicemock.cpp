@@ -96,25 +96,20 @@ void DeviceMock::onMessageReceived(const std::string& message)
             toCommandsList << "Decrease by " << std::to_string(command->m_value) << " points";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
-    }
-    if (const auto* error = dynamic_cast<const Error*>(commandFromServer)) {
+    } else if (const auto* error = dynamic_cast<const Error*>(commandFromServer)) {
         if (error->m_errType == Error::NoSchedule) {
             toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": no such schedule";
             m_messagesFromServer.push_back(toCommandsList.str());
-        }
-        if (error->m_errType == Error::NoTimestamp) {
+        } else if (error->m_errType == Error::NoTimestamp) {
             toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": no timestamp";
             m_messagesFromServer.push_back(toCommandsList.str());
-        }
-        if (error->m_errType == Error::Obsolete) {
+        } else if (error->m_errType == Error::Obsolete) {
             toCommandsList << "Error at timestamp " << std::to_string(m_timeStamp - 1) << ": obsolete timestamp";
             m_messagesFromServer.push_back(toCommandsList.str());
         }
-    }
-    if (dynamic_cast<const Info*>(commandFromServer)) {
-        m_messagesFromServer.push_back(static_cast<const Info*>(commandFromServer)->m_message);
-    }
-    if (commandFromServer == nullptr) {
+    } else if (const auto* info = dynamic_cast<const Info*>(commandFromServer)) {
+        m_messagesFromServer.push_back(info->m_message);
+    } else {
         m_messagesFromServer.push_back(message);
     }
     sendNextMeterage();
@@ -165,7 +160,7 @@ void DeviceMock::sendNextMeterage()
     ++m_timeStamp;
     
 	/*if (m_timeStamp == 9) {
-        m_timeStamp=7;
+        m_timeStamp = 7;
         obsoleteErrorFlag = true;
     }*/
 }
@@ -187,6 +182,4 @@ void DeviceMock::disconnect() {
         onDisconnected();
         m_clientConnection->disconnect();
     }
-    else return;
 }
-

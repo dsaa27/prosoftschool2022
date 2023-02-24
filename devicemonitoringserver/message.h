@@ -23,8 +23,8 @@ struct Meterage: public Message {
         m_value(value), m_timestamp(timestamp) {};
     Meterage(): Message(Message::Type::Meterage) {};
 
-    uint8_t m_value {0u};
-    uint64_t m_timestamp {0u};
+    uint8_t m_value{};
+    uint64_t m_timestamp{};
 };
 
 
@@ -33,8 +33,8 @@ struct Command: public Message {
         m_value(value), m_up(up) {};
     Command(): Message(Message::Type::Command) {};
 
-    uint8_t m_value {0u};
-    bool m_up {false};
+    uint8_t m_value{};
+    bool m_up{false};
 };
 
 

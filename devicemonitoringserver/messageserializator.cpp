@@ -32,34 +32,34 @@ Message* MessageSerializator::deserialize(const std::string& incoming) {
         buffer >> temp_value;
         values.push_back(temp_value);
     }
-    if (values.at(0) == "0" || values.at(0) == "1" || values.at(0) == "2" || values.at(0) == "3") {
-        switch (std::stoi(values.at(0))) {
+    if (values[0] == "0" || values[0] == "1" || values[0] == "2" || values[0] == "3") {
+        switch (std::stoi(values[0])) {
         case 0: {
             auto* output = new Meterage;
-            output->m_value = std::stoi(values.at(1));
-            output->m_timestamp = std::stoi(values.at(2));
+            output->m_value = std::stoi(values[1]);
+            output->m_timestamp = std::stoi(values[2]);
             return output;
             }
         case 1: {
             auto* output = new Command;
-            output->m_value = std::stoi(values.at(1));
-            output->m_up = static_cast<bool>(std::stoi(values.at(2)));
+            output->m_value = std::stoi(values[1]);
+            output->m_up = static_cast<bool>(std::stoi(values[2]));
             return output;
             }
         case 2: {
             auto* output = new Error;
-            output->m_errType = static_cast<Error::Type>(std::stoi(values.at(1)));
+            output->m_errType = static_cast<Error::Type>(std::stoi(values[1]));
             return output;
             }
         case 3: {
             auto* output = new Info;
-            auto iter = values.cbegin()+1;
-            while (iter != values.cend()-2) {
+            auto iter = values.cbegin() + 1;
+            while (iter != values.cend() - 2) {
                 output->m_message += *iter;
                 output->m_message += ' ';
                 ++iter;
             }
-            output->m_message += *(values.cend()-1);
+            output->m_message += *(values.cend() - 1);
             return output;
         }
         default: return nullptr;

@@ -80,7 +80,7 @@ private:
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
-    uint64_t m_timeStamp = 0;
+    uint64_t m_timeStamp{};
 	MessageSerializator* m_serializator = nullptr;
     MessageEncoder* m_encoder = nullptr;
     std::vector<std::string>& m_messagesFromServer;

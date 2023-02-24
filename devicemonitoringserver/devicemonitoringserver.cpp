@@ -84,16 +84,14 @@ void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::str
 
     std::string deencodedSerializedMsg = m_encoder->proceedDecoding(message);
     const auto* messageFromClient = m_serializator->deserialize(deencodedSerializedMsg);
+    const auto& it = m_messagesFromClients.find(deviceId);
     if (dynamic_cast<const Meterage*>(messageFromClient)) {
         const auto* newCommand = m_commandcenter->makeDecision(deviceId, messageFromClient);
         std::string encodedSerializedMsg = m_encoder->proceedEncoding(m_serializator->serialize(newCommand));
         sendMessage(deviceId, encodedSerializedMsg);
-    }
-    const auto& it = m_messagesFromClients.find(deviceId);
-    if (dynamic_cast<const Info*>(messageFromClient)) {
-        it->second.push_back(static_cast<const Info*>(messageFromClient)->m_message);
-    }
-    if (messageFromClient == nullptr) {
+    } else if (const auto* info = dynamic_cast<const Info*>(messageFromClient)) {
+        it->second.push_back(info->m_message);
+    } else {
         it->second.push_back(message);
     }
 
@@ -105,7 +103,7 @@ double DeviceMonitoringServer::getMSE(uint64_t deviceId) {
     if (conn)
         return m_commandcenter->getMSE(deviceId);
     else
-        return 0.0;
+        return zero;
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t deviceId)
@@ -180,11 +178,9 @@ std::string DeviceMonitoringServer::getEncodingMethodName() const {
 
 void DeviceMonitoringServer::disconnect() {
     if (m_connectionServer) {
-        for (const auto& conn : static_cast<ConnectionServerMock*>(m_connectionServer)->m_connections) {
+        for (const auto& conn : dynamic_cast<ConnectionServerMock*>(m_connectionServer)->m_connections) {
             onDisconnected(conn.first);
         }
         m_connectionServer->disconnect();
     }
-    else return;
 }
-
