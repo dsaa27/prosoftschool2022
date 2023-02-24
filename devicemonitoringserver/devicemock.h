@@ -2,7 +2,8 @@
 #define DEVICE_H
 
 #include "common.h"
-
+#include "messageserializator.h"
+#include "messageencoder.h"
 #include <string>
 #include <vector>
 
@@ -19,7 +20,7 @@ public:
      * \brief Конструктор.
      * \param clientConnection - владеющий указатель на объект класса клиента
      */
-    DeviceMock(AbstractClientConnection* clientConnection);
+    DeviceMock(AbstractClientConnection* clientConnection, std::vector<std::string>& messages);
     ~DeviceMock();
 
     /*!
@@ -43,6 +44,15 @@ public:
      * \brief Начать отправку измерений.
      */
     void startMeterageSending();
+	//выполнить разъединение с сервером
+    void disconnect();
+    //выбор метода (де)шифрования (возможно отключение при name == "")
+    void setEncodingMethod(const std::string& name);
+    //ввод пользовательского имени и ключа шифрования вплоть до 10 символов
+    //если в строке больше 10 символов, считываются первые 10
+    void registerСustomEncodingMethod(const std::string& name, const std::string& key);
+    //возвращает название выбранного метода (де)шифрования
+    std::string getEncodingMethodName() const;
 
 private:
     /*!
@@ -70,7 +80,11 @@ private:
 private:
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
-    uint64_t m_timeStamp = 0;
+    uint64_t m_timeStamp{};
+	MessageSerializator* m_serializator = nullptr;
+    MessageEncoder* m_encoder = nullptr;
+    std::vector<std::string>& m_messagesFromServer;
+    //bool obsoleteErrorFlag = false;
 };
 
 #endif // DEVICE_H
