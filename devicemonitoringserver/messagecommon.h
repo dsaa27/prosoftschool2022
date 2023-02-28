@@ -29,7 +29,7 @@ struct MessageStruct
     short messageType = NO_TYPE;
     Phase measurements;
     adjustment_t adjustment = 0;
-    uint8_t errorType = 0;
+    uint8_t errorType = NO_ERROR;
 };
 
 #endif // MESSAGECOMMON_H
