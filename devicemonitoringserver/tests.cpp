@@ -15,7 +15,7 @@
  */
 int getRandomNumber(int min, int max)
 {
-    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
+    constexpr const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
 /*!
@@ -101,21 +101,20 @@ void serializatorTest()
 {
     MessageSerializer ser;
     std::vector<std::string> stringsToTest = {
-        "05:10",
-        "0111:222",
-        "0557:1",
-        "11",
-        "155",
-        "21",
-        "22",
-        "23"
+        "0 5 10",
+        "0 111 222",
+        "0 557 1",
+        "1 1",
+        "1 55",
+        "2 1",
+        "2 2",
+        "2 3"
     };
     while (!stringsToTest.empty())
     {
-
         std::string serialMessage1 = stringsToTest.back();
         stringsToTest.pop_back();
-        std::string serialMessage2 = "";
+        std::string serialMessage2;
         MessageStruct message = ser.deserializate(serialMessage1);
         serialMessage2 = ser.serializate(message);
         ASSERT_EQUAL(serialMessage1, serialMessage2);

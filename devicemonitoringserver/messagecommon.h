@@ -6,14 +6,16 @@ enum messageType
 {
     METERAGE,
     COMMAND,
-    ERROR
+    ERROR,
+    NO_TYPE
 };
 
 enum errorType
 {
     NO_SCHEDULE,
     NO_TIMESTAMP,
-    OBSOLETE
+    OBSOLETE,
+    NO_ERROR
 };
 
 typedef int adjustment_t;
@@ -24,7 +26,7 @@ struct MessageStruct
     MessageStruct(errorType error) : messageType(ERROR), errorType(error) {}
     MessageStruct(Phase meterage) : messageType(METERAGE), measurements(meterage){}
     MessageStruct(adjustment_t adj) : messageType(COMMAND), adjustment(adj){}
-    short messageType = 0;
+    short messageType = NO_TYPE;
     Phase measurements;
     adjustment_t adjustment = 0;
     uint8_t errorType = 0;

@@ -9,7 +9,7 @@ MessageStruct CommandCenter::createCommand(uint64_t deviceId, MessageStruct mess
 {
     if (m_scheduleMap.find(deviceId) == m_scheduleMap.end())
     {
-        MessageStruct answer{NO_SCHEDULE};
+        MessageStruct answer(NO_SCHEDULE);
         return answer;
     }
 
@@ -18,21 +18,21 @@ MessageStruct CommandCenter::createCommand(uint64_t deviceId, MessageStruct mess
                         maxTimeStamp = m_scheduleMap[deviceId].back().timeStamp;
         (currentTime < minTimeStamp) || (currentTime > maxTimeStamp))
     {
-        MessageStruct answer{NO_TIMESTAMP};
+        MessageStruct answer(NO_TIMESTAMP);
         return answer;
     }
     DeviceInfo& deviceInfo = deviceInfoMap[deviceId];
     if (message.measurements.timeStamp < deviceInfo.lastTimestamp)
     {
-        MessageStruct answer{OBSOLETE};
+        MessageStruct answer(OBSOLETE);
         return answer;
     }
 
     const std::vector<Phase>& schedule = m_scheduleMap[deviceId];
-    unsigned int i;
+    unsigned int i = 0;
     //Поиск соответствующей метки начала этапа
     const uint64_t scheduleSize = schedule.size();
-    for (i = 0; i < scheduleSize; ++i)
+    for (; i < scheduleSize; ++i)
     {
         if (schedule[i].timeStamp >= currentTime)
         {
@@ -42,7 +42,7 @@ MessageStruct CommandCenter::createCommand(uint64_t deviceId, MessageStruct mess
         }
     }
     adjustment_t adj = schedule[i].value - message.measurements.value;
-    MessageStruct answer{adj};
+    MessageStruct answer(adj);
 
     updateMse(deviceId, answer.adjustment);
     deviceInfo.lastTimestamp = currentTime;

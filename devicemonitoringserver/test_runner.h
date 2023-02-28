@@ -80,9 +80,9 @@ std::ostream& operator<<(std::ostream& os, const std::unordered_map<K, V>& m)
 }
 
 template <class T>
-std::ostream& operator<<(std::ostream& os, std::optional<T>)
+std::ostream& operator<<(std::ostream& os, std::optional<T> opt)
 {
-    return os;
+    return os << "nullopt";
 }
 
 template <class T, class U>

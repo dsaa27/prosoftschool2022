@@ -25,13 +25,12 @@ public:
     void registerNewAlgorithm (BaseEncoderExecutor& newAlgorithm);
 
 private:
-    //Rot3 m_rot3;
     RotX m_rot3{3};
     Mirror m_mirror;
     Multiply41 m_multiply41;
-    std::string m_algoName = m_rot3.name();
     std::map <std::string, BaseEncoderExecutor*> m_algoNameMap = {{"ROT3", &m_rot3},
                                                                   {"Mirror", &m_mirror},
                                                                   {"Multiply41", &m_multiply41}};
+    BaseEncoderExecutor* m_Algorithm = &m_rot3;
 };
 #endif // MESSAGEENCODER_H
