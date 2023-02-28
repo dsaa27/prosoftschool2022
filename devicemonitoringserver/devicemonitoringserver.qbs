@@ -1,8 +1,9 @@
 import qbs
 
 CppApplication {
+
     consoleApplication: true
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++20"
     cpp.includePaths: product.sourceDirectory
 
     Group {
@@ -15,7 +16,8 @@ CppApplication {
         name: "C++"
         prefix: "**/"
         files: [
-            "*.h","*.cpp"
+            "*.h",
+            "*.cpp",
         ]
     }
 }
