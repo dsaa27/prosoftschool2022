@@ -12,24 +12,24 @@
     std::string ComandCenter::comparisonWPlan(uint64_t deviceId, uint64_t m_timeStamp, uint8_t metrages)
     {
         uint64_t devId = deviceId;
-		std::vector <Phase> plShedule = plan.schedule;
-		Phase lastTimeStamp = plShedule.back();
-		Phase firstTimeStamp = plShedule.front();
-		if (devId != plan.deviceId)
-		{
-			std::string message = "NoSchedule";
-			std::string serialMessage = MessageSerializer::errorSerialization(message);
-			std::string encodedMessage = oEncCmd.encode(serialMessage);
-			return encodedMessage;
-		}
-		else if (m_timeStamp > lastTimeStamp.timeStamp || m_timeStamp < firstTimeStamp.timeStamp)
-		{
-			std::string message = "NoTimestamp";
-			std::string serialMessage = MessageSerializer::errorSerialization(message);
-			std::string encodedMessage = oEncCmd.encode(serialMessage);
-			return encodedMessage;
-		
-		}
+        std::vector <Phase> plShedule = plan.schedule;
+        Phase lastTimeStamp = plShedule.back();
+        Phase firstTimeStamp = plShedule.front();
+        if (devId != plan.deviceId)
+        {
+            std::string message = "NoSchedule";
+            std::string serialMessage = MessageSerializer::errorSerialization(message);
+            std::string encodedMessage = oEncCmd.encode(serialMessage);
+            return encodedMessage;
+        }
+        else if (m_timeStamp > lastTimeStamp.timeStamp || m_timeStamp < firstTimeStamp.timeStamp)
+        {
+            std::string message = "NoTimestamp";
+            std::string serialMessage = MessageSerializer::errorSerialization(message);
+            std::string encodedMessage = oEncCmd.encode(serialMessage);
+            return encodedMessage;
+        
+        }
 		Phase phase = plShedule[m_timeStamp - 1];
 		if (m_timeStamp < phase.timeStamp)
 		{
