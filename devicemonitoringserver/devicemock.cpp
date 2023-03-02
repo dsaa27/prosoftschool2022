@@ -98,7 +98,7 @@ void DeviceMock::onConnected()
 
 void DeviceMock::onDisconnected()
 {
-	// TODO, если нужно
+	// TODO
 }
 
 void DeviceMock::setMeterages(std::vector<uint8_t> meterages)
