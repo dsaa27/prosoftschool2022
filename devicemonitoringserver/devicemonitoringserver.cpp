@@ -1,9 +1,12 @@
 #include "devicemonitoringserver.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <handlers/abstractnewconnectionhandler.h>
-#include <server/abstractconnection.h>
-#include <servermock/connectionservermock.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "handlers/abstractnewconnectionhandler.h"
+#include "server/abstractconnection.h"
+#include "servermock/connectionservermock.h"
+
+#include "ComandCenter.h"
+
 
 DeviceMonitoringServer::DeviceMonitoringServer(AbstractConnectionServer* connectionServer) :
     m_connectionServer(connectionServer)
@@ -29,9 +32,9 @@ DeviceMonitoringServer::~DeviceMonitoringServer()
     delete m_connectionServer;
 }
 
-void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule&)
+void DeviceMonitoringServer::setDeviceWorkSchedule(const DeviceWorkSchedule& DeviceWorkSchedule)
 {
-    // TODO
+    oCmdCenter.plan = DeviceWorkSchedule;
 }
 
 bool DeviceMonitoringServer::listen(uint64_t serverId)
@@ -45,10 +48,30 @@ void DeviceMonitoringServer::sendMessage(uint64_t deviceId, const std::string& m
     if (conn)
         conn->sendMessage(message);
 }
-
-void DeviceMonitoringServer::onMessageReceived(uint64_t /*deviceId*/, const std::string& /*message*/)
+void DeviceMonitoringServer::setEncodingAlgoritm(std::string name)
 {
-    // TODO
+
+    oEncode.algChosser(name);
+    oCmdCenter.setEncodingAlgoritm(name);
+}
+void DeviceMonitoringServer::regNewAlgoritm(std::string name, BaseEncoderExecutor *executor)
+{
+    
+    oEncode.algRegistr(name, executor);
+}
+double DeviceMonitoringServer::get_sDeviation()
+{
+    return oCmdCenter.getSDeviation();
+}
+
+void DeviceMonitoringServer::onMessageReceived(uint64_t deviceId, const std::string& message)
+{
+    std::string encoded = oEncode.decode(message);
+    MeterageMessage deserialized = MessageSerializer::deserialization(encoded);
+    uint64_t timeStmp = deserialized.timeStamp;
+    uint8_t metrage = deserialized.metrages;
+    std::string messageToDev = oCmdCenter.comparisonWPlan(deviceId, timeStmp, metrage);
+    sendMessage(deviceId, messageToDev);
 }
 
 void DeviceMonitoringServer::onDisconnected(uint64_t /*clientId*/)

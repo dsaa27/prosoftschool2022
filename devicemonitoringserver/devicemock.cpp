@@ -1,7 +1,16 @@
 #include "devicemock.h"
-#include <handlers/abstractaction.h>
-#include <handlers/abstractmessagehandler.h>
-#include <server/abstractclientconnection.h>
+#include "handlers/abstractaction.h"
+#include "handlers/abstractmessagehandler.h"
+#include "server/abstractclientconnection.h"
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <map>
+#include <cstdint>
+#include <vector>
+#include <variant>
+#include "MessageSerializerDev.h"
+#include "MessageEncoder.h"
 
 DeviceMock::DeviceMock(AbstractClientConnection* clientConnection) :
     m_clientConnection(clientConnection)
@@ -73,16 +82,18 @@ void DeviceMock::sendMessage(const std::string& message) const
     m_clientConnection->sendMessage(message);
 }
 
-void DeviceMock::onMessageReceived(const std::string& /*message*/)
+void DeviceMock::onMessageReceived(const std::string& message)
 {
-    // TODO: Разобрать std::string, прочитать команду,
-    // записать ее в список полученных комманд
-    sendNextMeterage(); // Отправляем следующее измерение
+
+    std::string decodedMess = oEncode.decode(message);
+    std::string deserialMess = MessageSerializer::deserialization(decodedMess);
+    commandList.push_back(deserialMess);
+    sendNextMeterage();
 }
 
 void DeviceMock::onConnected()
 {
-    // TODO, если нужно
+    std::cout << "connected";
 }
 
 void DeviceMock::onDisconnected()
@@ -99,13 +110,33 @@ void DeviceMock::startMeterageSending()
 {
     sendNextMeterage();
 }
+void DeviceMock::setEncodingAlgoritm(std::string name)
+{
+    oEncode.algChosser(name);
+}
+void DeviceMock::regNewAlgoritm(std::string name, BaseEncoderExecutor *executor)
+{
+    oEncode.algRegistr(name, executor);
+}
 
 void DeviceMock::sendNextMeterage()
 {
     if (m_timeStamp >= m_meterages.size())
         return;
     const auto meterage = m_meterages.at(m_timeStamp);
-    (void)meterage;
     ++m_timeStamp;
-    // TODO: Сформировать std::string и передать в sendMessage
+    (void)meterage;
+    MessageSerializer message(meterage, m_timeStamp);
+    std::string serial_Message = message.serialization(meterage, m_timeStamp);
+    std::string encoded_Message = oEncode.encode(serial_Message);
+    std::string *mesToSend = &encoded_Message;
+    if (encoded_Message.length() != 0)
+    {
+        sendMessage(*mesToSend);
+    }
+    
+}
+std::vector<std::string> DeviceMock::getCommList()
+{
+    return commandList;
 }

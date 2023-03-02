@@ -2,6 +2,8 @@
 #define DEVICEMONITORINGSERVER_H
 
 #include "common.h"
+#include "MessageEncoder.h"
+#include "ComandCenter.h"
 
 #include <cstdint>
 #include <string>
@@ -32,6 +34,9 @@ public:
      * \brief Начать прием подключений по идентификатору \a serverId
      */
     bool listen(uint64_t serverId);
+    void setEncodingAlgoritm(std::string name);
+    void regNewAlgoritm(std::string name, BaseEncoderExecutor *executor);
+    double get_sDeviation();
 
 private:
     /*!
@@ -60,6 +65,8 @@ private:
 private:
     void addMessageHandler(AbstractConnection* conn);
     void addDisconnectedHandler(AbstractConnection* conn);
+    MessageEncoder oEncode;
+    ComandCenter oCmdCenter;
 
 private:
     AbstractConnectionServer* m_connectionServer = nullptr;

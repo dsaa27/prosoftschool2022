@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include "MessageEncoder.h"
 
 class AbstractClientConnection;
 
@@ -43,7 +44,9 @@ public:
      * \brief Начать отправку измерений.
      */
     void startMeterageSending();
-
+    std::vector<std::string> getCommList();
+    void setEncodingAlgoritm(std::string name);
+    void regNewAlgoritm(std::string name, BaseEncoderExecutor *executor);
 private:
     /*!
      * \brief Отправить следующее измерение.
@@ -68,6 +71,8 @@ private:
     void onMessageReceived(const std::string& message);
 
 private:
+    MessageEncoder oEncode;
+    std::vector < std::string > commandList;
     AbstractClientConnection* m_clientConnection = nullptr;
     std::vector<uint8_t> m_meterages;
     uint64_t m_timeStamp = 0;
