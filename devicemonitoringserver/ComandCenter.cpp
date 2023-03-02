@@ -9,9 +9,9 @@
 #include "MessageSerializerServ.h"
 #include "ComandCenter.h"
 
-	std::string ComandCenter::comparisonWPlan(uint64_t deviceId, uint64_t m_timeStamp, uint8_t metrages)
-	{
-		uint64_t devId = deviceId;
+    std::string ComandCenter::comparisonWPlan(uint64_t deviceId, uint64_t m_timeStamp, uint8_t metrages)
+    {
+        uint64_t devId = deviceId;
 		std::vector <Phase> plShedule = plan.schedule;
 		Phase lastTimeStamp = plShedule.back();
 		Phase firstTimeStamp = plShedule.front();
